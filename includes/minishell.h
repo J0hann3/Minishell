@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/10 16:55:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/10 19:35:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,37 +21,30 @@
 #include <errno.h>
 #include <string.h>
 
-enum	e_meta_chararcter
+enum	e_meta_character
 {
-	e_and,
+	e_and = 0,
 	e_or,
-	e_pipe
+	e_pipe,
+	e_empty
 };
-
-typedef union u_data
-{
-	char					*command;
-	enum e_meta_chararcter	meta;
-}	t_data;
-
 
 typedef struct s_instruction
 {
 	char	**command;
-	int infile;
-	int outfile;
+	int		infile;
+	int		outfile;
 }	t_instruction;
 
 typedef struct	s_node
 {
-	struct s_node	*child1;
-	struct s_node	*child2;
-	struct s_node	*parent;
-	union u_data	data;
-}	t_node;
 
-void	echo(char **arg, char **env);
-void	env(char **arg, char **env);
-int		pwd(char **arg, char **env);
+	struct s_node			*left;
+	struct s_node			*right;
+	struct s_node			*parent;
+	char					*command;
+	size_t					size;
+	enum e_meta_character	meta;
+}	t_node;
 
 #endif
