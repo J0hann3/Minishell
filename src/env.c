@@ -6,16 +6,17 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:04:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/08 16:15:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/10 15:43:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "minishell.h"
 
-void env(char **env)
+void env(char **arg, char **env)
 {
 	int i;
 
+	(void)arg;
 	i = 0;
 	while (env[i] != NULL)
 	{

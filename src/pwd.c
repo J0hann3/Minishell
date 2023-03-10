@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/08 16:23:03 by jvigny           ###   ########.fr       */
+/*   Created: 2023/03/08 16:14:46 by jvigny            #+#    #+#             */
+/*   Updated: 2023/03/10 15:43:23 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void echo(int argc, char **argv, int option)
-{
-	int	i;
+#include "minishell.h"
 
-	i = 1;
-	while (i < argc)
-	{
-		printf("%s", argv[i]);
-		i++;
-	}
-	if (option == 0)
-	printf("\n");
+int pwd(char **arg, char **env)
+{
+	char *str;
+
+	(void)arg;
+	(void)env;
+	str = getcwd(NULL, 0);
+	if (str == NULL)
+		return (perror("Error"), 1);
+	printf("%s\n", str);
+	free(str);
+	return (0);
 }
