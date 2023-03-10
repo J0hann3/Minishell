@@ -6,21 +6,21 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:04:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/10 15:43:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/10 18:59:28 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void env(char **arg, char **env)
+void env(char **arg, char **envp)
 {
 	int i;
 
 	(void)arg;
 	i = 0;
-	while (env[i] != NULL)
+	while (envp[i] != NULL)
 	{
-		printf("%s\n", env[i]);
+		printf("%s\n", envp[i]);
 		i++;
 	}
 }

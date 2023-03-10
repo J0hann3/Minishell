@@ -12,6 +12,14 @@ ls | grep e > outfile > outfile1
 ls | grep e >> outfile >> outfile1
 < infile grep a | grep e > outfile
 
+export A=123456 && echo $A
+>123456
+
+export A=123456 | echo $A
+>
+
+
+
 
 ./minishell
 init env
@@ -36,13 +44,47 @@ johanne : execution built-in pipes "find path"
 
 
 
+struct s_instruction
+{
+	char **command;
+	char **fd;
+}
+
+s_instruction;
+
+recup this info after 
+- infile
+- outfile
+- error
+
+< read
+>write (clear ou create)
+>>write (append)
+
+<< char **args
+
+
+vrai && (faux || vrai) || vrai
+
+union node
+{
+	struct s_instruction	*pdn_m;
+	enum		meta;
+};
+
+struct	t_node
+{
+	t_node	*child1;
+	t_node	*child2;
+	t_node	*parent;
+	unnio node	data;
+}
 
 
 
 
 
-
-
+execve -> mutattion de process
 
 
 GOOD TO KNOW
@@ -50,3 +92,12 @@ GOOD TO KNOW
 Redirections are processed in the order they appear, from left to right. 
 
 godbolt
+learngitbranchingx
+
+git checkout -b [yourbranchname] ->create branch and change at the same time
+
+git cherry-pick <Commit1> <Commit2> <...>		-> copy commit where you are
+
+git rebase -i HEAD~4 ->choose which commit to rebase in which order
+
+revert ??

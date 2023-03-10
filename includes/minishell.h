@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/10 15:59:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/10 16:55:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,16 @@ enum	e_meta_chararcter
 
 typedef union u_data
 {
-	struct s_instruction	*pdn_m;
-	enum					meta;
+	char					*command;
+	enum e_meta_chararcter	meta;
 }	t_data;
+
 
 typedef struct s_instruction
 {
 	char	**command;
-	char	**fd;
+	int infile;
+	int outfile;
 }	t_instruction;
 
 typedef struct	s_node

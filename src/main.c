@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/10 15:47:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/10 16:12:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **envp)
 {
 	// int i = 0;
 	
@@ -20,8 +20,8 @@ int main(int argc, char **argv, char **env)
 	argv[0] = "ls";
 	// argv[1] = "< out";
 	argv[argc - 1] = NULL;
-	env[0] = "TEST=10";
-	// ft_env(argv, env);
+	envp[0] = "TEST=10";
+	env(argv, envp);
 	printf("	TEST = %s\n",getenv("TEST"));
 	printf("	SHELL = %s\n",getenv("SHELL"));
 	// int pid = fork();
