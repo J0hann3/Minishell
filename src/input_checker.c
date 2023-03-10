@@ -1,50 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   input_checker.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/10 21:23:30 by qthierry         ###   ########.fr       */
+/*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
+/*   Updated: 2023/03/10 21:18:22 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-int parse(char *input)
+int	check_quotes(const char *input)
 {
-	// check " '
-	// check >
-	// check <
-	// check double single meta
-	// trim/split on white spaces
-	// 
-	// create tree
+	int	in_single;
+	int	in_double;
 
-
-	printf("%d\n", check_quotes((const char *)input));
-
-
-
-
-
-	return (1);
-}
-
-int	exec(int argc, char *argv[], char *env[])
-{
-	char *input;
-
-	while (1)
+	in_single = -1;
+	in_double = -1;
+	while (*input)
 	{
-		input = readline("minishell: ");
-		parse(input);
+		if (*input == '\"' && in_single == -1)
+			in_double *= -1;
+		if (*input == '\'' && in_double == -1)
+			in_single *= -1;
+		input++;
 	}
-	return (0);
-}
-
-int main(int argc, char *argv[], char *env[])
-{
-
+	return (in_double == 1 || in_single == 1);
 }
