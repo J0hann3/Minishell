@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/11 15:09:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/11 16:35:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_option(char *str)
+static int	is_option(const char *str)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ static int	is_option(char *str)
 	return (1);
 }
 
-void	echo(char **arg, char **env)
+void	echo(const char **arg, const char **env)
 {
 	int	i;
 	int	option;
