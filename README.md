@@ -18,9 +18,7 @@ export A=123456 && echo $A
 export A=123456 | echo $A
 >
 
-
-
-
+- CODE : 
 ./minishell
 init env
 while (exit)
@@ -33,17 +31,14 @@ while (exit)
 	exec (path, arg, env)
 
 
-
-
-
+- TASK :
 quentin : main "parsing + errors" $ENV heredoc "lister fd" signaux "open les fds" *
 johanne : execution built-in pipes "find path"
 
 ? : history $?
 
 
-
-
+- STRUCT :
 struct s_instruction
 {
 	char **command;
@@ -80,14 +75,10 @@ struct	t_node
 	unnio node	data;
 }
 
-
-
-
-
 execve -> mutattion de process
 
 
-GOOD TO KNOW
+- GOOD TO KNOW :
 ‘|&’ is used, command1’s standard error, in addition to its standard output
 Redirections are processed in the order they appear, from left to right. 
 
@@ -100,4 +91,18 @@ git cherry-pick <Commit1> <Commit2> <...>		-> copy commit where you are
 
 git rebase -i HEAD~4 ->choose which commit to rebase in which order
 
-revert ??
+
+
+EXIT STATUS :
+- he return status of a simple command is its exit status as provided by the waitpid function, or 128+n if the command was terminated by signal n.
+
+- The exit status of a pipeline is the exit status of the last command in the pipeline
+
+The return status of and and or lists is the exit status of the last command executed in the list
+
+
+- Each command in a multi-command pipeline, where pipes are created, is executed in its own subshell, which is a separate process
+
+
+if value is not given it's assigned a null string
+variable value : null string is a valid value
