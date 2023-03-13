@@ -101,3 +101,12 @@ git cherry-pick <Commit1> <Commit2> <...>		-> copy commit where you are
 git rebase -i HEAD~4 ->choose which commit to rebase in which order
 
 revert ??
+
+builtins:
+◦ echo with option -n
+◦ pwd with no options
+◦ env with no options or arguments
+◦ cd with only a relative or absolute path
+◦ export with no options
+◦ unset with no options
+◦ exit with no options
