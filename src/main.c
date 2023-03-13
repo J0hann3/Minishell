@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/12 20:24:47 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/13 02:42:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,38 @@
 
 int	parse(char *input)
 {
+	size_t	i;
+
 	if (equals(input, "exit") == 1)
 		free(input), exit(EXIT_SUCCESS);
 
-	// check " '
-	// check >
-	// check <
-	// check double single meta
 	// trim/split on white spaces
 	// 
 	// create tree
 
 	if (quotes_not_closed((const char *)input))
 		return (2);
-	//printf("%d\n", quotes_not_closed((const char *)input));
-	if (has_error_syntax_pipe(input))
-		return (2);
-
-
-
-
+	i = 0;
+	while (input[i])
+	{
+		if (is_meta_character(input[i]))
+		{
+			if (input[i] == '&' && input[i + 1] != '&')
+			{
+				i++;
+				continue ;
+			}
+			if (input[i] == '<' || input[i] == '>')
+			{
+				if (!has_argument_right(input + i))
+					return (2);
+			}
+			else if(!has_argument_left(input, (input + i))
+				|| !has_argument_right(input + i))
+				return (2);
+		}
+		i++;
+	}
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/12 20:24:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/13 02:41:46 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,28 +69,32 @@ int	quotes_not_closed(const char *input)
 	return (in_double == 1 || in_single == 1);
 }
 
-int	has_error_syntax_pipe(const char *input)
+int	has_argument_left(const char *start_input, char *op_ptr)
 {
-	char	*pipe_pos;
+	char	*tmp;
 
-	pipe_pos = (char *)input;
-	while (pipe_pos)
+	tmp = op_ptr;
+	while (tmp != start_input)
 	{
-		pipe_pos = ft_strchr(pipe_pos, '|');
-		if (!pipe_pos)
-			break ;
-		if (*(pipe_pos + 1) == '|')
-		{
-			pipe_pos += 2;
-			input = pipe_pos;
-			continue ;
-		}
-		if (!find_argument(input, pipe_pos - input))
+		tmp--;
+		if (!is_meta_character(*tmp) && !is_wspace(*tmp))
 			return (1);
-		if (!find_argument(pipe_pos + 1, ft_strlen(pipe_pos)))
+	}
+	return (0);
+}
+
+int	has_argument_right(char *op_ptr)
+{
+	if (*(op_ptr + 1) == *op_ptr)
+		op_ptr++;
+	op_ptr++;
+	while (*op_ptr)
+	{
+		if (!is_meta_character(*op_ptr) && !is_wspace(*op_ptr))
 			return (1);
-		pipe_pos += 1;
-		input = pipe_pos;
+		if (is_meta_character(*op_ptr))
+			return (0);
+		op_ptr++;
 	}
 	return (0);
 }
