@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/10 19:43:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/14 16:07:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_instruction
 	int		outfile;
 }	t_instruction;
 
-typedef struct	s_node
+typedef struct s_node
 {
 
 	struct s_node			*left;
