@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 17:40:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/14 18:56:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	argv[0] = "echo";
+	argv[0] = "echo=10";
 	argv[argc - 1] = NULL;
 
 	envp = init_env((const char **)envp);
 	argv = init_env((const char **)argv);
-	env(argv, envp);
-	printf("--------------------------------------------------------------\n");
+	// env(argv, envp);
+	// printf("--------------------------------------------------------------\n");
 	envp = export(argv, envp);
-	printf("--------------------------------------------------------------\n");
-	env(argv, envp);
+	// printf("--------------------------------------------------------------\n");
+	// env(argv, envp);
 	free_str(envp);
 	// free(envp);
 	// printf("--------------\n");

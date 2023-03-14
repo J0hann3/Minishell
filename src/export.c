@@ -6,22 +6,61 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 18:04:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/14 19:28:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	is_alpha(char c)
+{
+	if (c >= 'a' && c <= 'z')
+		return (1);
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+
+static int	is_digit(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
 /**
  * search for valid name, sign = and valid value
  * begin with letters or underscore
  * can only contain letters numbers and underscores
- * return len or 0 if invalid name
+ * return 1 if invalid name
 */
 static int	is_valid_name(char *str)
 {
-	
-	return (1);
+	int	i;
+	int	equal;
+
+	i = 0;
+	equal = 0;
+	while (str[i])
+	{
+		if (is_alpha(str[i]) || str[i] == '_' || str[i] == '=' || is_digit(str[i]))
+		{
+			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
+				return (0);
+			else if (str[i] == '=')
+			{
+				equal = 1;
+				break ;
+			}
+		}
+		else
+			return (0);
+		++i;
+	}
+	if (equal == 1)
+		return (1);
+	else
+		return (0);
 }
 
 // static int	ft_error(void)
@@ -62,12 +101,13 @@ int	trim_invalid_varible(char **arg)
 	suppr = 0;
 	while (arg[i] != NULL)
 	{
+		printf("%s is valid : %d\n", arg[i], is_valid_name(arg[i]));
 		if (!is_valid_name(arg[i]))
 		{
 			// error = ft_error();
-			++i;
 			free(arg[i]);
 			arg[i] = NULL;
+			++i;
 			suppr--;
 			continue ;
 		}
@@ -122,7 +162,6 @@ char	**export(char **arg, char **env)
  * export ""		->not valid name
  * export NAME		->not add to env BUT trigger no error
  * export NAME=		-> add to env with no value
- * // export NAME+=12		->add 12 after the last value
  * export NAME====12	->value is '===12'
  * if NAME already exist modifie the last value with the now one
 */
