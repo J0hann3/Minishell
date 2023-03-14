@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/13 02:41:46 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/13 23:24:35 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_meta_character(char c)
 
 int	is_wspace(int c)
 {
-	return (c == ' ' || (c >= 9 && c <= 13));
+	return (c == ' ' || c == '\t');
 }
 
 char	*find_non_meta(const char *s, size_t size)

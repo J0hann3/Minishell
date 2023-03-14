@@ -6,15 +6,15 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/12 18:15:11 by qthierry         ###   ########.fr        #
+#    Updated: 2023/03/14 05:36:41 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
-LIBS = -lreadline
+CFLAGS = -g -Wall -Wextra #-Werror
+LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
 HEADERS_LIST = minishell.h parsing.h
@@ -35,10 +35,10 @@ OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 all:	$(NAME)
 
 tester: $(NAME)
-	./tester.sh "minishell$$>"
+	./tester.sh
 
 testerp: $(NAME)
-	./tester.sh "minishell$$>" -p
+	./tester.sh -p
 
 run: $(NAME)
 	./$(NAME)
