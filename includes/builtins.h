@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 17:11:35 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/15 14:38:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ size_t	ft_strlen(const char *s);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strdup(const char *s);
 void	free_str(char **str);
+int		is_alpha(char c);
+int		is_digit(char c);
 
 // ------Init ------
 char	**init_env(const char **env);

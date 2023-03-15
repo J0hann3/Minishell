@@ -6,26 +6,34 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 19:28:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/15 15:29:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_alpha(char c)
+static int	ft_len(char **str)
 {
-	if (c >= 'a' && c <= 'z')
-		return (1);
-	if (c >= 'A' && c <= 'Z')
-		return (1);
-	return (0);
+	int	i;
+
+	i = 0;
+	while (str[i] != NULL)
+	{
+		++i;
+	}
+	return (i);
 }
 
-static int	is_digit(char c)
+static void	ft_copy(char **dest, char **src)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	int	i;
+
+	i = 0;
+	while (src[i] != NULL)
+	{
+		dest[i] = src[i];
+		++i;
+	}
 }
 
 /**
@@ -63,48 +71,18 @@ static int	is_valid_name(char *str)
 		return (0);
 }
 
-// static int	ft_error(void)
-// {
-// 	return (1);
-// }
-
-static int	ft_len(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		++i;
-	}
-	return (i);
-}
-
-static void	ft_copy(char **dest, char **src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] != NULL)
-	{
-		dest[i] = src[i];
-		++i;
-	}
-}
-
-int	trim_invalid_varible(char **arg)
+static int	trim_invalid_varible(char **arg)
 {
 	int	suppr;
 	int	i;
 
-	i = 0;
-	suppr = 0;
+	i = 1;
+	suppr = -1;
 	while (arg[i] != NULL)
 	{
 		printf("%s is valid : %d\n", arg[i], is_valid_name(arg[i]));
 		if (!is_valid_name(arg[i]))
 		{
-			// error = ft_error();
 			free(arg[i]);
 			arg[i] = NULL;
 			++i;
@@ -116,29 +94,43 @@ int	trim_invalid_varible(char **arg)
 	return (i + suppr);
 }
 
-char	**export(char **arg, char **env)
+static int	is_variable_existing(char **env, char *str, int len_env)
 {
-	int		i;
-	int		len_env;
-	int		len_arg;
-	int		elem_add;
-	char	**new;
+	int	i;
+	int	j;
 
 	i = 0;
+	while (i < len_env)
+	{
+		j = 0;
+		while (str[j] != 0 && env[i][j] != 0)
+		{
+			if (str[j] != env[i][j])
+				break ;
+			if (str[j] == '=')
+				return (i);
+			++j;
+		}
+		++i;
+	}
+	return (0);
+}
+
+static void	modifie_var(char **env, char *str, int len)
+{
+	free(env[len]);
+	env[len] = str;
+}
+
+static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
+{
+	int		i;
+	int		elem_add;
+	int		var_exist;
+
+	i = 1;
 	elem_add = 0;
-	len_arg = trim_invalid_varible(arg);
-	if (len_arg < 0)		//not sure it's can happened
-		return (NULL);	//attention because arg can fill with NULL in the middle
-	if (len_arg == 0)
-		return (env);
-	len_env = ft_len(env);
-	printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
-	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
-	if (new == NULL)
-		return (NULL);		//dont no what to free
-	ft_copy(new, env);
-	free(env);
-	while (elem_add < len_arg || arg[i] != NULL)	//not sure of the condition
+	while (elem_add < len_arg || arg[i] != NULL)
 	{
 		printf("str = %s\n", arg[i]);
 		if (arg[i] == NULL)
@@ -146,12 +138,57 @@ char	**export(char **arg, char **env)
 			++i;
 			continue ;
 		}
-		new[len_env] = arg[i];
-		++i;
-		++len_env;
-		++elem_add;
+		var_exist = is_variable_existing(env, arg[i], len_env);
+		if (var_exist)
+		{
+			modifie_var(env, arg[i], var_exist);
+			++i;
+			++elem_add;
+		}
+		else
+		{
+			env[len_env] = arg[i];
+			++i;
+			++len_env;
+			++elem_add;
+		}
 	}
-	new[len_env] = NULL;
+	env[len_env] = NULL;
+}
+
+static void	free_arg(char **arg, int len)
+{
+	int	i;
+
+	i = 0;
+	while (i < len || arg[i] != NULL)
+	{
+		free(arg[i]);
+		++i;
+	}
+	free(arg);
+}
+
+char	**export(char **arg, char **env)
+{
+	int		len_env;
+	int		len_arg;
+	char	**new;
+
+	len_arg = trim_invalid_varible(arg);
+	if (len_arg < 0)		//not sure it's can happened
+		return (free_arg(arg, len_arg), NULL);
+	if (len_arg == 0)
+		return (free_arg(arg,len_arg), env);
+	len_env = ft_len(env);
+	printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
+	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
+	if (new == NULL)
+		return (free_arg(arg,len_arg), NULL);
+	ft_copy(new, env);
+	free(env);
+	add_new_variable(arg, new, len_arg, len_env);
+	free(arg[0]);
 	free(arg);
 	return (new);
 }
