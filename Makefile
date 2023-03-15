@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/14 17:45:50 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/15 18:47:03 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRC_LIST = echo.c \
 			ft_strlen.c \
 			main.c \
 			pwd.c \
-			utils.c
+			utils.c \
+			unset.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))

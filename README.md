@@ -93,14 +93,16 @@ git rebase -i HEAD~4 ->choose which commit to rebase in which order
 
 revert ??
 
+need to choose when to suppr arg for builtins
+
 builtins:
-◦ echo with option -n
-◦ pwd with no options
-◦ env with no options or arguments
-◦ cd with only a relative or absolute path
-◦ export with no options
-◦ unset with no options
-◦ exit with no options
+◦ echo with option -n							|	Done
+◦ pwd with no options							|	Done
+◦ env with no options or arguments				|	Done
+◦ cd with only a relative or absolute path		|
+◦ export with no options						|	Done
+◦ unset with no options							|
+◦ exit with no options							|
 
 
 EXIT STATUS :

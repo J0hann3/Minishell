@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/15 15:29:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/15 17:48:46 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_len(char **str)
+int	ft_len(char **str)
 {
 	int	i;
 
@@ -94,7 +94,7 @@ static int	trim_invalid_varible(char **arg)
 	return (i + suppr);
 }
 
-static int	is_variable_existing(char **env, char *str, int len_env)
+int	is_variable_existing(char **env, char *str, int len_env)
 {
 	int	i;
 	int	j;
