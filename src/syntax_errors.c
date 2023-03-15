@@ -1,55 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_checker.c                                    :+:      :+:    :+:   */
+/*   syntax_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/13 23:24:35 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 02:14:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
-
-int	is_meta_character(char c)
-{
-	return (c == '|' || c == '<' || c == '>' || c == '&');
-}
-
-int	is_wspace(int c)
-{
-	return (c == ' ' || c == '\t');
-}
-
-char	*find_non_meta(const char *s, size_t size)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] && i < size)
-	{
-		if (!is_meta_character(s[i]))
-			return ((char *)s);
-		i++;
-	}
-	return (NULL);
-}
-
-char	*find_argument(const char *input, size_t size)
-{
-	size_t	i;
-
-	i = 0;
-	while (input[i] && i < size)
-	{
-		if ((!is_meta_character(input[i]) && !is_wspace(input[i]))
-			|| input[i] == '&')
-			return ((char *)input);
-		i++;
-	}
-	return (NULL);
-}
 
 int	quotes_not_closed(const char *input)
 {

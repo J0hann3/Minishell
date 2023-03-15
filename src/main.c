@@ -6,12 +6,11 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/14 05:36:32 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 02:22:56 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
-#include "../includes/get_next_line.h"
 
 int	has_error_for_meta(char *input, size_t i)
 {
@@ -53,7 +52,7 @@ int	syntax_errors(char *input)
 			return (2);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 int main(int argc, char *argv[], char *env[])
@@ -64,16 +63,18 @@ int main(int argc, char *argv[], char *env[])
 	(void)argc;
 	(void)argv;
 	(void)env;
-
 	input = (char *)1;
 	ret_err = 0;
 	while (input != NULL)
 	{
-		input = readline("Minishell$>");
+		input = readline("minishell$>");
 		if (!input)
 			break ;
+		add_history(input);
 		ret_err = syntax_errors(input);
+		parse_args(input);
 		free(input);
 	}
+	rl_clear_history();
 	return (ret_err);
 }

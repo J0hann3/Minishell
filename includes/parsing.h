@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/14 04:42:49 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 03:37:54 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,36 @@
 # include <curses.h>
 # include "../includes/minishell.h"
 
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}	t_list;
+
+// utils.c
 size_t	ft_strlen(const char *s);
 int		equals(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
+
+// parsing_utils.c
+int		is_wspace(int c);
 int		is_meta_character(char c);
 
 int		quotes_not_closed(const char *input);
 int		has_argument_right(char *op_ptr);
 int		has_argument_left(const char *start_input, char *op_ptr);
 
-int	gget_next_line(char **string);
+// ast_utils.c
+t_ast	*ast_new_node(char *command);
+
+// ast.c
+char	**parse_args(char *input);
+t_ast	*create_tree(char *input);
+
+// chained_list.c
+t_list	*ft_lstnew(void *content);
+t_list	*ft_lstlast(t_list *lst);
+t_list	*ft_lstadd_back(t_list **lst, void *content);
+int		ft_lstsize(t_list *lst);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/14 05:36:41 by qthierry         ###   ########.fr        #
+#    Updated: 2023/03/15 02:16:37 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,10 @@ HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 SRC_LIST =	main.c \
-			input_checker.c \
+			syntax_errors.c \
+			parsing_utils.c \
+			ast.c \
+			ast_utils.c \
 			utils.c
 
 SRC_DIR = ./src/

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/13 22:12:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 01:24:21 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ typedef struct s_instruction
 	int		outfile;
 }	t_instruction;
 
-typedef struct	s_node
+typedef struct	s_ast
 {
-	struct s_node			*left;
-	struct s_node			*right;
-	struct s_node			*parent;
+	struct s_ast			*left;
+	struct s_ast			*right;
+	struct s_ast			*parent;
 	char					*command;
 	size_t					size;
 	enum e_meta_character	meta;
-}	t_node;
+}	t_ast;
 
 #endif
