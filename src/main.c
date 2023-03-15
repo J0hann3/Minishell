@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 02:22:56 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 18:57:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,16 @@ int	has_error_for_meta(char *input, size_t i)
 int	syntax_errors(char *input)
 {
 	size_t	i;
-	int		in_single;
-	int		in_double;
 
-	if (equals(input, "exit") == 1)
+	if (equals(input, "exit") == 1) // temp
 		free(input), exit(EXIT_SUCCESS);
 	if (quotes_not_closed((const char *)input))
 		return (2);
 	i = 0;
-	in_double = -1;
-	in_single = -1;
 	while (input[i])
 	{
-		if (input[i] == '\"' && in_single == -1)
-			in_double *= -1;
-		if (input[i] == '\'' && in_double == -1)
-			in_single *= -1;
-		if ((in_double == 1 || in_single == 1) && ++i)
-			continue ;
+		if (input[i] == '\"' || input[i] == '\'')
+			i += skip_quotes(input + i);
 		if (is_meta_character(input[i]) && has_error_for_meta(input, i))
 			return (2);
 		i++;
@@ -72,6 +64,7 @@ int main(int argc, char *argv[], char *env[])
 			break ;
 		add_history(input);
 		ret_err = syntax_errors(input);
+		printf("err : %d\n", ret_err);
 		parse_args(input);
 		free(input);
 	}

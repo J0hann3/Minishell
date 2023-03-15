@@ -26,3 +26,18 @@ Parsing :
 	"&&" et "||" : besoin argument des deux cotés
 	"<" et ">" droite uniquement
 	"<<" et ">>" droite uniquement
+
+tests :
+	echo u&&(ls&&ls)s	-> erreur de parsing
+	()					-> '\0'
+	(())				-> '\0'
+	( )					-> '\0'
+	(ls)				-> 'ls'
+	((ls))				-> 'ls'
+	()ls				-> '\0' 'ls'
+	()ls()				-> '\0' 'ls' '\0'
+	()l()s				-> '\0' 'l' '\0' 's'
+	echo o&&&ls			-> 'echo o && &ls'
+	echo o|||ls			-> erreur de parsing
+	()()()				-> '\0' '\0' '\0'
+	&|&

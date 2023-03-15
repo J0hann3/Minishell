@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 03:41:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/15 17:49:22 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	**parse_args(char *input)
 		cursor = find_next_meta(cursor);
 		if (!cursor)
 			break ;
-		print_size(prev_cursor, cursor - prev_cursor);
+		// print_size(prev_cursor, cursor - prev_cursor);
 		cursor++;
 		if (*cursor == *(cursor - 1))
 			cursor++;
