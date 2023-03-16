@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/15 18:46:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/16 16:08:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		is_alpha(char c);
 int		is_digit(char c);
 int		is_variable_existing(char **env, char *str, int len_env);
 int		ft_len(char **str);
+int		ft_getenv(char **env, char *str);
 
 // ------Init ------
 char	**init_env(const char **env);
@@ -34,5 +35,5 @@ void	env(char **arg, char **envp);
 char	**export(char **arg, char **env);
 int		pwd(char **arg, char **env);
 int		unset(char **arg, char **env);
-
+int		cd(char **arg,char **env);
 #endif

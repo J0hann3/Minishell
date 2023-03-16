@@ -91,6 +91,9 @@ git cherry-pick <Commit1> <Commit2> <...>		-> copy commit where you are
 
 git rebase -i HEAD~4 ->choose which commit to rebase in which order
 
+--trace-children=yes -> flag valgrind go to child process
+valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes
+
 revert ??
 
 need to choose when to suppr arg for builtins
@@ -101,7 +104,7 @@ builtins:
 ◦ env with no options or arguments				|	Done
 ◦ cd with only a relative or absolute path		|
 ◦ export with no options						|	Done
-◦ unset with no options							|
+◦ unset with no options							|	Done
 ◦ exit with no options							|
 
 
