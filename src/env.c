@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:04:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 17:28:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/16 14:21:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	**init_env(const char **env)
 		len++;
 	}
 	new = ft_calloc(len + 1, sizeof(char *));
-	printf("len_env_init : %d\n", len + 1);
+	printf("len_env_init : %d\n", len);
 	if (new == NULL)
 		return (NULL);
 	while (i < len)

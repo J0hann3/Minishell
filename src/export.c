@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/15 17:48:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/16 14:20:47 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ char	**export(char **arg, char **env)
 	if (len_arg == 0)
 		return (free_arg(arg,len_arg), env);
 	len_env = ft_len(env);
-	printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
+	// printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
 	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
 	if (new == NULL)
 		return (free_arg(arg,len_arg), NULL);
