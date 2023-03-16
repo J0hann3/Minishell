@@ -29,15 +29,15 @@ Parsing :
 
 tests :
 	echo u&&(ls&&ls)s	-> erreur de parsing
-	()					-> '\0'
-	(())				-> '\0'
-	( )					-> '\0'
+	()					-> erreur de parsing
+	(())				-> erreur de parsing
+	( )					-> erreur de parsing
 	(ls)				-> 'ls'
 	((ls))				-> 'ls'
-	()ls				-> '\0' 'ls'
-	()ls()				-> '\0' 'ls' '\0'
-	()l()s				-> '\0' 'l' '\0' 's'
+	()ls				-> erreur de parsing
+	()ls()				-> erreur de parsing
+	()l()s				-> erreur de parsing
 	echo o&&&ls			-> 'echo o && &ls'
 	echo o|||ls			-> erreur de parsing
-	()()()				-> '\0' '\0' '\0'
+	()()()				-> erreur de parsing
 	&|&

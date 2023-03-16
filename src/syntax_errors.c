@@ -6,13 +6,13 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 02:14:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/16 17:53:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-int	quotes_not_closed(const char *input)
+bool	quotes_not_closed(const char *input)
 {
 	int	in_single;
 	int	in_double;
@@ -30,7 +30,7 @@ int	quotes_not_closed(const char *input)
 	return (in_double == 1 || in_single == 1);
 }
 
-int	has_argument_left(const char *start_input, char *op_ptr)
+bool	has_argument_left(const char *start_input, char *op_ptr)
 {
 	char	*tmp;
 
@@ -44,7 +44,7 @@ int	has_argument_left(const char *start_input, char *op_ptr)
 	return (0);
 }
 
-int	has_argument_right(char *op_ptr)
+bool	has_argument_right(char *op_ptr)
 {
 	if (*(op_ptr + 1) == *op_ptr)
 		op_ptr++;

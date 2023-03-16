@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 17:48:03 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/16 18:12:29 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSING_H
 
 # include <stdio.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
@@ -23,9 +24,9 @@
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
-# include <term.h>
-# include <curses.h>
 # include "../includes/minishell.h"
+
+# define TOMATE 1 * 4
 
 typedef struct s_list
 {
@@ -35,17 +36,17 @@ typedef struct s_list
 
 // utils.c
 size_t	ft_strlen(const char *s);
-int		equals(char	*s1, char *s2);
+bool	eq(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
 
 // parsing_utils.c
-int		is_wspace(int c);
-int		is_meta_character(char c);
-size_t	skip_quotes(char *input);
+bool	is_wspace(int c);
+bool	is_meta_character(char c);
+size_t	skip_quotes(const char *input);
 
-int		quotes_not_closed(const char *input);
-int		has_argument_right(char *op_ptr);
-int		has_argument_left(const char *start_input, char *op_ptr);
+bool	quotes_not_closed(const char *input);
+bool	has_argument_right(char *op_ptr);
+bool	has_argument_left(const char *start_input, char *op_ptr);
 
 // ast_utils.c
 t_ast	*ast_new_node(char *command);

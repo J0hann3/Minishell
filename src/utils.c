@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 03:18:35 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/16 17:54:10 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	ft_strlen(const char *s)
 	return ((size_t)(s - cpy));
 }
 
-int	equals(char	*s1, char *s2)
+bool	eq(char *s1, char *s2)
 {
 	size_t	i;
 
