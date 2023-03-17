@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/16 18:12:29 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/17 02:36:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*ft_strchr(const char *s, int c);
 bool	is_wspace(int c);
 bool	is_meta_character(char c);
 size_t	skip_quotes(const char *input);
+bool	is_and_or(const char *input);
+size_t	skip_parenthesis(const char *input);
 
 bool	quotes_not_closed(const char *input);
 bool	has_argument_right(char *op_ptr);

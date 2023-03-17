@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/16 17:53:52 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/17 04:03:17 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ bool	has_argument_left(const char *start_input, char *op_ptr)
 	while (tmp != start_input)
 	{
 		tmp--;
+		if (*tmp == '(')
+			return (false);
 		if (!is_meta_character(*tmp) && !is_wspace(*tmp))
-			return (1);
+			return (true);
 	}
-	return (0);
+	return (false);
 }
 
 bool	has_argument_right(char *op_ptr)
@@ -51,6 +53,8 @@ bool	has_argument_right(char *op_ptr)
 	op_ptr++;
 	while (*op_ptr)
 	{
+		if (*op_ptr == ')')
+			return (false);
 		if (!is_meta_character(*op_ptr) && !is_wspace(*op_ptr))
 			return (1);
 		if (is_meta_character(*op_ptr))
