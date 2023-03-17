@@ -26,69 +26,126 @@ print_ko()
 
 test_output()
 {
-	input=$(echo -e "$1")
-	expected=$(echo -e "$1" | bash)
-	if [ "$input" == "$expected" ]; then
-		print_ok
-		if [ "$flag" == "-p" ]; then
-			echo -ne "\e[36mINPUT:\n""$input\n"
-			echo -ne "\e[94mEXPECTED:\n""$expected\n"
-			set_clear
-		fi
-	else
-		print_ko
-		if [ "$flag" == "-p" ]; then
-			echo -ne "\e[36mINPUT:\n""$input\n"
-			echo -ne "\e[94mEXPECTED:\n""$expected\n"
-			set_clear
-		fi
-	fi
-	error_expected=$(echo echo "$?" | bash)
-	echo ------
-	if [ "$error_intput" == "$error_expected" ]; then
-		print_ok
-		if [ "$flag" == "-p" ]; then
-			echo -ne "\e[36mEINPUT:\n""$error_intput\n"
-			echo -ne "\e[94mEEXPECTED:\n""$error_expected\n"
-			set_clear
-		fi
-	else
-		print_ko
-		if [ "$flag" == "-p" ]; then
-			echo -ne "\e[36mINPUT:\n""$error_intput\n"
-			echo -ne "\e[94mEXPECTED:\n""$error_expected\n"
-			set_clear
-		fi
-	fi
+	echo -n ""
+	# input=$(echo -e "$1")
+	# expected=$(echo -e "$1" | bash)
+	# if [ "$input" == "$expected" ]; then
+	# 	print_ok
+	# 	if [ "$flag" == "-p" ]; then
+	# 		echo -ne "\e[36mINPUT:\n""$input\n"
+	# 		echo -ne "\e[94mEXPECTED:\n""$expected\n"
+	# 		set_clear
+	# 	fi
+	# else
+	# 	print_ko
+	# 	if [ "$flag" == "-p" ]; then
+	# 		echo -ne "\e[36mINPUT:\n""$input\n"
+	# 		echo -ne "\e[94mEXPECTED:\n""$expected\n"
+	# 		set_clear
+	# 	fi
+	# fi
+	# error_expected=$(echo echo "$?" | bash)
+	# echo ------
+	# if [ "$error_intput" == "$error_expected" ]; then
+	# 	print_ok
+	# 	if [ "$flag" == "-p" ]; then
+	# 		echo -ne "\e[36mEINPUT:\n""$error_intput\n"
+	# 		echo -ne "\e[94mEEXPECTED:\n""$error_expected\n"
+	# 		set_clear
+	# 	fi
+	# else
+	# 	print_ko
+	# 	if [ "$flag" == "-p" ]; then
+	# 		echo -ne "\e[36mINPUT:\n""$error_intput\n"
+	# 		echo -ne "\e[94mEXPECTED:\n""$error_expected\n"
+	# 		set_clear
+	# 	fi
+	# fi
 }
 
 test()
 {
-	set_yellow
 	command="$1"
 	input=$(echo -en $command | ./minishell)
-	error_intput=$(echo $?)
-	echo "Testing : '$command'"
+	error_input=$(echo $?)
+	if [ "$flag" == "-p" ] || [ "$flag" == "-p2" ]; then
+		set_yellow
+		echo -n "Testing : \`$command\` "
+	fi
+	if [ $error_input == "$2" ]; then
+		print_ok
+		if [ "$flag" == "-p2" ]; then
+			echo -ne "\e[36mINPUT   : $error_input\n"
+			echo -ne "\e[94mEXPECTED: $2\n"
+		fi
+	else
+		print_ko
+		if [ "$flag" == "-p2" ]; then
+			echo -ne "\e[36mINPUT   : $error_input\n"
+			echo -ne "\e[94mEXPECTED: $2\n"
+		fi
+	fi
 	set_clear
-	test_output "$input"
 }
 
 parsing_tests()
 {
-	test "\n"
-	test "\""
-	test "test"
+	test "\n" 0
+	test " " 0
+	test "           " 0
+	test "echo a" 0
+	test "\"" 2
+	test "'" 2
+	test "\"\"" 0
+	test "''" 0
+	test "echo a && echo b" 0
+	test "&& echo b" 2
+	test "&&" 2
+	test "'&&'" 0
+	test "echo a &&| echo b" 2
+	test "echo a &&|| echo b" 2
+	test "echo a |&& echo b" 2
+	test "echo a ||&& echo b" 2
+	test "echo a&&echo b" 0
+	test "echo a&&||echo b" 2
+	test "echo a|echo c" 0
+	test "echo a| |echo b" 2
+	test "echo a|echo b|echo c" 0
+	test "echo a|||echo b" 2
+	test "echo a||||echo b" 2
+	test "echo a||\"||\"echo b" 0
+	test " && " 2
+	test "'' && ''" 0
+	test "()" 2
+	test "'()'" 0
+	test "echo a ()" 2
+	test "()echo a" 2
+	test "(echo a)" 0
+	test "((((echo a))))" 0
+	test "(((echo a))))" 2
+	test "((((echo a)))" 2
+	test "(echo a()()())" 2
+	test "((((echo a)&&)))" 2
+	test "(((&&(echo a))))" 2
+	test "(echo a) && (echo b)" 0
+	test "((((echo a)&&echo b)))" 0
+	test "((echo a)\"&&\")" 0
+	test "((((echo a) && echo b) || (echo c)))" 0
+	test "(echo a && echo b) echo c" 2
+	test "echo a (echo b && echo c)" 2
+	test "echo a \"(echo b && echo c)\"" 0
 }
 
 flag=""
-error_intput=""
 
 if [ $# -eq 0 ]; then
 	prompt="$1"
 	parsing_tests
 elif [ "$1" == "-p" ]; then
-	prompt="$1"
 	flag="-p"
+	parsing_tests
+elif [ "$1" == "-p2" ]; then
+	flag="-p2"
 	parsing_tests
 else
 	echo "Usage: $0 prompt [-p]"
