@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/18 15:25:47 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/18 17:39:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,46 +68,46 @@ char *find_absolute_path(char *str)
 static int	delete_previous_dir(char *str, int index)
 {
 	int	letter_suppr;
+	int	i;
 	int	nb_slash;
 
 	nb_slash = 0;
 	letter_suppr = 0;
-	while (index > 0)
+	i = index;
+	while (index >= 0)
 	{
 		while (index > 0 && str[index] == '\0')
 			index--;
-		if (str[index] == '/')
+		if (index > 0 && i != index && str[index] == '/')
 			nb_slash++;
+		if (nb_slash == 2 || index <= 0)
+			break ;
 		str[index] = '\0';
 		letter_suppr++;
 		index--;
-		if (nb_slash == 2)
-			break ;
 	}
-	// printf("letter suppr dir : %d\n", letter_suppr);
+	// printf("dot-dot : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 
 static int	delete_dot_slash(char *str, int index)
 {
 	int	letter_suppr;
+	int	i;
 
 	letter_suppr = 0;
-	while (index > 0)
+	i = index;
+	while (index >= 0)
 	{
 		while (index > 0 && str[index] == '\0')
 			index--;
-		if (str[index] == '/')
-		{
-			str[index] = '\0';
-			letter_suppr++;
+		if (index <= 0 || (i != index && str[index] == '/'))
 			break ;
-		}
 		str[index] = '\0';
 		letter_suppr++;
 		index--;
 	}
-	// printf("letter suppr dot : %d\n", letter_suppr);
+	// printf("dot : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 
@@ -116,7 +116,7 @@ static int	trim_slash(char *str, int i)
 	int	letter_suppr;
 
 	letter_suppr = 0;
-	while (i > 0)
+	while (i >= 0)
 	{
 		if (str[i] == '/')
 		{
@@ -127,6 +127,7 @@ static int	trim_slash(char *str, int i)
 		else
 			break ;
 	}
+	// printf("slash : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 
@@ -145,11 +146,10 @@ int	canonical_form(char *str)
 		while (str[i] == '.')
 		{
 			++nb_dot;
-			// printf("%c", str[i]);
 			++i;
 		}
 		nb_slash = 0;
-		while (str[i] == '/' && str[i + 1] == '/')
+		while (str[i] != '\0' && str[i] == '/' && str[i + 1] == '/')
 		{
 			++nb_slash;
 			++i;
@@ -158,16 +158,97 @@ int	canonical_form(char *str)
 			letter_suppr += trim_slash(str, i - 1);
 		if (str[i] == '/' || str[i] == '\0')
 		{
+			if (str[i] == '\0')
+				i = i - 1;
 			if (nb_dot == 2)
-				letter_suppr += delete_previous_dir(str, i - 1);
+				letter_suppr += delete_previous_dir(str, i);
 			else if (nb_dot == 1)
-				letter_suppr += delete_dot_slash(str, i - 1);
+				letter_suppr += delete_dot_slash(str, i);
+			if (str[i + 1] == '\0')
+			{
+				++i;
+				break ;
+			}
 		}
-		// printf("%c", str[i]);
 		++i;
 	}
-	// printf("\nsuppr : %d	len : %d\n", letter_suppr, i);
 	return (i - letter_suppr);
+}
+
+static int	add_first_slash(char *str, int len_path, int real_len)
+{
+	int	i;
+	int	j;
+	
+	i = 0;
+	j = 0;
+	while (j < len_path)
+	{
+		if (str[i] != '\0')
+		{
+			if (i - 1 >= 0 && str[i] != '/')
+			{
+				str[i - 1] = '/';
+				len_path--;
+			}
+			j++;
+			break ;
+		}
+		++i;
+	}
+	if (len_path == 0 && real_len > 1)
+	{
+		str[0] = '/';
+		str[1] = '\0';
+		len_path = 1;
+	}
+	return (len_path);
+}
+
+static char	*clean_path(char *str, int len_path)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	new = malloc(sizeof(char) * (len_path + 1));
+	if (new == NULL)
+		return (free(str), NULL);
+	while (j < len_path)
+	{
+		if (str[i] != '\0')
+		{
+			new[j] = str[i];
+			j++;
+		}
+		++i;
+	}
+	new[j] = 0;
+	free(str);
+	return (new);
+}
+
+static void	update_env(char **env, char *str)
+{
+	int	i_pwd;
+	int	i_old_pwd;
+
+	i_pwd = 0;
+	i_old_pwd = 0;
+	i_old_pwd = ft_getenv(env, "OLD_PWD");
+	if (i_old_pwd != 0)
+		free(env[i_old_pwd]);
+	i_pwd = ft_getenv(env, "PWD");
+	if (i_pwd != 0)
+	{
+		if (i_old_pwd != 0)
+			env[i_old_pwd] = env[i_pwd];
+		else
+			free(env[i_pwd]);
+		env[i_pwd] = str;
+	}
 }
 
 /**
@@ -184,37 +265,24 @@ int	cd(char **arg,char **env)
 {
 	char	*path;
 	int		len_path;
-	int		i;
+	int		len;
 
-	(void)env;
 	if (arg[1] == NULL)
 		return (0);
 	if (arg[2] != NULL)
 		return (1);
 	if (arg[1][0] != '/')
-	{
 		path = find_absolute_path(arg[1]);
-		len_path = canonical_form(path);
-	}
 	else
-		return (1);
-
-
-	
-	i = 0;
-	int	j = 0;
-	printf("len_path : %d\n", len_path);
-	while (j < len_path)
-	{
-		if (path[i] != '\0')
-		{
-			printf("%c", path[i]);
-			j++;
-		}
-		++i;
-	}
-	printf("\n");
-	free(path);
+		path = ft_strdup(arg[1]);
+	len = ft_strlen(path);
+	printf("PATH [%ld] : %s\n", ft_strlen(path), path);
+	len_path = canonical_form(path);
+	add_first_slash(path, len_path, len);
+	path = clean_path(path, len_path);
+	update_env(env, path);
+	if (chdir(path) == -1)
+		perror("Error");
 	return (0);
 }
 
@@ -224,6 +292,12 @@ int	cd(char **arg,char **env)
  * cd /../../..		-> go to /
  * cd /../../../bin -> go to bin
  * 
+ * 
+ * chdir(changes the current dir)	-> arg = curpath
+ * if erreur
+ * 		->print error
+ * set OLD_PWD
+ * set PWD
+ * 
+ * 
  */
-
-// /mnt/nfs/homes/jvigny/Documents/42/Minishell////../Minishell/./../Minishell/
