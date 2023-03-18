@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 18:18:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/18 15:25:47 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	*ft_strjoin(char *s1, char *s2, int add_slash)
 	return (res);
 }
 
-char *find_absolute_path(char **env, char *str)
+char *find_absolute_path(char *str)
 {
 	char	*pwd;
 	char	*path;
@@ -65,40 +65,109 @@ char *find_absolute_path(char **env, char *str)
 	return (path);
 }
 
-char *canonical_form(char *str)
+static int	delete_previous_dir(char *str, int index)
+{
+	int	letter_suppr;
+	int	nb_slash;
+
+	nb_slash = 0;
+	letter_suppr = 0;
+	while (index > 0)
+	{
+		while (index > 0 && str[index] == '\0')
+			index--;
+		if (str[index] == '/')
+			nb_slash++;
+		str[index] = '\0';
+		letter_suppr++;
+		index--;
+		if (nb_slash == 2)
+			break ;
+	}
+	// printf("letter suppr dir : %d\n", letter_suppr);
+	return (letter_suppr);
+}
+
+static int	delete_dot_slash(char *str, int index)
+{
+	int	letter_suppr;
+
+	letter_suppr = 0;
+	while (index > 0)
+	{
+		while (index > 0 && str[index] == '\0')
+			index--;
+		if (str[index] == '/')
+		{
+			str[index] = '\0';
+			letter_suppr++;
+			break ;
+		}
+		str[index] = '\0';
+		letter_suppr++;
+		index--;
+	}
+	// printf("letter suppr dot : %d\n", letter_suppr);
+	return (letter_suppr);
+}
+
+static int	trim_slash(char *str, int i)
+{
+	int	letter_suppr;
+
+	letter_suppr = 0;
+	while (i > 0)
+	{
+		if (str[i] == '/')
+		{
+			str[i] = '\0';
+			letter_suppr++;
+			i--;
+		}
+		else
+			break ;
+	}
+	return (letter_suppr);
+}
+
+int	canonical_form(char *str)
 {
 	int		i;
-	int		len_path;
-	int		one_point;
-	int		two_point;
-	int		more_point;
+	int		letter_suppr;
+	int		nb_dot;
+	int		nb_slash;
 
 	i = 0;
-	one_point = 0;
-	two_point = 0;
-	two_point = 0;
+	letter_suppr = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '.' )
+		nb_dot = 0;
+		while (str[i] == '.')
 		{
-			if (more_point != 1)
-			{
-				if (two_point == 1)
-					more_point = 0;
-				else if (one_point == 1)
-				{
-					two_point = 1;
-					one_point = 0;
-				}
-				else if (one_point == 0)
-					one_point = 1;
-			}
+			++nb_dot;
+			// printf("%c", str[i]);
+			++i;
 		}
-		
-		
+		nb_slash = 0;
+		while (str[i] == '/' && str[i + 1] == '/')
+		{
+			++nb_slash;
+			++i;
+		}
+		if (nb_slash >= 1)
+			letter_suppr += trim_slash(str, i - 1);
+		if (str[i] == '/' || str[i] == '\0')
+		{
+			if (nb_dot == 2)
+				letter_suppr += delete_previous_dir(str, i - 1);
+			else if (nb_dot == 1)
+				letter_suppr += delete_dot_slash(str, i - 1);
+		}
+		// printf("%c", str[i]);
 		++i;
 	}
-	return (str);
+	// printf("\nsuppr : %d	len : %d\n", letter_suppr, i);
+	return (i - letter_suppr);
 }
 
 /**
@@ -114,19 +183,37 @@ char *canonical_form(char *str)
 int	cd(char **arg,char **env)
 {
 	char	*path;
+	int		len_path;
 	int		i;
 
-	i = 0;
+	(void)env;
 	if (arg[1] == NULL)
 		return (0);
 	if (arg[2] != NULL)
 		return (1);
-	if (arg[1][i] != '/')
-		path = find_absolute_path(env, arg[1]);
-		path = canonical_form(path);
-		
-		
-	printf("%s\n", path);
+	if (arg[1][0] != '/')
+	{
+		path = find_absolute_path(arg[1]);
+		len_path = canonical_form(path);
+	}
+	else
+		return (1);
+
+
+	
+	i = 0;
+	int	j = 0;
+	printf("len_path : %d\n", len_path);
+	while (j < len_path)
+	{
+		if (path[i] != '\0')
+		{
+			printf("%c", path[i]);
+			j++;
+		}
+		++i;
+	}
+	printf("\n");
 	free(path);
 	return (0);
 }
@@ -138,3 +225,5 @@ int	cd(char **arg,char **env)
  * cd /../../../bin -> go to bin
  * 
  */
+
+// /mnt/nfs/homes/jvigny/Documents/42/Minishell////../Minishell/./../Minishell/

@@ -103,8 +103,8 @@ builtins:
 ◦ pwd with no options							|	Done
 ◦ env with no options or arguments				|	Done
 ◦ cd with only a relative or absolute path		|
-◦ export with no options						|	Done
-◦ unset with no options							|	Done
+◦ export with no options						|	Done	-> dont works in pipe
+◦ unset with no options							|	Done	-> dont works in pipe
 ◦ exit with no options							|
 
 

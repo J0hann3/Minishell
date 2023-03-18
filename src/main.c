@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 16:19:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/18 14:23:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	argv[0] = "echo=10";
+	argv[0] = "cd";
 	argv[argc - 1] = NULL;
 
 	envp = init_env((const char **)envp);
