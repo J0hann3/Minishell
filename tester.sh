@@ -134,6 +134,8 @@ parsing_tests()
 	test "(echo a && echo b) echo c" 2
 	test "echo a (echo b && echo c)" 2
 	test "echo a \"(echo b && echo c)\"" 0
+	test "(echo a) && \"(echo b)\"" 0
+	test "\"(echo a)\" && (echo b)" 0
 }
 
 flag=""
