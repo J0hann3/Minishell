@@ -103,6 +103,7 @@ parsing_tests()
 	test "&&" 2
 	test "'&&'" 0
 	test "echo a &&| echo b" 2
+	test "  echo   	a		&&	  echo  b      " 0
 	test "echo a &&|| echo b" 2
 	test "echo a |&& echo b" 2
 	test "echo a ||&& echo b" 2
