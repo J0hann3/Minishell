@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:59:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/17 03:51:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/19 16:31:53 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ bool	is_wspace(int c)
 
 bool	is_and_or(const char *input)
 {
-	return (*input == '&' && *(input + 1) == '&'
-			|| *input == '|' && *(input + 1) == '|');
+	return ((*input == '&' && *(input + 1) == '&')
+			|| (*input == '|' && *(input + 1) == '|'));
 }
 
 // returns the closing quote of the one entered

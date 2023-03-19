@@ -16,7 +16,7 @@ ls | grep e >> outfile >> outfile1
 quentin : main "parsing + errors" $ENV heredoc "lister fd" signaux "open les fds" *
 johanne : execution built-in pipes "find path"
 
-? : history $?
+? : $?
 
 
 Parsing :
@@ -26,18 +26,3 @@ Parsing :
 	"&&" et "||" : besoin argument des deux cotés
 	"<" et ">" droite uniquement
 	"<<" et ">>" droite uniquement
-
-tests :
-	echo u&&(ls&&ls)s	-> erreur de parsing
-	()					-> erreur de parsing
-	(())				-> erreur de parsing
-	( )					-> erreur de parsing
-	(ls)				-> 'ls'
-	((ls))				-> 'ls'
-	()ls				-> erreur de parsing
-	()ls()				-> erreur de parsing
-	()l()s				-> erreur de parsing
-	echo o&&&ls			-> 'echo o && &ls'
-	echo o|||ls			-> erreur de parsing
-	()()()				-> erreur de parsing
-	&|&

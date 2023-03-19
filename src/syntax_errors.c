@@ -6,11 +6,33 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/17 04:03:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/19 16:39:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
+
+bool	has_parenthesis_not_closed(const char *input)
+{
+	size_t	depth;
+	int		i;
+
+	depth = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '(' && input[i + 1] == ')')
+			return (true);
+		else if (input[i] == '\"' || input[i] == '\'')
+			i += skip_quotes(input + i);
+		else if (input[i] == '(')
+			depth++;
+		else if (input[i] == ')')
+			depth--;
+		i++;
+	}
+	return (depth != 0);
+}
 
 bool	quotes_not_closed(const char *input)
 {

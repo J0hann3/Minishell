@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/15 02:16:37 by qthierry         ###   ########.fr        #
+#    Updated: 2023/03/19 16:29:56 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC_LIST =	main.c \
 			parsing_utils.c \
 			ast.c \
 			ast_utils.c \
+			parsing_parenthesis.c \
 			utils.c
 
 SRC_DIR = ./src/
