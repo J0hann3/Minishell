@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/20 18:38:23 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/20 19:36:53 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,20 +20,23 @@ HEADERS_LIST = minishell.h builtins.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
-SRC_LIST = echo.c \
-			env.c \
-			export.c \
+BUILTINS = builtins/
+
+SRC_LIST =  ${BUILTINS}echo.c \
+			${BUILTINS}env.c \
+			${BUILTINS}export.c \
+			${BUILTINS}exit.c \
+			${BUILTINS}pwd.c \
+			${BUILTINS}unset.c \
+			${BUILTINS}cd.c \
 			ft_calloc.c \
 			ft_strdup.c \
 			ft_strlen.c \
 			main.c \
-			pwd.c \
 			utils.c \
-			unset.c \
-			cd.c \
 			init.c \
 			ft_atouc.c \
-			exit.c
+			error.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -53,6 +56,7 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADERS) Makefile
 	
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)$(BUILTINS)
 
 clean:
 	rm -rf $(OBJ_DIR)

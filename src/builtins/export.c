@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 18:08:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 20:01:10 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static int	is_valid_name(char *str, t_env_info	*env)
 			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
 			{
 				env->error = 1;		//error
+				ft_write_error("export", str, "not a valid identifier");		//need '' around str
 				return (0);
 			}
 			else if (str[i] == '=')
@@ -135,7 +136,7 @@ static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
 	elem_add = 0;
 	while (elem_add < len_arg || arg[i] != NULL)
 	{
-		printf("str = %s\n", arg[i]);
+		// printf("str = %s\n", arg[i]);
 		if (arg[i] == NULL)
 		{
 			++i;
@@ -188,7 +189,7 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
 	if (new == NULL)
 	{
-		env->error = 2;			// code error ??
+		env->error = 2;			// code error ?? + write ????
 		return (free_arg(arg, len_arg), NULL);
 	}
 	env->len_env = len_env + len_arg;

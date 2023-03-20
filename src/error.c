@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 20:07:04 by jvigny           ###   ########.fr       */
+/*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
+/*   Updated: 2023/03/20 19:36:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **envp)
+void	ft_write_error(char *command, char *argument, char *message)
 {
-	t_env_info *env;
-	argv[0] = "exit";
-	argv[argc - 1] = NULL;
-	
-	env = init_env((const char **)envp);
-	argv = init_arg((const char **)argv);
-	ft_cd(argv, env);
-	ft_exit(argv, env);
-	return (0);
+	write(2, "minishell: ", 11);
+	if (command != NULL)
+	{
+		write(2, command, ft_strlen(command));
+		write(2, ": ", 2);
+	}
+	if (argument != NULL)
+	{
+		write(2, argument, ft_strlen(argument));
+		write(2, ": ", 2);
+	}
+	if (message != NULL)
+		write(2, message, ft_strlen(message));
+	write(2, "\n", 1);
 }

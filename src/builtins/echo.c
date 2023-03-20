@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 18:08:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 19:53:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ void	ft_echo(const char **arg, const t_env_info	*env)
 			}
 		}
 		check_option = 0;
-		printf("%s", arg[i]);
+		write(1, arg[i], ft_strlen(arg[i]));
 		if (arg[++i] != NULL)
-			printf(" ");
+			write(1, " ", 1);
+
 	}
 	if (option == 1)
-		printf("\n");
+		write(1, "\n", 1);
 }

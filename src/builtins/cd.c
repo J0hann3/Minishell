@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 18:09:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 19:51:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ static void	update_env(char **env, char *str)
  * 
  * @param arg char ** first arg -> cd second arg ->Path more -> ERROR
  * @param env 
- * @return int 
+ * @return int sucess ->0 else 1
  */
 int	ft_cd(char **arg, t_env_info	*env)
 {
@@ -123,6 +123,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 	if (arg[2] != NULL)
 	{
 		env->error = 1;		//code error
+		ft_write_error("cd", NULL, "too many arguments");
 		return (1);
 	}
 	if (arg[1][0] != '/')
@@ -132,7 +133,8 @@ int	ft_cd(char **arg, t_env_info	*env)
 	if (path == NULL)
 	{
 		env->error = 2;		//code error ??
-		return(perror("Error"), printf("NULL\n"), 1);		// need to free something
+		ft_write_error("cd", arg[1], strerror(errno));
+		return(1);		// need to free something
 	}
 	// len = ft_strlen(path);
 	// printf("PATH [%ld] : %s\n", ft_strlen(path), path);
@@ -142,7 +144,8 @@ int	ft_cd(char **arg, t_env_info	*env)
 	if (chdir(path) == -1)
 	{
 		env->error = 1;		//code error
-		return(perror("Error"), free(path), 1);		// need to free something
+		ft_write_error("cd", arg[1], strerror(errno));
+		return(free(path), 1);		// need to free something
 	}
 	update_env(env->env, path);
 	return (0);

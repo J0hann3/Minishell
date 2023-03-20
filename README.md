@@ -101,7 +101,7 @@ builtins:
 ◦ cd with only a relative or absolute path		|	Done
 ◦ export with no options						|	Done	-> dont works in pipe
 ◦ unset with no options							|	Done	-> dont works in pipe
-◦ exit with no options							|
+◦ exit with no options							|	Done
 
 
 EXIT STATUS :
