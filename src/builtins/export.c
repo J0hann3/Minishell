@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 14:20:47 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 18:08:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ static void	ft_copy(char **dest, char **src)
  * search for valid name, sign = and valid value
  * begin with letters or underscore
  * can only contain letters numbers and underscores
- * return 1 if invalid name
+ * return 1 if valid name
 */
-static int	is_valid_name(char *str)
+static int	is_valid_name(char *str, t_env_info	*env)
 {
 	int	i;
 	int	equal;
@@ -54,7 +54,10 @@ static int	is_valid_name(char *str)
 		if (is_alpha(str[i]) || str[i] == '_' || str[i] == '=' || is_digit(str[i]))
 		{
 			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
+			{
+				env->error = 1;		//error
 				return (0);
+			}
 			else if (str[i] == '=')
 			{
 				equal = 1;
@@ -71,7 +74,7 @@ static int	is_valid_name(char *str)
 		return (0);
 }
 
-static int	trim_invalid_varible(char **arg)
+static int	trim_invalid_varible(char **arg, t_env_info	*env)
 {
 	int	suppr;
 	int	i;
@@ -80,8 +83,8 @@ static int	trim_invalid_varible(char **arg)
 	suppr = -1;
 	while (arg[i] != NULL)
 	{
-		printf("%s is valid : %d\n", arg[i], is_valid_name(arg[i]));
-		if (!is_valid_name(arg[i]))
+		// printf("%s is valid : %d\n", arg[i], is_valid_name(arg[i]));
+		if (!is_valid_name(arg[i], env))
 		{
 			free(arg[i]);
 			arg[i] = NULL;
@@ -113,7 +116,7 @@ int	is_variable_existing(char **env, char *str, int len_env)
 		}
 		++i;
 	}
-	return (0);
+	return (-1);
 }
 
 static void	modifie_var(char **env, char *str, int len)
@@ -139,7 +142,7 @@ static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
 			continue ;
 		}
 		var_exist = is_variable_existing(env, arg[i], len_env);
-		if (var_exist)
+		if (var_exist != -1)
 		{
 			modifie_var(env, arg[i], var_exist);
 			++i;
@@ -169,28 +172,33 @@ static void	free_arg(char **arg, int len)
 	free(arg);
 }
 
-char	**export(char **arg, char **env)
+t_env_info	*ft_export(char **arg, t_env_info	*env)
 {
 	int		len_env;
 	int		len_arg;
 	char	**new;
 
-	len_arg = trim_invalid_varible(arg);
+	len_arg = trim_invalid_varible(arg, env);
 	if (len_arg < 0)		//not sure it's can happened
 		return (free_arg(arg, len_arg), NULL);
 	if (len_arg == 0)
-		return (free_arg(arg,len_arg), env);
-	len_env = ft_len(env);
+		return (free_arg(arg, len_arg), env);
+	len_env = ft_len(env->env);
 	// printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
 	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
 	if (new == NULL)
-		return (free_arg(arg,len_arg), NULL);
-	ft_copy(new, env);
-	free(env);
+	{
+		env->error = 2;			// code error ??
+		return (free_arg(arg, len_arg), NULL);
+	}
+	env->len_env = len_env + len_arg;
+	ft_copy(new, env->env);
+	free(env->env);
 	add_new_variable(arg, new, len_arg, len_env);
 	free(arg[0]);
 	free(arg);
-	return (new);
+	env->env = new;
+	return (env);
 }
 
 /**

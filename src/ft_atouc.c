@@ -1,0 +1,49 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atouc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/15 13:32:21 by jvigny            #+#    #+#             */
+/*   Updated: 2023/03/20 18:53:33 by jvigny           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/**
+ * @brief convert char * in unsigned char
+ * 
+ * @param str char *: text to convert
+ * @return int sucess -> return unsigned char, else -> -1 if non_numeric value
+ */
+int	ft_atouc(const char *str)
+{
+	unsigned char	res;
+	int				i;
+	int				sign;
+
+	res = 0;
+	i = 0;
+	sign = 1;
+	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\r' || str[i] == '\n'
+		||str[i] == '\t' || str[i] == '\v')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		res = res * 10 + str[i] - '0';
+		i++;
+	}
+	if (str[i] != '\0')
+		return (-1);
+	if (sign != 1)
+		return (res * sign);
+	return (res);
+}

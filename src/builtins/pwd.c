@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/15 17:38:02 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 15:15:42 by jvigny           ###   ########.fr       */
+/*   Created: 2023/03/08 16:14:46 by jvigny            #+#    #+#             */
+/*   Updated: 2023/03/20 18:08:59 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	unset(char **arg, char **env)
+int	ft_pwd(char **arg, t_env_info	*env)
 {
-	int	i;
-	int	i_unset;
-	int	len_env;
+	char *str;
 
-	i = 1;
-	len_env = ft_len(env);
-	while (arg[i] != NULL)
+	(void)arg;
+	(void)env;
+	str = getcwd(NULL, 0);
+	if (str == NULL)
 	{
-		if (len_env == 0)
-			return (0);
-		i_unset = ft_getenv(env, arg[i]);
-		if (i_unset != 0)
-		{
-			free(env[i_unset]);
-			env[i_unset] = env[len_env - 1];
-			env[len_env - 1] = NULL;
-			len_env--;
-		}
-		++i;
+		env->error = 2;				//Not sure is the good error flag
+		return (perror("Error"), 1);
 	}
+	printf("%s\n", str);
+	free(str);
 	return (0);
 }

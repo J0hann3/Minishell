@@ -6,12 +6,17 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 15:09:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 13:42:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief free char ** while != NULL
+ * 
+ * @param str terminate by NULL -> need to by free
+ */
 void	free_str(char **str)
 {
 	int	i;
@@ -41,6 +46,13 @@ int	is_digit(char c)
 	return (0);
 }
 
+/**
+ * @brief search str in the env
+ * 
+ * @param env char ** terminate by NULL ->where to search variable 
+ * @param str char * Name of variable to find
+ * @return int index where is find the variable, if not find return -1
+ */
 int	ft_getenv(char **env, char *str)
 {
 	int	i;
@@ -50,7 +62,7 @@ int	ft_getenv(char **env, char *str)
 	while (env[i] != NULL)
 	{
 		j = 0;
-		while (env[i][j] != 0)
+		while (env[i][j] != '\0')
 		{
 			if (env[i][j] == '=' && str[j] == '\0')
 				return (i);
@@ -62,5 +74,5 @@ int	ft_getenv(char **env, char *str)
 		}
 		++i;
 	}
-	return (0);
+	return (-1);
 }

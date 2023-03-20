@@ -1,10 +1,5 @@
 # Minishell
 
-~ == variable HOME in env
-
-cd ~ with HOME empty -> go nowhere
-if HOME is unset -> find a other way to go home
-
 grep e > outfile < infile
 grep e < infile > outfile
 grep e < infile < infile1
@@ -100,9 +95,10 @@ need to choose when to suppr arg for builtins
 
 builtins:
 ◦ echo with option -n							|	Done
-◦ pwd with no options							|	Done
+◦ pwd with no options							|	Done	->if getcwd return NULL, real steal print the current path even if parent folder is rm
+																real pwd don't use PWD variable
 ◦ env with no options or arguments				|	Done
-◦ cd with only a relative or absolute path		|
+◦ cd with only a relative or absolute path		|	Done
 ◦ export with no options						|	Done	-> dont works in pipe
 ◦ unset with no options							|	Done	-> dont works in pipe
 ◦ exit with no options							|

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/16 16:08:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 18:52:01 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 # define BUILTINS_H
 
 # include <stdint.h>
+# include <errno.h>
+
+typedef struct	s_env_info
+{
+	int		error;
+	int		len_env;
+	char	**env;
+}	t_env_info;
 
 // ----- Utils ------
 size_t	ft_strlen(const char *s);
@@ -25,15 +33,19 @@ int		is_digit(char c);
 int		is_variable_existing(char **env, char *str, int len_env);
 int		ft_len(char **str);
 int		ft_getenv(char **env, char *str);
+int		ft_atouc(const char *str);
 
 // ------Init ------
-char	**init_env(const char **env);
+t_env_info	*init_env(const char **env);
+char	**init_arg(const char **arg);
 
 // ------ Builtins -------
-void	echo(const char **arg, const char **env);
-void	env(char **arg, char **envp);
-char	**export(char **arg, char **env);
-int		pwd(char **arg, char **env);
-int		unset(char **arg, char **env);
-int		cd(char **arg,char **env);
+void	ft_echo(const char **arg, const t_env_info	*env);
+void	ft_env(char **arg, t_env_info	*env);
+t_env_info	*ft_export(char **arg, t_env_info	*env);
+int		ft_pwd(char **arg, t_env_info	*env);
+int		ft_unset(char **arg, t_env_info	*env);
+int		ft_cd(char **arg, t_env_info	*env);
+void	ft_exit(char **arg, t_env_info *env);
+
 #endif
