@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/19 16:39:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:35:29 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,11 @@ bool	has_argument_left(const char *start_input, char *op_ptr)
 		tmp--;
 		if (*tmp == '(')
 			return (false);
-		if (!is_meta_character(*tmp) && !is_wspace(*tmp))
+		if (tmp != start_input && is_double_meta(tmp - 1))
+			return (false);
+		if (is_single_meta(tmp))
+			return (false);
+		else if (!is_wspace(*tmp))
 			return (true);
 	}
 	return (false);
@@ -77,11 +81,11 @@ bool	has_argument_right(char *op_ptr)
 	{
 		if (*op_ptr == ')')
 			return (false);
-		if (!is_meta_character(*op_ptr) && !is_wspace(*op_ptr))
-			return (1);
-		if (is_meta_character(*op_ptr))
-			return (0);
+		if (is_double_meta(op_ptr) || is_single_meta(op_ptr))
+			return (false);
+		else if (!is_wspace(*op_ptr))
+			return (true);
 		op_ptr++;
 	}
-	return (0);
+	return (false);
 }

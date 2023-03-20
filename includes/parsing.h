@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/19 16:39:26 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 17:39:07 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ bool	is_meta_character(char c);
 size_t	skip_quotes(const char *input);
 bool	is_and_or(const char *input);
 size_t	skip_parenthesis(const char *input);
+bool	is_and(const char *input);
+bool	is_single_meta(const char *c);
+bool	is_double_meta(const char *c);
 
 // syntax_errors
 bool	has_parenthesis_not_closed(const char *input);

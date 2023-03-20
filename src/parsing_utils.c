@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:59:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/19 16:31:53 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:51:57 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,31 @@ bool	is_meta_character(char c)
 	return (ft_strchr("<>|&", c) != 0);
 }
 
+bool	is_single_meta(const char *c)
+{
+	return (
+		(*c == '|' && *(c + 1) != '|')
+		|| (*c == '>' && *(c + 1) != '>')
+		|| (*c == '<' && *(c + 1) != '<'));
+}
+
+bool	is_double_meta(const char *c)
+{
+	return (
+		(*c == '|' && *(c + 1) == '|')
+		|| (*c == '&' && *(c + 1) == '&')
+		|| (*c == '>' && *(c + 1) == '>')
+		|| (*c == '<' && *(c + 1) == '<'));
+}
+
 bool	is_wspace(int c)
 {
 	return (c == ' ' || c == '\t');
+}
+
+bool	is_and(const char *input)
+{
+	return (*input == '&' && *(input + 1) == '&');
 }
 
 bool	is_and_or(const char *input)

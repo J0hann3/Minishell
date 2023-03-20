@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/19 17:41:56 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:51:55 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	remove_useless_parenthesis(char **input)
 	while (string[i])
 	{
 		if (string[i] == '\"' || string[i] == '\'')
-			i += skip_quotes(string);
+			i += skip_quotes(string + i);
 		else if (string[i] == '(')
 		{
 			if (!is_useful_parenthesis(string + i))
@@ -106,9 +106,7 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 
 	while (is_wspace(*input))
 		input++;
-	has_op_left = false;
-	if (*input == '(')
-		has_op_left = true;
+	has_op_left = (*input == '(');
 	i = 0;
 	while (input[i])
 	{
@@ -118,9 +116,11 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 			return (true);
 		else if (input[i] == ')' && has_error_op_par_right(input + i))
 			return (true);
-		else if (is_and_or(input + i) || input[i] == '|' || input[i] == '(')
+		else if (is_and_or(input + i))
 			has_op_left = ++i;
-		else if (!is_wspace(input[i]))
+		else if (is_single_meta(input + i))
+			has_op_left = 1;
+		else if (!is_wspace(input[i]) && input[i] != '(')
 			has_op_left = false;
 		i++;
 	}
