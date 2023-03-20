@@ -26,3 +26,7 @@ Parsing :
 	"&&" et "||" : besoin argument des deux cotés
 	"<" et ">" droite uniquement
 	"<<" et ">>" droite uniquement
+
+erreurs : 
+echo (   )
+&|&

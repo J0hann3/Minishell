@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 18:42:27 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 19:34:44 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ int	syntax_errors(char *input)
 {
 	size_t	i;
 
-	if (eq(input, "exit") == 1) // temp
-		free(input), exit(EXIT_SUCCESS);
 	if (quotes_not_closed(input))
 		return (2);
 	if (has_parenthesis_not_closed(input))

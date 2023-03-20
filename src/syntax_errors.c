@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 18:35:29 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/20 19:14:36 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,21 @@ bool	has_parenthesis_not_closed(const char *input)
 {
 	size_t	depth;
 	int		i;
+	int		j;
 
 	depth = 0;
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '(' && input[i + 1] == ')')
-			return (true);
-		else if (input[i] == '\"' || input[i] == '\'')
+		if (input[i] == '(')
+		{
+			j = 1;
+			while (is_wspace(input[i + j]))
+				j++;
+			if (input[i + j] == ')')
+				return (true);
+		}
+		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i);
 		else if (input[i] == '(')
 			depth++;
