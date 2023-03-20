@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/18 17:39:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/20 13:05:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,8 +264,8 @@ static void	update_env(char **env, char *str)
 int	cd(char **arg,char **env)
 {
 	char	*path;
-	int		len_path;
-	int		len;
+	// int		len_path;
+	// int		len;
 
 	if (arg[1] == NULL)
 		return (0);
@@ -275,14 +275,17 @@ int	cd(char **arg,char **env)
 		path = find_absolute_path(arg[1]);
 	else
 		path = ft_strdup(arg[1]);
-	len = ft_strlen(path);
+	if (path == NULL)
+		return(printf("NULL\n"), 1);		// need to free something
+
+	// len = ft_strlen(path);
 	printf("PATH [%ld] : %s\n", ft_strlen(path), path);
-	len_path = canonical_form(path);
-	add_first_slash(path, len_path, len);
-	path = clean_path(path, len_path);
-	update_env(env, path);
+	// len_path = canonical_form(path);
+	// add_first_slash(path, len_path, len);
+	// path = clean_path(path, len_path);
 	if (chdir(path) == -1)
-		perror("Error");
+		return(perror("Error"), 1);		// need to free something
+	update_env(env, path);
 	return (0);
 }
 
@@ -301,3 +304,4 @@ int	cd(char **arg,char **env)
  * 
  * 
  */
+
