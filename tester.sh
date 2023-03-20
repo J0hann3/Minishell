@@ -66,7 +66,8 @@ test_output()
 test()
 {
 	command="$1"
-	input=$(echo -en $command | ./minishell)
+	# input=$(echo -en $command | ./minishell)
+	input=$(echo -en $command | valgrind --error-exitcode=500 --log-file="/dev/null" ./minishell)
 	error_input=$(echo $?)
 	if [ "$flag" == "-p" ] || [ "$flag" == "-p2" ]; then
 		set_yellow
@@ -101,6 +102,11 @@ parsing_tests()
 	test "echo a && echo b" 0
 	test "&& echo b" 2
 	test "&&" 2
+	test "&|&" 0
+	test "echo a|" 2
+	test "|echo b" 2
+	test "&|echo a" 0
+	test "echo a|&" 0
 	test "'&&'" 0
 	test "echo a &&| echo b" 2
 	test "  echo   	a		&&	  echo  b      " 0
