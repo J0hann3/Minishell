@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 15:37:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 15:41:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	ft_exit(char **arg, t_env_info *env)
 
 	if (arg[1] == NULL)
 	{
-		free_str(arg);
 		free_str(env->env);
 		erreur = env->error;
 		free(env);
@@ -50,7 +49,6 @@ void	ft_exit(char **arg, t_env_info *env)
 		return ;
 	}
 	erreur = env->error;
-	free_str(arg);
 	free_str(env->env);
 	free(env);
 	write(2, "exit\n", 5);

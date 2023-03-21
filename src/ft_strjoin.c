@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 15:20:47 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 17:41:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	*ft_strjoin(char *s1, char const *s2)
 		len++;
 	}
 	res[j] = 0;
-	free(s1);
 	return (res);
 }
 
@@ -78,6 +77,5 @@ char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 		len++;
 	}
 	res[j] = 0;
-	free(s1);
 	return (res);
 }

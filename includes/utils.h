@@ -6,14 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 15:18:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 15:59:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-// ----- Utils ------
 size_t	ft_strlen(const char *s);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strdup(const char *s);
@@ -28,5 +27,6 @@ void	ft_write_error(char *command, char *argument, char *message);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3);
+int		ft_strcmp(const char *s1, const char *s2);
 
 #endif

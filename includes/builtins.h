@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 14:33:07 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 17:16:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@ int			ft_pwd(char **arg, t_env_info	*env);
 int			ft_unset(char **arg, t_env_info	*env);
 int			ft_cd(char **arg, t_env_info	*env);
 void		ft_exit(char **arg, t_env_info *env);
+
+char		*find_absolute_path(char *str);
 
 #endif

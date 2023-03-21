@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/08 16:14:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 17:44:27 by jvigny           ###   ########.fr       */
+/*   Created: 2022/10/15 13:52:48 by jvigny            #+#    #+#             */
+/*   Updated: 2023/03/21 15:59:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(char **arg, t_env_info	*env)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	*str;
-	char	*tmp;
+	size_t	i;
 
-	(void)arg;
-	(void)env;
-	str = getcwd(NULL, 0);
-	if (str == NULL)
-	{
-		env->error = 2;				//Not sure is the good error flag
-		ft_write_error("pwd", NULL, strerror(errno));			//Not sure is the good write
-		return (2);
-	}
-	tmp = str;
-	str = ft_strjoin(str, "\n");
-	free(tmp);
-	write(1, str, ft_strlen(str));
-	free(str);
-	return (0);
+	i = 0;
+	while (s1[i] != 0 && (unsigned char)s1[i] == (unsigned char)s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
