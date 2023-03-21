@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 13:32:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 18:53:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 14:23:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 /**
  * @brief convert char * in unsigned char
  * 
- * @param str char *: text to convert
- * @return int sucess -> return unsigned char, else -> -1 if non_numeric value
+ * @param str char *: text to convert in unsigned char
+ * @return int: sucess -> return unsigned char, else -> -1 if non_numeric value or not decimal
  */
 int	ft_atouc(const char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 20:24:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 14:28:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
  * 
  */
 
-static char	*ft_strjoin(char *s1, char *s2, int add_slash)
+static char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 {
 	char	*res;
 	size_t	len;
@@ -76,7 +76,7 @@ char *find_absolute_path(char *str)
 	len = ft_strlen(pwd);
 	if (len != 0 && pwd[len - 1] != '/')
 		add_slash = 1;
-	path = ft_strjoin (pwd, str, add_slash);
+	path = ft_strjoin_slash(pwd, str, add_slash);
 	free(pwd);
 	return (path);
 }

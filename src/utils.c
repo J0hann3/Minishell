@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 13:42:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 14:21:53 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * @brief free char ** while != NULL
  * 
- * @param str terminate by NULL -> need to by free
+ * @param str char **: terminate by NULL -> need to by free
  */
 void	free_str(char **str)
 {
@@ -49,8 +49,8 @@ int	is_digit(char c)
 /**
  * @brief search str in the env
  * 
- * @param env char ** terminate by NULL ->where to search variable 
- * @param str char * Name of variable to find
+ * @param env char **: terminate by NULL ->where to search variable 
+ * @param str char *: Name of variable to find
  * @return int index where is find the variable, if not find return -1
  */
 int	ft_getenv(char **env, char *str)

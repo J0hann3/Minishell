@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 17:30:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 14:22:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /**
  * @brief	malloc struct and copy env with malloc
- * 			init error = 0
+ * 			init error and len_env
  * @param env char ** to copy, NULL terminate
  * @return t_env_info * if succes, else return NULL ->error = 2
  */

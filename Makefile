@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/20 20:19:36 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/21 15:09:20 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,28 +16,35 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g #-Werror
 INCLUDES = -I$(HEADERS_DIR) -lreadline
 
-HEADERS_LIST = minishell.h builtins.h
+HEADERS_LIST = minishell.h builtins.h utils.h exec.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
-BUILTINS = builtins/
+EXECUTION = execution/
+SRC_EXECUTION =	exec.c
 
-SRC_LIST =  ${BUILTINS}echo.c \
-			${BUILTINS}env.c \
-			${BUILTINS}export.c \
-			${BUILTINS}exit.c \
-			${BUILTINS}pwd.c \
-			${BUILTINS}unset.c \
-			${BUILTINS}cd.c \
-			ft_calloc.c \
+BUILTINS = builtins/
+SRC_BUILTINS =	echo.c \
+				env.c \
+				export.c \
+				exit.c \
+				pwd.c \
+				unset.c \
+				cd.c \
+
+SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
 			ft_strlen.c \
-			main.c \
-			utils.c \
-			init.c \
 			ft_atouc.c \
+			ft_split.c \
+			ft_strjoin.c \
+			utils.c
+
+SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
+			$(SRC_UTILS) \
+			main.c \
 			error.c \
-			ft_split.c
+			init.c \
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
