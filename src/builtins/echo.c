@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 19:53:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:12:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	is_option(const char *str)
 	return (1);
 }
 
-void	ft_echo(const char **arg, const t_env_info	*env)
+void	ft_echo(char **arg, const t_env_info	*env)
 {
 	int	i;
 	int	option;
@@ -58,4 +58,5 @@ void	ft_echo(const char **arg, const t_env_info	*env)
 	}
 	if (option == 1)
 		write(1, "\n", 1);
+	free_str(arg);
 }

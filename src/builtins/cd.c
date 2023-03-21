@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 14:28:05 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:10:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 		return(free(path), 1);		// need to free something
 	}
 	update_env(env->env, path);
+	free_str(arg);
 	return (0);
 }
 

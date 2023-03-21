@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 17:59:47 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:12:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	is_builtins(char **arg, t_env_info *env)
 {
 	if (ft_strcmp(arg[1], "echo") != 0)
-		return (ft_echo((const char **)arg, (const t_env_info *)env), 1);
+		return (ft_echo(arg, (const t_env_info *)env), 1);
 	if (ft_strcmp(arg[1], "cd") != 0)
 		return (ft_cd(arg, env), 1);
 	if (ft_strcmp(arg[1], "pwd") != 0)
@@ -58,9 +58,10 @@ static char	*explore_path(char *name, char *env_path)
 		path = ft_strjoin(name, var_path[i]);
 		if (path == NULL)
 		{
-				//code error
+			++i;
+			continue ;	//code error
 		}
-		if (access(path, F_OK) == 0)
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
 			return (free_str(var_path), path);
 		free(path);
 		++i;
@@ -109,4 +110,9 @@ void	exec(t_instruction *inst, t_env_info *env)
 		if (path == NULL)
 			return ;
 	}
+	else
+		return ;
+	
+
+	free(path);
 }

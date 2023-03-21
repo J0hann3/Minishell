@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 15:41:14 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:11:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_exit(char **arg, t_env_info *env)
 	if (arg[1] == NULL)
 	{
 		free_str(env->env);
+		free_str(arg);
 		erreur = env->error;
 		free(env);
 		write(2, "exit\n", 5);
@@ -45,11 +46,13 @@ void	ft_exit(char **arg, t_env_info *env)
 	else if (arg[2] != NULL)
 	{
 		ft_write_error("exit", NULL, "too many arguments");
+		free_str(arg);
 		env->error = 1;
 		return ;
 	}
 	erreur = env->error;
 	free_str(env->env);
+	free_str(arg);
 	free(env);
 	write(2, "exit\n", 5);
 	exit(erreur);
