@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 17:38:02 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 18:09:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 15:23:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * 
  * @param arg variable to free
  * @param env 
- * @return int 0 on sucess
+ * @return int: 0 on sucess
  */
 int	ft_unset(char **arg, t_env_info	*env)
 {

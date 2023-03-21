@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 14:32:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 15:18:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		ft_getenv(char **env, char *str);
 int		ft_atouc(const char *str);
 void	ft_write_error(char *command, char *argument, char *message);
 char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char const *s2);
+char	*ft_strjoin3(char *s1, char const *s2, char const *s3);
 
 #endif
