@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/21 15:59:45 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/21 18:21:02 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
-SRC_EXECUTION =	exec.c
+SRC_EXECUTION =	exec_command.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
@@ -42,6 +42,7 @@ SRC_UTILS = ft_calloc.c \
 			utils.c
 
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
+			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
 			$(SRC_UTILS) \
 			main.c \
 			error.c \
@@ -66,6 +67,7 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADERS) Makefile
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)$(BUILTINS)
+	mkdir -p $(OBJ_DIR)$(EXECUTION)
 
 clean:
 	rm -rf $(OBJ_DIR)

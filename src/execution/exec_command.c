@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 18:12:24 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/21 18:25:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static char	*explore_path(char *name, char *env_path)
 	int		i;
 
 	i = 0;
-	var_path = ft_split(env_path, ":");
+	var_path = ft_split(env_path, ':');
 	while (var_path[i] != NULL)
 	{
 		path = ft_strjoin(name, var_path[i]);
@@ -84,7 +84,7 @@ static char	*find_path_command(char *str, t_env_info *env)
 		return (path);
 	}
 	i_path = ft_getenv(env->env, "PATH");
-	if (i_path = -1)
+	if (i_path == -1)
 	{
 		env->error = 1;			//code error au pif
 		return (NULL);
@@ -95,6 +95,7 @@ static char	*find_path_command(char *str, t_env_info *env)
 void	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
+	// int		pid;
 
 	if (inst == NULL || inst->command == NULL)
 	{
@@ -104,15 +105,20 @@ void	exec(t_instruction *inst, t_env_info *env)
 	if (inst->command[0] == NULL)
 		return ;
 	//need to do redirection now
-	if (is_builtins(inst->command[0], env) == 0)
+	if (is_builtins(inst->command, env) != 0)
 	{
-		path = find_path_command(inst->command[0], env);
-		if (path == NULL)
-			return ;
-	}
-	else
 		return ;
-	
+	}
+	path = find_path_command(inst->command[0], env);
+	if (path == NULL)
+	{
+		env->error = 127;		//commmand not found
+		ft_write_error(NULL, inst->command[0], "command not found");
+		return ;
+	}
+	// pid = fork();
+	printf("PATH: %s\n",path);
+
 
 	free(path);
 }
