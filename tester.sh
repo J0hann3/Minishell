@@ -66,8 +66,8 @@ test_output()
 test()
 {
 	command="$1"
-	input=$(echo -en $command | ./minishell)
-	# input=$(echo -en $command | valgrind --error-exitcode=500 --log-file="/dev/null" ./minishell)
+	#input=$(echo -en $command | ./minishell)
+	input=$(echo -en $command | valgrind --error-exitcode=500 --log-file="/dev/null" ./minishell)
 	error_input=$(echo $?)
 	if [ "$flag" == "-p" ] || [ "$flag" == "-p2" ]; then
 		set_yellow

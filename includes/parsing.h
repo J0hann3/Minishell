@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 17:39:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:21:23 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_ast	*ast_new_node(char *command);
 
 // ast.c
 char	**parse_args(char *input);
-t_ast	*create_tree(char *input);
+t_ast	*create_tree(char *input, t_ast *parent);
 
 // parsing_parenthesis.c
 void	remove_useless_parenthesis(char **input);

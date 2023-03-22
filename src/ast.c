@@ -6,82 +6,96 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/15 17:49:22 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/22 01:23:07 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-char	*find_next_meta(const char *s)
+size_t	get_command_size(const char *input)
 {
-	size_t	i;
+	const char	*start;
 
-	i = 0;
-	while (s[i])
+	start = input;
+	while (*input)
 	{
-		if (is_meta_character(s[i]) && !(s[i] == '&' && s[i + 1] != '&'))
-			return ((char *)(s + i));
-		i++;
+		if (is_double_meta(input) || is_single_meta(input))
+			return (start - input);
+		input++;
 	}
-	return (NULL);
+	return (start - input);
 }
 
-void	print_size(char *deb, int size)
-{
-	printf("printing :\n");
-	for (int i = 0; i < size; i++)
-	{
-		printf("%c\n", deb[i]);
-	}
-}
 
-t_ast	*build_node(char *command, size_t size)
+t_ast	*create_tree(char *input, t_ast *parent)
 {
 	t_ast	*node;
 
-	node = ast_new_node(command);
-	if (!node)
-		return (NULL);
-	node->size = size;
+	//node create
+	if (!is_sub_tree(input)) // if has not operator next to
+	{
+		return (create_leaf(input));
+	}
+	node->left = create_tree(input, node);
+	node->meta = get_meta();
+	node->right = create_tree(input + x, node);
 	return (node);
 }
 
-char	**parse_args(char *input)
-{
-	char	*cursor;
-	char	*prev_cursor;
-	size_t	i;
-	size_t	j;
+// si parentheses : create tree
+// sinon create leaf
 
-	i = 0;
-	j = 0;
-	cursor = input;
-	prev_cursor = cursor;
-	while (1)
-	{
-		cursor = find_next_meta(cursor);
-		if (!cursor)
-			break ;
-		// print_size(prev_cursor, cursor - prev_cursor);
-		cursor++;
-		if (*cursor == *(cursor - 1))
-			cursor++;
-		prev_cursor = cursor;
-	}
-	return (NULL);
-}
+// a -> create leaf return
+// && prend a comme left puis creer leaf b, pui return
+// create leaf b
 
-t_ast	*create_tree(char *input)
-{
-	//t_ast	*ast;
-	//char	**args;
 
-	//args = parse_args(input);
-	//if (!args)
-	//	return (NULL);
-	
-	
 
-	return (NULL);
-	//return (ast);
-}
+
+
+
+
+
+//t_ast	*create_tree(char *input, t_ast *parent)
+//{
+//	t_ast	*node;
+//	char	*cur_command;
+
+//	cur_command = NULL;
+
+//	while (*input)
+//	{
+//		if (*input == '(')
+//		{
+//			//create_tree(input, node);
+//		}
+//		else if (is_double_meta(input) || is_single_meta(input))
+//		{
+//			node = ast_new_node(NULL);
+//			if (!node)
+//				return (NULL); // secure free
+//			node->meta = get_meta_type(input);
+//			node->size = get_meta_size(node->meta);
+//			node->parent = NULL;
+
+//		}
+//		else if (!is_wspace(*(input)))
+//		{
+//			node = ast_new_node(input);
+//			if (!node)
+//				return (NULL); // secure free
+//			node->size = get_command_size(input);
+//			node->parent = parent;
+//			node->meta = e_empty;
+//			return (node);
+//		}
+//	}
+//	return (node);
+//}
+
+// si parentheses : create tree
+// sinon create leaf
+
+// a -> create leaf return
+// && prend a comme left puis creer leaf b, pui return
+// create leaf b
