@@ -117,3 +117,14 @@ The return status of and and or lists is the exit status of the last command exe
 
 if value is not given it's assigned a null string
 variable value : null string is a valid value
+
+
+
+
+
+1. WIFEXITED(status): child exited normally 
+• WEXITSTATUS(status): return code when child exits
+2. WIFSIGNALED(status): child exited because a signal was not caught 
+• WTERMSIG(status): gives the number of the terminating signal
+3. WIFSTOPPED(status): child is stopped 
+• WSTOPSIG(status): gives the number of the stop signal

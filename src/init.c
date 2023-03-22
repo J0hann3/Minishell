@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 14:22:24 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 19:35:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,12 @@ t_env_info	*init_env(const char **env)
 char	**init_arg(const char **arg)
 {
 	int		i;
+	int		j;
 	int		len;
 	char	**new;
 
 	i = 0;
+	j = 1;
 	len = 0;
 	while (arg[len] != NULL)
 	{
@@ -66,12 +68,13 @@ char	**init_arg(const char **arg)
 	printf("len_arg_init : %d\n", len);
 	if (new == NULL)
 		return (NULL);
-	while (i < len)
+	while (j < len)
 	{
-		new[i] = ft_strdup(arg[i]);
+		new[i] = ft_strdup(arg[j]);
 		if (new[i] == NULL)
 			return (free_str(new), NULL);
 		++i;
+		++j;
 	}
 	new[i] = NULL;
 	return (new);

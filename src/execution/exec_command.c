@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 18:28:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 20:09:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char	*explore_path(char *name, char *env_path)
 			++i;
 			continue ;	//code error
 		}
-		printf("TEST : %s\n", path);
+		// printf("TEST : %s\n", path);
 		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
 			return (free_str(var_path), path);
 		free(path);
@@ -128,11 +128,34 @@ static char	*find_path_command(char *str, t_env_info *env)
 	return (path);
 }
 
-void	exec(t_instruction *inst, t_env_info *env)
+void	redirection(t_instruction *inst, t_env_info *env)
+{
+	if (inst->infile != 0)
+		if (dup2(0, inst->infile) != 0)
+		{
+			env->error = 1;
+		}
+	if (inst->outfile != 0)
+		if (dup2(1, inst->outfile) != 0)
+		{
+			env->error = 1;
+		}
+	if (inst->outerror != 0)
+		if (dup2(2, inst->outerror) != 0)
+		{
+			env->error = 1;
+		}
+}
+
+void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 {
 	char	*path;
 	int		pid;
+	int		stat;
+	int		fildes[2];
 
+	// reset error before new commands
+	env->error = 0;
 	//Check command
 	if (inst == NULL)
 		return ;
@@ -142,8 +165,20 @@ void	exec(t_instruction *inst, t_env_info *env)
 		return ;
 
 	//if Pipe open pipe
-
+	if (operand == e_pipe_left)
+	{
+		if (pipe(fildes) != 0)
+		{
+			env->error = 1;
+			return ;
+		}
+		dup2(1, fildes[1]);
+	}
+	else if (operand == e_pipe_right)
+		dup2(0, fildes[0]);
+		
 	//Redirection
+	redirection(inst, env);
 	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
@@ -151,14 +186,26 @@ void	exec(t_instruction *inst, t_env_info *env)
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return ;
-	printf("PATH : %s\n",path);
-	pid = fork();
 	
 	//exec in fork or no ??
+	pid = fork();
+	if (pid == 0)
+	{
+		execve(path, inst->command, env->env);
+		return ;
+	}
 
 	//recup exit of function
+	waitpid(pid, &stat, 0);
+	free(path);
+	free_str(inst->command);
+	if (WIFEXITED(stat))
+	{
+		env->error = WEXITSTATUS(stat);
+		// printf("Exit status: %d\n", WEXITSTATUS(stat));
+	}
 	
-	//
+
 
 	
 
