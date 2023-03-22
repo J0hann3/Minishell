@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 18:25:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 18:28:46 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 static int	is_builtins(char **arg, t_env_info *env)
 {
-	if (ft_strcmp(arg[1], "echo") != 0)
+	if (ft_strcmp(arg[0], "echo") == 0)
 		return (ft_echo(arg, (const t_env_info *)env), 1);
-	if (ft_strcmp(arg[1], "cd") != 0)
+	if (ft_strcmp(arg[0], "cd") == 0)
 		return (ft_cd(arg, env), 1);
-	if (ft_strcmp(arg[1], "pwd") != 0)
+	if (ft_strcmp(arg[0], "pwd") == 0)
 		return (ft_pwd(arg, env), 1);
-	if (ft_strcmp(arg[1], "export") != 0)
+	if (ft_strcmp(arg[0], "export") == 0)
 		return (ft_export(arg, env), 1);
-	if (ft_strcmp(arg[1], "unset") != 0)
+	if (ft_strcmp(arg[0], "unset") == 0)
 		return (ft_unset(arg, env), 1);
-	if (ft_strcmp(arg[1], "env") != 0)
+	if (ft_strcmp(arg[0], "env") == 0)
 		return (ft_env(arg, env), 1);
-	if (ft_strcmp(arg[1], "exit") != 0)
+	if (ft_strcmp(arg[0], "exit") == 0)
 		return (ft_exit(arg, env), 1);
 	return (0);
 }
@@ -45,6 +45,26 @@ static int	contain_slash(char *str)
 	return (0);
 }
 
+static void	trim_name_var(char **str)
+{
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	while (str[0][i] != '\0')
+	{
+		if (str[0][i] == '=')
+		{
+			i++;
+			tmp = ft_strdup((char *)(str[0] + i));
+			free(str[0]);
+			str[0] = tmp;
+			return ;
+		}
+		++i;
+	}
+}
+
 static char	*explore_path(char *name, char *env_path)
 {
 	char	**var_path;
@@ -53,14 +73,19 @@ static char	*explore_path(char *name, char *env_path)
 
 	i = 0;
 	var_path = ft_split(env_path, ':');
+	trim_name_var(var_path);
 	while (var_path[i] != NULL)
 	{
-		path = ft_strjoin(name, var_path[i]);
+		if (var_path[i][ft_strlen(var_path[i]) - 1] != '/')
+			path = ft_strjoin3(var_path[i], "/", name);
+		else
+			path = ft_strjoin(var_path[i], name);
 		if (path == NULL)
 		{
 			++i;
 			continue ;	//code error
 		}
+		printf("TEST : %s\n", path);
 		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
 			return (free_str(var_path), path);
 		free(path);
@@ -81,7 +106,12 @@ static char	*find_path_command(char *str, t_env_info *env)
 			path = find_absolute_path(str);
 		else
 			path = ft_strdup(str);
-		return (path);
+		// printf("PATH TEST : %s\n", path);
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
+			return (path);
+		env->error = 127;
+		ft_write_error(NULL, str, strerror(errno));
+		return (free(path), NULL);
 	}
 	i_path = ft_getenv(env->env, "PATH");
 	if (i_path == -1)
@@ -89,36 +119,48 @@ static char	*find_path_command(char *str, t_env_info *env)
 		env->error = 1;			//code error au pif
 		return (NULL);
 	}
-	return (explore_path(str, env->env[i_path]));
+	path = explore_path(str, env->env[i_path]);
+	if (path == NULL)
+	{
+		env->error = 127;
+		ft_write_error(NULL, str, "command not found");
+	}
+	return (path);
 }
 
 void	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
-	// int		pid;
+	int		pid;
 
-	if (inst == NULL || inst->command == NULL)
-	{
-		env->error = 127;		//code error + need to print error
+	//Check command
+	if (inst == NULL)
 		return ;
-	}
+	if (inst->command == NULL)
+		return ;
 	if (inst->command[0] == NULL)
 		return ;
-	//need to do redirection now
-	if (is_builtins(inst->command, env) != 0)
-	{
+
+	//if Pipe open pipe
+
+	//Redirection
+	
+	//	Find Path
+	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
 		return ;
-	}
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-	{
-		env->error = 127;		//commmand not found
-		ft_write_error(NULL, inst->command[0], "command not found");
 		return ;
-	}
-	// pid = fork();
-	printf("PATH: %s\n",path);
+	printf("PATH : %s\n",path);
+	pid = fork();
+	
+	//exec in fork or no ??
 
+	//recup exit of function
+	
+	//
+
+	
 
 	free(path);
 }

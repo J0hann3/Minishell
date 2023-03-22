@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 14:20:06 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 16:16:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <errno.h>
 # include <string.h>
 # include "builtins.h"
-# include "exec.h"
 
 enum	e_meta_character
 {
@@ -49,5 +48,6 @@ typedef struct s_node
 	size_t					size;
 	enum e_meta_character	meta;
 }	t_node;
+
 
 #endif
