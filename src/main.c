@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 19:34:44 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/22 19:33:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,29 +33,28 @@ bool	has_error_for_meta(char *input, size_t i)
 void	remove_multiple_wspaces(char *input)
 {
 	char	*dest;
-	size_t	space_count;
-	char	quote;
+	char	*start;
+	size_t	space;
 
-	space_count = 1;
+	space = 1;
 	dest = input;
+	start = input;
 	while (*input)
 	{
 		if (*input == '\'' || *input == '\"')
 		{
-			quote = *input;
+			space = *input;
 			*dest++ = *input++;
-			while (*input && *input != quote)
+			while (*input != (char)space)
 				*dest++ = *input++;
-			*dest++ = *input++;
-			space_count = 0;
-			continue ;
 		}
-		space_count = (space_count + 1) * (*input == ' ' || *input == '\t');
-		if (space_count <= 1)
-			*dest++ = *input + ((' ' - '\t') * (*input == '\t'));
-		(input)++;
+		space = ((space + 1) * (*input++ == ' ' || *(input - 1) == '\t'));
+		if (space <= 1)
+			*dest++ = *(input - 1) + ((' ' - '\t') * (*(input - 1) == '\t'));
 	}
-	*(dest - (space_count >= 1 && ft_strlen(dest))) = 0;
+	*dest = 0;
+	while ((*dest == ' ' || !*dest) && dest != start)
+		*(dest--) = 0;
 }
 
 int	syntax_errors(char *input)
@@ -83,7 +82,7 @@ int	syntax_errors(char *input)
 	return (0);
 }
 
-int main(int argc, char *argv[], char *env[])
+int	main(int argc, char *argv[], char *env[])
 {
 	char	*input;
 	int		ret_err;
@@ -100,8 +99,7 @@ int main(int argc, char *argv[], char *env[])
 			break ;
 		add_history(input);
 		ret_err = syntax_errors(input);
-		printf("err : %d\n", ret_err);
-		parse_args(input);
+		create_tree(input);
 		free(input);
 	}
 	rl_clear_history();

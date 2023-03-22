@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/21 18:21:23 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:55:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ bool	eq(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
 
 // parsing_utils.c
+bool	is_operator(const char *c);
 bool	is_wspace(int c);
 bool	is_meta_character(char c);
 size_t	skip_quotes(const char *input);
@@ -56,11 +57,10 @@ bool	has_argument_right(char *op_ptr);
 bool	has_argument_left(const char *start_input, char *op_ptr);
 
 // ast_utils.c
-t_ast	*ast_new_node(char *command);
+t_ast	*create_node(const char *command);
 
 // ast.c
-char	**parse_args(char *input);
-t_ast	*create_tree(char *input, t_ast *parent);
+t_ast	*create_tree(char *input);
 
 // parsing_parenthesis.c
 void	remove_useless_parenthesis(char **input);

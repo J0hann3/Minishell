@@ -6,11 +6,31 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/22 01:23:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/22 20:11:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
+
+static enum e_meta_character	get_meta(char *input)
+{
+	if (is_operator(input))
+	{
+		if (is_and_or(input))
+		{
+			if (*input == '|')
+				return (e_or);
+			return (e_and);
+		}
+		else
+			return (e_pipe);
+	}
+	else
+	{
+		printf("error, not an operator !\n");
+		return (e_empty);
+	}
+}
 
 size_t	get_command_size(const char *input)
 {
@@ -26,76 +46,134 @@ size_t	get_command_size(const char *input)
 	return (start - input);
 }
 
-
-t_ast	*create_tree(char *input, t_ast *parent)
+t_ast	*create_leaf(const char *input)
 {
-	t_ast	*node;
+	t_ast		*node;
+	const char	*start;
+	
+	start = input;
+	node = create_node(input);
+	if (!node)
+		return (NULL);
 
-	//node create
-	if (!is_sub_tree(input)) // if has not operator next to
+	while (*input)
 	{
-		return (create_leaf(input));
+		if (*input == '\'' || *input == '\"')
+			input += skip_parenthesis(input);
+		else if (*input == ')' || is_operator(input))
+			break;
+		input++;
 	}
-	node->left = create_tree(input, node);
-	node->meta = get_meta();
-	node->right = create_tree(input + x, node);
+	node->size = input - start;
 	return (node);
 }
 
-// si parentheses : create tree
-// sinon create leaf
+t_ast	*create_op_node(char *input)
+{
+	t_ast	*node;
 
-// a -> create leaf return
-// && prend a comme left puis creer leaf b, pui return
-// create leaf b
+	while (*input == ' ')
+		input++;
+	node = create_node(NULL);
+	if (!node)
+		return (NULL);
+	if (is_operator(input))
+	{
+		node->meta = get_meta(input);
+		if (is_and_or(input))
+			node->size = 2;
+		else
+			node->size = 1;
+	}
+	return (node);
+}
 
 
+t_ast	*create_sub_tree(char *input, t_ast *child)
+{
+	t_ast	*left;
+
+	printf("rentre\n");
+	while (*input == ' ')
+		input++;
+	if (child)
+		left = child;
+	else if (*input == '(')
+	{
+		input ++;
+		left = create_sub_tree(input, NULL);
+	}
+	else
+	{
+		left = create_leaf(input);
+		input += left->size;
+	}
+	while (*input == ' ')
+		input++;
+	if (!*input || !is_operator(input))
+		return (left);
+
+	left->parent = create_op_node(input);
+	left->parent->left = left;
+	input += left->parent->size;
+
+	while (*input == ' ')
+		input++;
+	if (*input == '(')
+	{
+		left->parent->right = create_sub_tree(input, NULL);
+	}
+	else
+	{
+		left->parent->right = create_leaf(input);
+		input += left->parent->right->size;
+	}
+	// printf("parent : %d\n", left->parent->meta);
+	// if (left->parent->left->command)
+	// 	printf("left   : %s\n", left->parent->left->command);
+	// else
+	// 	printf("left   : %d\n", left->parent->left->meta);
+	// if (left->parent->right->command)
+	// 	printf("right   : %s\n", left->parent->right->command);
+	// else
+	// 	printf("right   : %d\n", left->parent->right->meta);
+	if (is_operator(input))
+	{
+		create_sub_tree(input, left->parent);
+	}
+	printf("end\n");
+	return (left->parent);
+}
 
 
+void	print_tree(t_ast *tree)
+{
+	if (!tree)
+		return ;
+	if (tree->left)
+	{
+		print_tree(tree->left);
+	}
+	if (tree->right)
+	{
+		print_tree(tree->right);
+	}
+	if (tree->command)
+	{
+		write(1, tree->command, tree->size);
+		printf("\n");
+	}
+	else
+		printf("%d\n", tree->meta);
+}
 
+t_ast	*create_tree(char *input)
+{
 
+	t_ast	*root;
 
+	root = create_sub_tree(input, NULL);
 
-//t_ast	*create_tree(char *input, t_ast *parent)
-//{
-//	t_ast	*node;
-//	char	*cur_command;
-
-//	cur_command = NULL;
-
-//	while (*input)
-//	{
-//		if (*input == '(')
-//		{
-//			//create_tree(input, node);
-//		}
-//		else if (is_double_meta(input) || is_single_meta(input))
-//		{
-//			node = ast_new_node(NULL);
-//			if (!node)
-//				return (NULL); // secure free
-//			node->meta = get_meta_type(input);
-//			node->size = get_meta_size(node->meta);
-//			node->parent = NULL;
-
-//		}
-//		else if (!is_wspace(*(input)))
-//		{
-//			node = ast_new_node(input);
-//			if (!node)
-//				return (NULL); // secure free
-//			node->size = get_command_size(input);
-//			node->parent = parent;
-//			node->meta = e_empty;
-//			return (node);
-//		}
-//	}
-//	return (node);
-//}
-
-// si parentheses : create tree
-// sinon create leaf
-
-// a -> create leaf return
-// && prend a comme left puis creer leaf b, pui return
-// create leaf b
+	print_tree(root);
+	return (NULL);
+}

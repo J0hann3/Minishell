@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:59:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 18:51:57 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/22 17:46:19 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 bool	is_meta_character(char c)
 {
 	return (ft_strchr("<>|&", c) != 0);
+}
+
+bool	is_operator(const char *c)
+{
+	return (is_and_or(c) || *c == '|');
 }
 
 bool	is_single_meta(const char *c)
