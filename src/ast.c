@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/23 02:22:31 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/23 18:06:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,29 @@ static enum e_meta_character	get_meta(char *input)
 		return (e_pipe);
 	}
 	return (e_empty);
+}
+
+static int	get_max_depth(t_ast	*root, int depth)
+{
+	if (!root)
+		return (depth + 1);
+	if (root->left)
+		return (get_max_depth(root->left, depth + 1));
+	if (root->right)
+		return (get_max_depth(root->left, depth + 1));
+	return (depth + 1);
+}
+
+static const char *meta_to_char(enum e_meta_character meta)
+{
+	if (meta == e_pipe)
+		return ("|");
+	if (meta == e_or)
+		return ("||");
+	if (meta == e_and)
+		return ("&&");
+	else
+		return ("");
 }
 
 size_t	get_command_size(const char *input)
@@ -53,12 +76,14 @@ t_ast	*create_leaf(const char *input)
 	while (*input)
 	{
 		if (*input == '\'' || *input == '\"')
-			input += skip_parenthesis(input);
+			input += skip_quotes(input);
 		else if (*input == ')' || is_operator(input))
 			break ;
 		input++;
 	}
 	node->size = input - start;
+	if (*(input - 1) == ' ')
+		node->size--;
 	return (node);
 }
 
@@ -102,7 +127,7 @@ t_ast	*create_sub_tree(char **input, t_ast *child)
 		(*input) += left->size;
 	}
 	while (**input == ' ')
-		input++;
+		(*input)++;
 	if (!**input || !is_operator(*input))
 		return (left);
 	left->parent = create_op_node(*input);
@@ -137,26 +162,32 @@ t_ast	*create_sub_tree(char **input, t_ast *child)
 	return (left->parent);
 }
 
-void	print_tree(t_ast *tree, int depth)
+void	print_tree(t_ast *tree, int depth, int max_depth)
 {
+	int	i;
+
 	if (!tree)
 		return ;
+	i = 0;
 	depth++;
 	if (tree->left)
-	{
-		print_tree(tree->left, depth);
-	}
+		print_tree(tree->left, depth, max_depth);
+	while(i++ < max_depth - (depth))
+		write(1, "\t\t", 2);
 	if (tree->command)
 	{
+		write(1, "[", 1);
 		write(1, tree->command, tree->size);
-		printf("(%d)\n", depth);
+		write(1, "]\n", 2);
 	}
 	else
-		printf("%d (%d)\n", tree->meta, depth);
-	if (tree->right)
 	{
-		print_tree(tree->right, depth);
+		write(1, "[", 1);
+		write(1, meta_to_char(tree->meta), tree->size);
+		write(1, "]\n", 2);
 	}
+	if (tree->right)
+		print_tree(tree->right, depth, max_depth);
 }
 
 t_ast	*create_tree(char *input)
@@ -164,6 +195,6 @@ t_ast	*create_tree(char *input)
 	t_ast	*root;
 
 	root = create_sub_tree(&input, NULL);
-	print_tree(root, 0);
+	print_tree(root, 0, get_max_depth(root, 0));
 	return (NULL);
 }
