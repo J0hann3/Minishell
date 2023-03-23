@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/15 01:24:21 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/23 00:19:19 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 enum	e_meta_character
 {
-	e_and = 0,
-	e_or,
+	e_empty = 0,
 	e_pipe,
-	e_empty
+	e_or,
+	e_and
 };
 
 typedef struct s_instruction
