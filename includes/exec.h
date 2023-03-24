@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:19:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:06:42 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:30:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ enum	e_boolean
 
 int		ft_pipe(t_env_info *env);
 void	exec(t_instruction *inst, t_env_info *env);
-// void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character operand, int status)
+void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character operand, int status);
 
 # endif

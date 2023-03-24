@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:05:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:35:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,18 @@
 // }
 
 
-int	main(int argc, char *argv[], char *env[])
+int	main(int argc, char *argv[], char *envp[])
 {
-	char	*input;
-	int		ret_err;
+	char		*input;
+	int			ret_err;
+	t_env_info	*env;
+	t_ast		*tree;
 
 	(void)argc;
 	(void)argv;
 	(void)env;
 	input = (char *)1;
+	env = init_env((const char **)envp);
 	ret_err = 0;
 	while (input != NULL)
 	{
@@ -69,7 +72,8 @@ int	main(int argc, char *argv[], char *env[])
 			break ;
 		add_history(input);
 		ret_err = syntax_errors(input);
-		create_tree(input);
+		tree = create_tree(input);
+		// explore_tree(tree, envp, e_empty, 0);
 		free(input);
 	}
 	rl_clear_history();

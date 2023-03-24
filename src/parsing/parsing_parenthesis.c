@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/24 18:21:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:41:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static bool	is_useful_parenthesis(const char *string)
 			i += skip_parenthesis(string + i);
 		else if (string[i] == ')')
 			break ;
-		else if (is_operator(string + i))
+		else if (is_and_or(string + i))
 		{
 			has_op = true;
 			break ;

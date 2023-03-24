@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/24 18:21:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:28:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,5 +194,5 @@ t_ast	*create_tree(char *input)
 
 	root = create_sub_tree(&input, NULL);
 	print_tree(root, 0, get_max_depth(root, 0));
-	return (NULL);
+	return (root);
 }
