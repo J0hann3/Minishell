@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 14:59:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 16:21:53 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,18 +163,16 @@ void	redirection(t_instruction *inst, t_env_info *env)
  * @param operand	create pipe if operand == e_pipe
  * @return int : pid of process on success, else -1
  */
-int	ft_pipe(t_env_info *env, enum e_meta_character operand)
+int	ft_pipe(t_env_info *env)
 {
 	int	fildes[2];
 	int	pid;
 	
-	if (operand == e_pipe)
+
+	if (pipe(fildes) != 0)
 	{
-		if (pipe(fildes) != 0)
-		{
-			env->error = 1;
-			return (-1);
-		}
+		env->error = 1;
+		return (-1);
 	}
 	pid = fork();
 	if (pid == -1)
@@ -196,14 +194,14 @@ int	ft_pipe(t_env_info *env, enum e_meta_character operand)
 	}
 }
 
-void	exec(t_instruction *inst, t_env_info *env)
+int	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
 	int		pid;
 	int		stat;
 
 	// reset error before new commands
-	env->error = 0;
+	// env->error = 0;
 	//Check command
 	if (inst == NULL)
 		return ;
@@ -217,22 +215,22 @@ void	exec(t_instruction *inst, t_env_info *env)
 	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
-		return ;
+		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return ;
+		return (env->error);
 	
 	//exec in fork or no ??
 	pid = fork();
 	if (pid == -1)
 	{
 		env->error = 1;
-		return ;
+		return (env->error);
 	}
 	if (pid == 0)
 	{
 		execve(path, inst->command, env->env);
-		return ;
+		return (env->error);
 	}
 
 	//recup exit of function
@@ -243,4 +241,5 @@ void	exec(t_instruction *inst, t_env_info *env)
 	{
 		env->error = WEXITSTATUS(stat);
 	}
+	return (env->error);
 }
