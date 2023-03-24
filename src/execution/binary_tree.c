@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 16:26:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 17:39:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 void	explore_tree(t_node *tree, t_env_info *env, enum e_meta_character operand, int status)
 {
+	char	**arg;
 	int	pid;
 	int	stat;
 
@@ -25,7 +26,10 @@ void	explore_tree(t_node *tree, t_env_info *env, enum e_meta_character operand, 
 		if (operand == e_and)
 		{
 			if (status == e_true)
-				exec(tree->command, env);
+			{
+				arg = parsing2(tree->command);
+				exec(arg, env);
+			}
 			else
 				return ; 
 			
@@ -33,7 +37,10 @@ void	explore_tree(t_node *tree, t_env_info *env, enum e_meta_character operand, 
 		else if (operand == e_or)
 		{
 			if (status == e_false)
-				exec(tree->command, env);
+			{
+				arg = parsing2(tree->command);
+				exec(arg, env);
+			}
 			else
 				return ;
 		}
@@ -42,20 +49,26 @@ void	explore_tree(t_node *tree, t_env_info *env, enum e_meta_character operand, 
 			pid = ft_pipe(env);			//ATTENTION need to close fd after use
 			if (pid == 0)
 			{
-				return (exec(tree->command, env));
+				arg = parsing2(tree->command);
+				exec(arg, env);
 			}
 			else
 				waitpid(pid, &stat, 0);
-				if (WIFEXITED(stat))
-					env->error = WEXITSTATUS(stat);
-				else 
-					env->error = 1;
-				explore_tree(tree->right, env, e_pipe, env->error);
+				// if (WIFEXITED(stat))
+				// 	env->error = WEXITSTATUS(stat);
+				// else 
+				// 	env->error = 1;
+				explore_tree(tree->right, env, e_pipe_right, 0);
+		}
+		else if (operand == e_pipe_right)
+		{
+			arg = parsing2(tree->command);
+			exec(arg, env);
 		}
 	}
 		
 	if (tree->meta != e_empty)
-		//changes operand to call function
-	explore_tree(tree->left, env);
-	explore_tree(tree->right, env);
+		operand = tree->meta;
+	explore_tree(tree->left, env, operand, status);
+	explore_tree(tree->right, env, operand, status);
 }
