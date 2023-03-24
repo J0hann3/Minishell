@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/23 18:06:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/24 16:25:56 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,8 @@ t_ast	*create_sub_tree(char **input, t_ast *child)
 	{
 		(*input)++;
 		left = create_sub_tree(input, NULL);
-		(*input) += left->size;
+		if (**input == ')')
+			(*input)++;
 	}
 	else
 	{
@@ -140,20 +141,17 @@ t_ast	*create_sub_tree(char **input, t_ast *child)
 		(*input)++;
 		left->parent->right = create_sub_tree(input, NULL);
 		if (**input == ')')
-		{
 			(*input)++;
-			return (left->parent);
-		}
 	}
 	else
 	{
 		left->parent->right = create_leaf(*input);
 		*input += left->parent->right->size;
-		if (**input == ')')
-		{
-			(*input)++;
-			return (left->parent);
-		}
+		//if (**input == ')')
+		//{
+		//	(*input)++;
+		//	return (left->parent);
+		//}
 	}
 	while (**input == ' ')
 		(*input)++;
