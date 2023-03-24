@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 14:44:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 14:59:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int	ft_pipe(t_env_info *env, enum e_meta_character operand)
 	}
 }
 
-void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
+void	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
 	int		pid;

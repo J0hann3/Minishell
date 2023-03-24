@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:19:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 16:15:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 15:00:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,8 @@
 
 # include "minishell.h"
 
-// enum	e_builtins
-// {
-// 	e_echo = 1,
-// 	e_cd,
-// 	e_pwd,
-// 	e_export,
-// 	e_unset,
-// 	e_env,
-// 	e_exit
-// };
-
 void	exec(t_instruction *inst, t_env_info *env);
+void	explore_tree(t_node *tree, t_env_info *env);
+
 
 # endif

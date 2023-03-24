@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/22 16:11:08 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/24 15:01:12 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
-SRC_EXECUTION =	exec_command.c
+SRC_EXECUTION =	exec_command.c \
+				binary_tree.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
