@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 18:51:55 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:31:51 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static bool	is_useful_parenthesis(const char *string)
 			i += skip_parenthesis(string + i);
 		else if (string[i] == ')')
 			break ;
-		else if (is_and_or(string + i))
+		else if (is_operator(string + i))
 		{
 			has_op = true;
 			break ;
