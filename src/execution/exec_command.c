@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 20:12:35 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 14:44:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,23 +128,72 @@ static char	*find_path_command(char *str, t_env_info *env)
 	return (path);
 }
 
+/**
+ * @brief make redirection before execution + error
+ * 
+ * [ATTENTION]	DON'T HAVE NAME OF FILE TO PRINT ERROR MESSSAGES
+ * 
+ * @param inst 
+ * @param env 
+ */
 void	redirection(t_instruction *inst, t_env_info *env)
 {
 	if (inst->infile != 0)
-		if (dup2(0, inst->infile) != 0)
+		if (dup2(inst->infile, 0) != 0)
 		{
 			env->error = 1;
 		}
 	if (inst->outfile != 0)
-		if (dup2(1, inst->outfile) != 0)
+		if (dup2(inst->outfile, 1) != 0)
 		{
 			env->error = 1;
 		}
 	if (inst->outerror != 0)
-		if (dup2(2, inst->outerror) != 0)
+		if (dup2(inst->outerror, 2) != 0)
 		{
 			env->error = 1;
 		}
+}
+/**
+ * @brief create and fork for execution
+ * child (pid==0)-> write permission
+ * parent (pid > 0) -> read permission and wait
+ * 
+ * @param env 	write erroor in env if necessary
+ * @param operand	create pipe if operand == e_pipe
+ * @return int : pid of process on success, else -1
+ */
+int	ft_pipe(t_env_info *env, enum e_meta_character operand)
+{
+	int	fildes[2];
+	int	pid;
+	
+	if (operand == e_pipe)
+	{
+		if (pipe(fildes) != 0)
+		{
+			env->error = 1;
+			return (-1);
+		}
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		env->error = 1;
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(fildes[0]);
+		dup2(fildes[1], 1);
+		return (pid);
+	}
+	else
+	{
+		close(fildes[1]);
+		dup2(fildes[0], 0);
+		return (pid);
+	}
 }
 
 void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
@@ -152,7 +201,6 @@ void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 	char	*path;
 	int		pid;
 	int		stat;
-	int		fildes[2];
 
 	// reset error before new commands
 	env->error = 0;
@@ -164,20 +212,6 @@ void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 	if (inst->command[0] == NULL)
 		return ;
 
-	//if Pipe open pipe
-	if (operand == e_pipe_left)
-	{
-		if (pipe(fildes) != 0)
-		{
-			env->error = 1;
-			return ;
-		}
-		dup2(1, fildes[1]);
-		close()
-	}
-	else if (operand == e_pipe_right)
-		dup2(0, fildes[0]);
-		
 	//Redirection
 	redirection(inst, env);
 	
@@ -190,6 +224,11 @@ void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 	
 	//exec in fork or no ??
 	pid = fork();
+	if (pid == -1)
+	{
+		env->error = 1;
+		return ;
+	}
 	if (pid == 0)
 	{
 		execve(path, inst->command, env->env);
@@ -203,12 +242,5 @@ void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 	if (WIFEXITED(stat))
 	{
 		env->error = WEXITSTATUS(stat);
-		// printf("Exit status: %d\n", WEXITSTATUS(stat));
 	}
-	
-
-
-	
-
-	free(path);
 }

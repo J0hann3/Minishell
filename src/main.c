@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 20:04:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 14:29:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ int main(int argc, char **argv, char **envp)
 	command.command = init_arg((const char **)argv);
 
 	exec(&command, env);
+	free_str(env->env);
 	exit(env->error);
+	free(env);
 	// ft_export(argv, env);
 	// while(1)
 	// {
@@ -47,7 +49,5 @@ int main(int argc, char **argv, char **envp)
 	// 	// free_str(argv);
 	// }
 	
-	// free_str(env->env);
-	// free(env);
 	return (0);
 }
