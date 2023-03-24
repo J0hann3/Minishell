@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 16:21:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:00:02 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,11 +204,11 @@ int	exec(t_instruction *inst, t_env_info *env)
 	// env->error = 0;
 	//Check command
 	if (inst == NULL)
-		return ;
+		return (-1);
 	if (inst->command == NULL)
-		return ;
+		return (-1);
 	if (inst->command[0] == NULL)
-		return ;
+		return (-1);
 
 	//Redirection
 	redirection(inst, env);

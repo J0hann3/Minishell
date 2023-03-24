@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/24 17:57:30 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/24 18:23:22 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,8 @@ HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
-SRC_EXECUTION =	exec_command.c \
-				binary_tree.c
+SRC_EXECUTION =	exec_command.c
+				# binary_tree.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
@@ -32,30 +32,31 @@ SRC_BUILTINS =	echo.c \
 				exit.c \
 				pwd.c \
 				unset.c \
-				cd.c \
+				cd.c
 
 SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
-			ft_strlen.c \
 			ft_atouc.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
 			utils.c
 
-SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
-			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
-			$(SRC_UTILS) \
-			main.c \
-			error.c \
-			init.c \
-			syntax_errors.c \
+PARSING = parsing/
+SRC_PARSING = syntax_errors.c \
 			parsing_utils.c \
 			ast.c \
 			ast_utils.c \
 			parsing_parenthesis.c \
-			utils.c \
 			utils2.c
+			
+SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
+			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
+			$(addprefix $(PARSING), $(SRC_PARSING)) \
+			$(SRC_UTILS) \
+			main.c \
+			error.c \
+			init.c \
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -89,6 +90,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)$(BUILTINS)
 	mkdir -p $(OBJ_DIR)$(EXECUTION)
+	mkdir -p $(OBJ_DIR)$(PARSING)
 
 clean:
 	rm -rf $(OBJ_DIR)

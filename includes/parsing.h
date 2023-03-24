@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/22 17:55:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/24 18:14:28 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,11 @@ t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstadd_back(t_list **lst, void *content);
 int		ft_lstsize(t_list *lst);
+
+int		syntax_errors(char *input);
+void	remove_multiple_wspaces(char *input);
+bool	has_error_for_meta(char *input, size_t i);
+void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 #endif

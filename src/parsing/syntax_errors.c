@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/20 19:14:36 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/24 18:21:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
+#include "parsing.h"
 
 bool	has_parenthesis_not_closed(const char *input)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_parenthesis.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/24 17:31:51 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/24 18:21:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
+#include "parsing.h"
 
 static void	replace_parenthesis(char *string)
 {

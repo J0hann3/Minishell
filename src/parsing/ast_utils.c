@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 10:13:42 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/14 17:08:49 by jvigny           ###   ########.fr       */
+/*   Created: 2023/03/15 01:23:55 by qthierry          #+#    #+#             */
+/*   Updated: 2023/03/24 18:21:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parsing.h"
 
-size_t	ft_strlen(const char *s)
+t_ast	*create_node(const char *command)
 {
-	size_t	i;
+	t_ast	*node;
 
-	i = 0;
-	while (s[i] != 0)
-		i++;
-	return (i);
+	node = malloc(sizeof(t_ast));
+	if (!node)
+		return (NULL);
+	node->command = (char *)command;
+	node->left = NULL;
+	node->right = NULL;
+	node->parent = NULL;
+	node->meta = 0;
+	node->size = 0;
+	return (node);
 }

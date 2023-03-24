@@ -6,11 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 17:52:35 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 17:53:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:21:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
+#include "parsing.h"
 
 size_t	ft_strlen(const char *s)
 {

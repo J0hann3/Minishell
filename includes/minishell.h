@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 17:54:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:15:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <string.h>
+# include "utils.h"
 # include "builtins.h"
 
 enum	e_meta_character
@@ -43,9 +44,9 @@ typedef struct s_instruction
 typedef struct s_ast
 {
 
-	struct s_node			*left;
-	struct s_node			*right;
-	struct s_node			*parent;
+	struct s_ast			*left;
+	struct s_ast			*right;
+	struct s_ast			*parent;
 	char					*command;
 	size_t					size;
 	enum e_meta_character	meta;
