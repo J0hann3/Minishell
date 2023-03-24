@@ -30,7 +30,7 @@ while (exit)
 quentin : main "parsing + errors" $ENV heredoc "lister fd" signaux "open les fds" *
 johanne : execution built-in pipes "find path"
 
-? : history $?
+? : $?
 
 
 - STRUCT :

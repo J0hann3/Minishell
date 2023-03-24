@@ -6,12 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 14:29:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 17:53:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"
+#include "../includes/parsing.h"
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -51,3 +52,28 @@ int main(int argc, char **argv, char **envp)
 	
 	return (0);
 }
+
+
+// int	main(int argc, char *argv[], char *env[])
+// {
+// 	char	*input;
+// 	int		ret_err;
+
+// 	(void)argc;
+// 	(void)argv;
+// 	(void)env;
+// 	input = (char *)1;
+// 	ret_err = 0;
+// 	while (input != NULL)
+// 	{
+// 		input = readline("minishell$>");
+// 		if (!input)
+// 			break ;
+// 		add_history(input);
+// 		ret_err = syntax_errors(input);
+// 		create_tree(input);
+// 		free(input);
+// 	}
+// 	rl_clear_history();
+// 	return (ret_err);
+// }

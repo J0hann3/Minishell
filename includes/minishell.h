@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 16:12:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 17:54:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_instruction
 	int		outerror;
 }	t_instruction;
 
-typedef struct s_node
+typedef struct s_ast
 {
 
 	struct s_node			*left;
@@ -49,7 +49,7 @@ typedef struct s_node
 	char					*command;
 	size_t					size;
 	enum e_meta_character	meta;
-}	t_node;
+}	t_ast;
 
 
 #endif
