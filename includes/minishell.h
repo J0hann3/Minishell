@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 20:06:58 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 20:13:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ enum	e_meta_character
 {
 	e_and = 0,
 	e_or,
+	e_pipe,
 	e_pipe_left,
 	e_pipe_right,
 	e_empty

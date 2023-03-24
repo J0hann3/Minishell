@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 20:09:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/22 20:12:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ void	exec(t_instruction *inst, t_env_info *env, enum e_meta_character operand)
 			return ;
 		}
 		dup2(1, fildes[1]);
+		close()
 	}
 	else if (operand == e_pipe_right)
 		dup2(0, fildes[0]);
