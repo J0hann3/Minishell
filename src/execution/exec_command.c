@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/26 12:05:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/26 21:51:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,13 +162,11 @@ void	redirection(t_instruction *inst, t_env_info *env)
  * child (pid==0)-> write permission
  * parent (pid > 0) -> read permission and wait
  * 
- * @param env 	write erroor in env if necessary
- * @param operand	create pipe if operand == e_pipe
+ * @param env 	write error in env if necessary
  * @return int : pid of process on success, else -1
  */
-int	ft_pipe(t_env_info *env)
+int	ft_pipe(t_env_info *env, int fildes[2])
 {
-	int	fildes[2];
 	int	pid;
 	
 
