@@ -6,11 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/03/23 17:49:28 by jvigny           ###   ########.fr       */
-=======
-/*   Updated: 2023/03/24 18:00:02 by jvigny           ###   ########.fr       */
->>>>>>> aa0295380d852bb0bf999b2582bdf99997755afb
+/*   Updated: 2023/03/26 12:05:53 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,15 +129,9 @@ static char	*find_path_command(char *str, t_env_info *env)
 }
 
 /**
-<<<<<<< HEAD
  * @brief make redirection if fd != 0 + add env->error and write error ??
  * [ATTENTION]Don't have the name of arg_fd so I can't write the error
  * don't know what to do if something failed
-=======
- * @brief make redirection before execution + error
- * 
- * [ATTENTION]	DON'T HAVE NAME OF FILE TO PRINT ERROR MESSSAGES
->>>>>>> aa0295380d852bb0bf999b2582bdf99997755afb
  * 
  * @param inst 
  * @param env 
