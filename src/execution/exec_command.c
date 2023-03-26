@@ -6,7 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/03/23 17:49:28 by jvigny           ###   ########.fr       */
+=======
+/*   Updated: 2023/03/24 18:00:02 by jvigny           ###   ########.fr       */
+>>>>>>> aa0295380d852bb0bf999b2582bdf99997755afb
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +133,15 @@ static char	*find_path_command(char *str, t_env_info *env)
 }
 
 /**
+<<<<<<< HEAD
  * @brief make redirection if fd != 0 + add env->error and write error ??
  * [ATTENTION]Don't have the name of arg_fd so I can't write the error
  * don't know what to do if something failed
+=======
+ * @brief make redirection before execution + error
+ * 
+ * [ATTENTION]	DON'T HAVE NAME OF FILE TO PRINT ERROR MESSSAGES
+>>>>>>> aa0295380d852bb0bf999b2582bdf99997755afb
  * 
  * @param inst 
  * @param env 
@@ -157,41 +167,47 @@ void	redirection(t_instruction *inst, t_env_info *env)
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 }
-
 /**
- * @brief create pipe and fork if needed
+ * @brief create and fork for execution
+ * child (pid==0)-> write permission
+ * parent (pid > 0) -> read permission and wait
  * 
- * @param env write error if needed
- * @param operand know if need to create pipe or fork or close fd
- * @return int -1 if error or no need pipe, else return pid of the fork;
+ * @param env 	write erroor in env if necessary
+ * @param operand	create pipe if operand == e_pipe
+ * @return int : pid of process on success, else -1
  */
-int	ft_pipe(t_env_info *env, enum e_meta_character operand)
+int	ft_pipe(t_env_info *env)
 {
-	int		fildes[2];
-	int		pid;
+	int	fildes[2];
+	int	pid;
+	
 
-	if (operand == e_pipe)
+	if (pipe(fildes) != 0)
 	{
-		if (pipe(fildes) != 0)
-		{
-			env->error = 1;
-			return (-1);
-		}
-	// 	dup2(1, fildes[1]);
-	}
-	// else if (operand == e_pipe)
-	// 	dup2(0, fildes[0]);
-	else
+		env->error = 1;
 		return (-1);
+	}
 	pid = fork();
+	if (pid == -1)
+	{
+		env->error = 1;
+		return (-1);
+	}
 	if (pid == 0)
+	{
 		close(fildes[0]);
+		dup2(fildes[1], 1);
+		return (pid);
+	}
 	else
+	{
 		close(fildes[1]);
-	return (pid);
+		dup2(fildes[0], 0);
+		return (pid);
+	}
 }
 
-void	exec(t_instruction *inst, t_env_info *env)
+int	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
 	int		pid;
@@ -201,11 +217,11 @@ void	exec(t_instruction *inst, t_env_info *env)
 	// env->error = 0;
 	//Check command
 	if (inst == NULL)
-		return ;
+		return (-1);
 	if (inst->command == NULL)
-		return ;
+		return (-1);
 	if (inst->command[0] == NULL)
-		return ;
+		return (-1);
 
 	//if Pipe open pipe
 		
@@ -214,17 +230,22 @@ void	exec(t_instruction *inst, t_env_info *env)
 	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
-		return ;
+		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return ;
+		return (env->error);
 	
 	//exec in fork
 	pid = fork();
+	if (pid == -1)
+	{
+		env->error = 1;
+		return (env->error);
+	}
 	if (pid == 0)
 	{
 		execve(path, inst->command, env->env);
-		return ;
+		return (env->error);
 	}
 
 	//recup exit of function
@@ -232,8 +253,8 @@ void	exec(t_instruction *inst, t_env_info *env)
 	if (WIFEXITED(stat))
 	{
 		env->error = WEXITSTATUS(stat);
-		// printf("Exit status: %d\n", WEXITSTATUS(stat));
 	}
 	free(path);
 	free_str(inst->command);
+	return (env->error);
 }

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:19:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 16:15:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/24 18:30:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 
 # include "minishell.h"
 
-// enum	e_builtins
-// {
-// 	e_echo = 1,
-// 	e_cd,
-// 	e_pwd,
-// 	e_export,
-// 	e_unset,
-// 	e_env,
-// 	e_exit
-// };
+enum	e_boolean
+{
+	e_true = 0,
+	e_false
+};
 
+int		ft_pipe(t_env_info *env);
 void	exec(t_instruction *inst, t_env_info *env);
+void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character operand, int status);
 
 # endif

@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/22 16:11:08 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/24 18:31:26 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,14 +14,16 @@ NAME = minishell
 
 CC = gcc
 CFLAGS = -Wall -Wextra -g #-Werror
-INCLUDES = -I$(HEADERS_DIR) -lreadline
+LIBS = -lreadline -lncurses
+INCLUDES = -I$(HEADERS_DIR)
 
-HEADERS_LIST = minishell.h builtins.h utils.h exec.h
+HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
-SRC_EXECUTION =	exec_command.c
+SRC_EXECUTION =	exec_command.c \
+				binary_tree.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
@@ -30,19 +32,27 @@ SRC_BUILTINS =	echo.c \
 				exit.c \
 				pwd.c \
 				unset.c \
-				cd.c \
+				cd.c
 
 SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
-			ft_strlen.c \
 			ft_atouc.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
 			utils.c
 
+PARSING = parsing/
+SRC_PARSING = syntax_errors.c \
+			parsing_utils.c \
+			ast.c \
+			ast_utils.c \
+			parsing_parenthesis.c \
+			utils2.c
+			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
+			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(SRC_UTILS) \
 			main.c \
 			error.c \
@@ -51,23 +61,36 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
 
-	
+
 OBJ_DIR = ./obj/
 OBJ_LIST = $(patsubst %.c, %.o, $(SRC_LIST))
 OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
 all:	$(NAME)
 
+tester: $(NAME)
+	./tester.sh
+
+testerp: $(NAME)
+	./tester.sh -p
+
+run: $(NAME)
+	./$(NAME)
+
+vrun: $(NAME)
+	valgrind ./$(NAME)
+
 $(NAME):	$(OBJ_DIR) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(INCLUDES) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)
 
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADERS) Makefile
-	$(CC) $(CFLAGS) -c $(INCLUDES) $< -o $@
+	$(CC) $(CFLAGS) -c $(INCLUDES) $(LIBS) $< -o $@
 	
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)$(BUILTINS)
 	mkdir -p $(OBJ_DIR)$(EXECUTION)
+	mkdir -p $(OBJ_DIR)$(PARSING)
 
 clean:
 	rm -rf $(OBJ_DIR)
