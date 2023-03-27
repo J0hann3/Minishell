@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/26 21:51:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/27 15:30:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,43 +157,7 @@ void	redirection(t_instruction *inst, t_env_info *env)
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 }
-/**
- * @brief create and fork for execution
- * child (pid==0)-> write permission
- * parent (pid > 0) -> read permission and wait
- * 
- * @param env 	write error in env if necessary
- * @return int : pid of process on success, else -1
- */
-int	ft_pipe(t_env_info *env, int fildes[2])
-{
-	int	pid;
-	
 
-	if (pipe(fildes) != 0)
-	{
-		env->error = 1;
-		return (-1);
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		env->error = 1;
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		close(fildes[0]);
-		dup2(fildes[1], 1);
-		return (pid);
-	}
-	else
-	{
-		close(fildes[1]);
-		dup2(fildes[0], 0);
-		return (pid);
-	}
-}
 
 int	exec(t_instruction *inst, t_env_info *env)
 {
@@ -201,8 +165,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 	int		pid;
 	int		stat;
 
-	// reset error before new commands
-	// env->error = 0;
 	//Check command
 	if (inst == NULL)
 		return (-1);
@@ -210,11 +172,8 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (-1);
 	if (inst->command[0] == NULL)
 		return (-1);
-
-	//if Pipe open pipe
-		
 	//Redirection
-	// redirection(inst, env);
+	redirection(inst, env);
 	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)

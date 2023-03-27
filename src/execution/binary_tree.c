@@ -6,60 +6,98 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/26 21:55:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/27 16:36:02 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "exec.h"
 
-int	find_next_meta(t_ast *node)
+static t_ast	*find_right_command(t_ast *node)
 {
-	return (e_or);
+	while (node != NULL)
+	{
+		if (node->parent != NULL && node->parent->command != NULL)
+			return(node->parent);
+		node = node->parent;
+	}
+	return (NULL);
 }
 
-static int	exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
+enum e_meta_character	find_next_meta(t_ast *node)
 {
-	enum e_meta_character	meta_next;
-	t_instruction 			*arg;
-	int						pid;
-	int						fildes[2];
+	enum e_meta_character	tmp;
 
-	meta_next = find_meta_next(tree);
-	if (meta_before == e_pipe)
+	while (node != NULL)
 	{
-		if (meta_next == e_pipe)
+		// printf("test %s\n", node->command);
+		if (node->parent != NULL && node->parent->meta != e_empty)
 		{
-			pid = ft_pipe(env, fildes);
-			if (pid == 0)
-			{
-				arg->command = ft_split(tree->command, ' ');
-				stat = exec(&arg, env);
-				close(fildes[1]);
-				exit(stat);				// maybe need to free malloc ?
-			}
-			else
-			{
-				waitpid(pid, &stat, 0);
-				if (WIFEXITED(stat))
-					stat = WEXITSTATUS(stat);
-				else 
-					stat = 1;				//need to modifie also env->error	no sure ??
-			}
+			tmp = node->parent->meta;
+			node->parent->meta = e_empty;
+			return (tmp);
 		}
-		else
-		{
-			arg->command = ft_split(tree->command, ' ');
-			stat = exec(&arg, env);
-			// close(fildes[0]);			//don't have the fd to close it
-		}
+		// printf("node:%p		meta: %d	node_parent: %p\n", node, node->meta, node->parent);
+		node = node->parent;
+		// printf("node:%p\n", node);
 	}
-	if (meta_next == e_pipe)
+	return (e_empty);
+}
+
+/**
+ * @brief create and fork for execution
+ * child (pid==0)-> write permission
+ * parent (pid > 0) -> read permission and wait
+ * 
+ * @param env 	write error in env if necessary
+ * @return int : pid of process on success, else -1
+ */
+int	ft_pipe(t_env_info *env, int fildes[2])
+{
+	int	pid;
+	
+
+	if (pipe(fildes) != 0)
+	{
+		env->error = 1;
+		return (-1);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		env->error = 1;
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		close(fildes[0]);
+		dup2(fildes[1], 1);
+		return (pid);
+	}
+	else
+	{
+		close(fildes[1]);
+		// dup2(fildes[0], 0);
+		return (pid);
+	}
+}
+
+int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n)
+{
+	t_instruction			arg;
+	int						pid;
+	static int				fildes[2];
+	static int				fd_tmp;
+	int						stat;
+
+	fd_tmp = 0;
+	if (m_n == e_pipe)
 	{
 		pid = ft_pipe(env, fildes);
 		if (pid == 0)
 		{
-			arg->command = ft_split(tree->command, ' ');
+			dup2(fd_tmp, 0);
+			arg.command = ft_split(tree->command, ' ');
 			stat = exec(&arg, env);
 			close(fildes[1]);
 			exit(stat);				// maybe need to free malloc ?
@@ -70,40 +108,95 @@ static int	exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta
 			if (WIFEXITED(stat))
 				stat = WEXITSTATUS(stat);
 			else 
-				stat = 1;				//need to modifie also env->error	no sure ??
+				stat = 1;
+			fd_tmp = fildes[0];
+			tree = find_right_command(tree);
+			// if (tree == NULL)
+			// 	return (-1);		//error
+			// m_b = m_n;
+			// m_n = find_next_meta(tree);
+			close(fd_tmp);
 		}
 	}
-	if (meta_before == e_and)
+	else if (m_b == e_pipe)
+	{
+		dup2(fd_tmp, 0);
+		arg.command = ft_split(tree->command, ' ');
+		stat = exec(&arg, env);
+		close(fd_tmp);
+		return (stat);
+	}
+}
+
+static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
+{
+	enum e_meta_character	meta_next;
+	t_instruction 			arg;
+
+	meta_next = find_next_meta(tree);
+	printf("meta_next : %d\n",meta_next);
+	if (meta_next == e_pipe || meta_before == e_pipe)
+		stat = multi_pipe(tree, env, meta_before, meta_next);
+	if (meta_before == e_empty)
+	{
+		arg.command = ft_split(tree->command, ' ');
+		stat = exec(&arg, env);
+	}
+	else if (meta_before == e_and)
 	{
 		if (stat == 0)
 		{
-			arg->command = ft_split(tree->command, ' ');		//replace by parsing2
+			arg.command = ft_split(tree->command, ' ');		//replace by parsing2
 			stat = exec(&arg, env);
 		}
-		
 	}
 	else if (meta_before == e_or)
 	{
 		if (stat != 0)
 		{
-			arg->command = ft_split(tree->command, ' ');
+			arg.command = ft_split(tree->command, ' ');
 			stat = exec(&arg, env);
 		}
 	}
-	meta_before = meta_next;
-	return (stat);
+	return (meta_next);
 }
 
-void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
+void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character *meta_before, int stat)
 {
-	enum e_meta_character	meta_next;
+	// printf("NODE\n");
+	// printf("meta_befor_p:%p\n", meta_before);
+	// if (meta_before != NULL)
+	// 	printf("meta_before_d:%d\n", *meta_before);
 
 	if (tree == NULL)
+	{
+		// printf("----------------------------\n");
 		return;
+	}
+	
 	if (tree->left == NULL && tree->right == NULL && tree->command != NULL)
-		stat = exec_command(tree, env, meta_before, stat);
-	if (tree->meta != e_empty)
-		meta_before = tree->meta;
+	{
+		*meta_before = skip_or_exec_command(tree, env, *meta_before, stat);
+
+		// printf("meta_before_p:%p\n", meta_before);
+		// if (meta_before != NULL)
+		// 	printf("meta_before_d:%d\n", *meta_before);
+		// printf("stat: %d\n", stat);
+		// if (tree->meta != e_empty)
+		// 	printf("tree block:%d\n", tree->meta);
+		// if (tree->command != NULL)
+		// 	printf("tree_block:%s\n", tree->command);
+			
+		// printf("----------------------------\n");
+		return ;
+	}
+	// printf("stat: %d\n", stat);
+	// if (tree->meta != e_empty)
+	// 	printf("tree block:%d\n", tree->meta);
+	// if (tree->command != NULL)
+	// 	printf("tree_block:%s\n", tree->command);
+	// printf("----------------------------\n");
+	
 	explore_tree(tree->left, env, meta_before, stat);
 	explore_tree(tree->right, env, meta_before, stat);
 }
