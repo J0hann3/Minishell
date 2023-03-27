@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/27 16:16:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/27 16:44:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,12 @@ int	main(int argc, char *argv[], char *envp[])
 		if (ret_err == 0)
 			tree = create_tree(input);
 		else
+		{
 			printf("ERROR:	%d\n",ret_err);
-		// explore_tree(tree, env, &meta_before, 0);
+			free(input);
+			return (ret_err);
+		}
+		explore_tree(tree, env, &meta_before, 0);
 		free(input);
 	}
 	rl_clear_history();

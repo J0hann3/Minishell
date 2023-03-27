@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/27 13:39:08 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/27 17:56:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_instruction
 
 typedef struct s_ast
 {
-
 	struct s_ast			*left;
 	struct s_ast			*right;
 	struct s_ast			*parent;

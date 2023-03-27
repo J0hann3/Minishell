@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/27 16:36:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/27 17:49:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	ft_pipe(t_env_info *env, int fildes[2])
 	if (pid == 0)
 	{
 		close(fildes[0]);
-		dup2(fildes[1], 1);
+		// dup2(fildes[1], 1);
 		return (pid);
 	}
 	else
@@ -82,25 +82,35 @@ int	ft_pipe(t_env_info *env, int fildes[2])
 	}
 }
 
-int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n)
+int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
 {
 	t_instruction			arg;
 	int						pid;
 	static int				fildes[2];
 	static int				fd_tmp;
-	int						stat;
 
 	fd_tmp = 0;
+	printf("-----------pipe----------\n");
 	if (m_n == e_pipe)
 	{
 		pid = ft_pipe(env, fildes);
+		printf("PID : %d\n", pid);
+		if (pid == -1)
+			return(printf("error pipe\n"), -1);
 		if (pid == 0)
 		{
 			dup2(fd_tmp, 0);
-			arg.command = ft_split(tree->command, ' ');
-			stat = exec(&arg, env);
+			if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
+			{
+				printf("don't execute command\n");
+				close(fildes[1]);
+				exit(0);
+			}
+			// arg.command = ft_split(tree->command, ' ');
+			// stat = exec(&arg, env);
+			printf("%s\n", tree->command);
 			close(fildes[1]);
-			exit(stat);				// maybe need to free malloc ?
+			exit(0);				// maybe need to free malloc ?
 		}
 		else
 		{
@@ -115,17 +125,19 @@ int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_m
 			// 	return (-1);		//error
 			// m_b = m_n;
 			// m_n = find_next_meta(tree);
-			close(fd_tmp);
+			// close(fd_tmp);
 		}
 	}
 	else if (m_b == e_pipe)
 	{
 		dup2(fd_tmp, 0);
-		arg.command = ft_split(tree->command, ' ');
-		stat = exec(&arg, env);
+		printf("%s\n", tree->command);
+		// arg.command = ft_split(tree->command, ' ');
+		// stat = exec(&arg, env);
 		close(fd_tmp);
-		return (stat);
 	}
+	printf("---------------------\n");
+	return (stat);
 }
 
 static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
@@ -134,28 +146,31 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	t_instruction 			arg;
 
 	meta_next = find_next_meta(tree);
-	printf("meta_next : %d\n",meta_next);
-	if (meta_next == e_pipe || meta_before == e_pipe)
-		stat = multi_pipe(tree, env, meta_before, meta_next);
-	if (meta_before == e_empty)
+	printf("meta_before : %d		meta_next: %d		stat:%d\n",meta_before, meta_next, stat);
+	if (meta_next == e_pipe || meta_before == e_pipe)		//need to skip command if and or or
+		stat = multi_pipe(tree, env, meta_before, meta_next,stat);
+	else if (meta_before == e_empty)
 	{
-		arg.command = ft_split(tree->command, ' ');
-		stat = exec(&arg, env);
+		printf("%s\n", tree->command);
+		// arg.command = ft_split(tree->command, ' ');
+		// stat = exec(&arg, env);
 	}
 	else if (meta_before == e_and)
 	{
 		if (stat == 0)
 		{
-			arg.command = ft_split(tree->command, ' ');		//replace by parsing2
-			stat = exec(&arg, env);
+			printf("%s\n", tree->command);
+			// arg.command = ft_split(tree->command, ' ');		//replace by parsing2
+			// stat = exec(&arg, env);
 		}
 	}
 	else if (meta_before == e_or)
 	{
 		if (stat != 0)
 		{
-			arg.command = ft_split(tree->command, ' ');
-			stat = exec(&arg, env);
+			printf("%s\n", tree->command);
+			// arg.command = ft_split(tree->command, ' ');
+			// stat = exec(&arg, env);
 		}
 	}
 	return (meta_next);
