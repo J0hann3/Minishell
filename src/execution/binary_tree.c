@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 17:29:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 18:41:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 enum e_meta_character	find_next_meta(t_ast *node)
 {
 	enum e_meta_character	tmp;
-
+	
 	while (node != NULL)
 	{
 		if (node->parent != NULL && node->parent->meta != e_empty)
@@ -24,9 +24,20 @@ enum e_meta_character	find_next_meta(t_ast *node)
 			tmp = node->parent->meta;
 			node->parent->meta = e_empty;
 			return (tmp);
+			// return (node->parent->meta);
 		}
 		node = node->parent;
 	}
+	// while (node != NULL)
+	// {
+	// 	if (node->meta != e_empty)
+	// 	{
+	// 		tmp = node->meta;
+	// 		node->meta = e_empty;
+	// 		return (tmp);
+	// 	}
+	// 	node = node->parent;
+	// }
 	return (e_empty);
 }
 
@@ -198,32 +209,29 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 
 void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
 {
-	// if (tree == NULL)
-	// {
-	// 	return;
-	// }
-	// if (tree->left == NULL && tree->right == NULL && tree->command != NULL)
-	// {
-	// 	*meta_before = skip_or_exec_command(tree, env, *meta_before, stat);
-	// 	return ;
-	// }
-	// explore_tree(tree->left, env, meta_before, env->error);
-	// explore_tree(tree->right, env, meta_before, env->error);
+	enum e_meta_character	tmp;
 
 	if (tree == NULL)
 		return;
-	if (tree->left != NULL && tree->left->command != NULL)
+	if (tree->meta != e_empty)
 	{
-		meta_before = skip_or_exec_command(tree, env, meta_before, stat);
-		return ;
+		tmp = tree->meta;
 	}
+	if (tree->left != NULL && tree->left->command != NULL)
+		meta_before = skip_or_exec_command(tree->left, env, meta_before, stat);
 	else
 		explore_tree(tree->left, env, meta_before, env->error);
+	meta_before = tmp;
 	if (tree->right != NULL && tree->right->command != NULL)
+		meta_before = skip_or_exec_command(tree->right, env, meta_before, env->error);
+	else if (meta_before == e_and)
 	{
-		meta_before = skip_or_exec_command(tree, env, meta_before, stat);
-		return ;
+		if (env->error == 0)
+			explore_tree(tree->right, env, meta_before, env->error);
 	}
-	else
-		explore_tree(tree->right, env, meta_before, env->error);
+	else if (meta_before == e_or)
+	{
+		if (env->error != 0)
+			explore_tree(tree->right, env, meta_before, env->error);
+	}
 }
