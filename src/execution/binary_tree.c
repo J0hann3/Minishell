@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 19:39:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 20:00:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ enum e_meta_character	find_next_meta(t_ast *node)
 // 	}
 // }
 
-int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
+void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
 {
 	t_instruction			arg;
 	int						pid;
@@ -115,22 +115,21 @@ int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_m
 		if (m_n == e_pipe)
 			close(fildes[1]);
 		else
+		{
 			close(fd_tmp);
+			fd_tmp = 0;
+		}
 		exit(0);
 	}
 	else
 	{
 		waitpid(pid, &stat, 0);
-		// close(fildes[1]);
 		if (m_n == e_pipe)
 			close(fildes[1]);
-		// if (WIFEXITED(stat))
-		// 	stat = WEXITSTATUS(stat);
-		// else if (WIFSIGNALED(stat))
-		// {
-		// 	// printf("signal\n");
-		// 	stat = WTERMSIG(stat);
-		// }
+		if (WIFEXITED(stat))
+			env->error = WEXITSTATUS(stat);
+		else if (WIFSIGNALED(stat))
+			env->error = 128 + WTERMSIG(stat);
 		// else if (WIFSTOPPED(stat))
 		// {
 		// 	// printf("stop\n");
@@ -138,7 +137,6 @@ int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_m
 		// }
 		fd_tmp = fildes[0];
 	}
-	return (stat);
 }
 
 static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
