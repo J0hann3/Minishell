@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 18:41:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 19:39:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,9 @@ enum e_meta_character	find_next_meta(t_ast *node)
 			tmp = node->parent->meta;
 			node->parent->meta = e_empty;
 			return (tmp);
-			// return (node->parent->meta);
 		}
 		node = node->parent;
 	}
-	// while (node != NULL)
-	// {
-	// 	if (node->meta != e_empty)
-	// 	{
-	// 		tmp = node->meta;
-	// 		node->meta = e_empty;
-	// 		return (tmp);
-	// 	}
-	// 	node = node->parent;
-	// }
 	return (e_empty);
 }
 
@@ -92,76 +81,63 @@ int	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_m
 	int						fildes[2];
 	static int				fd_tmp = 0;
 
-
-	// printf("-----------pipe----------[%d][%d][%d]\n", fildes[0], fildes[1], fd_tmp);
-	if (m_n == e_pipe)
+	if (m_n == e_pipe )
 	{
 		if (pipe(fildes) != 0)
 		{
 			env->error = 1;
 			return (-1);
 		}
-		pid = fork();
-		if (pid == -1)
-		{
-			env->error = 1;
-			return (-1);
-		}
-		if (pid == 0)
-		{
-			dup2(fd_tmp, STDIN_FILENO);
-			if (dup2(fildes[1], STDOUT_FILENO) == -1)
-				return (perror("Error"), -1);
-			// printf("[%d]close test : %d\n", pid, fildes[0]);
-			close(fildes[0]);
-			if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
-			{
-				printf("don't execute command\n");
-				printf("[%d]close : %d\n", pid, fildes[1]);
-				close(fildes[1]);
-				exit(0);
-			}
-			arg.command = ft_split(tree->command, ' ');
-			stat = exec(&arg, env);
-			printf("%s\n", tree->command);
-			// printf("[%d]close : %d\n", pid, fildes[1]);
-			close(fildes[1]);
-			exit(0);				// maybe need to free malloc ?
-		}
-		else
-		{
-			waitpid(pid, &stat, 0);
-			if (WIFEXITED(stat))
-				stat = WEXITSTATUS(stat);
-			else if (WIFSIGNALED(stat))
-			{
-				// printf("signal\n");
-				stat = WTERMSIG(stat);
-			}
-			else if (WIFSTOPPED(stat))
-			{
-				// printf("stop\n");
-				stat = WSTOPSIG(stat);
-			}
-			// printf("Wait	status: %d\n", stat);
-			close(fildes[1]);
-			// printf("[%d]close : %d\n", pid, fildes[1]);
-			// printf("fd_tmp = %d\n", fildes[0]);
-			fd_tmp = fildes[0];
-			// close(fd_tmp);
-		}
 	}
-	else if (m_b == e_pipe)
+	pid = fork();
+	if (pid == -1)
 	{
-		dup2(fd_tmp, STDIN_FILENO);
-		// printf("%s\n", tree->command);
-		arg.command = ft_split(tree->command, ' ');
-		stat = exec(&arg, env);
-		// printf("[%d]close : %d\n", pid, fd_tmp);
-		close(fd_tmp);
-		fd_tmp = 0;
+		env->error = 1;
+		return (-1);
 	}
-	// printf("---------------------\n");
+	if (pid == 0)
+	{
+		if (fd_tmp != 0)
+			dup2(fd_tmp, STDIN_FILENO);
+		if (m_n == e_pipe)
+		{
+			dup2(fildes[1], STDOUT_FILENO);
+			close(fildes[0]);
+		}
+		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
+		{
+			printf("don't execute command\n");
+			close(fildes[1]);
+			exit(0);
+		}
+		arg.command = ft_split(tree->command, ' ');
+		exec(&arg, env);
+		if (m_n == e_pipe)
+			close(fildes[1]);
+		else
+			close(fd_tmp);
+		exit(0);
+	}
+	else
+	{
+		waitpid(pid, &stat, 0);
+		// close(fildes[1]);
+		if (m_n == e_pipe)
+			close(fildes[1]);
+		// if (WIFEXITED(stat))
+		// 	stat = WEXITSTATUS(stat);
+		// else if (WIFSIGNALED(stat))
+		// {
+		// 	// printf("signal\n");
+		// 	stat = WTERMSIG(stat);
+		// }
+		// else if (WIFSTOPPED(stat))
+		// {
+		// 	// printf("stop\n");
+		// 	stat = WSTOPSIG(stat);
+		// }
+		fd_tmp = fildes[0];
+	}
 	return (stat);
 }
 
@@ -172,14 +148,13 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 
 	meta_next = find_next_meta(tree);
 	// printf("meta_before : %d		meta_next: %d		stat:%d\n",meta_before, meta_next, stat);
-	if (meta_next == e_pipe || meta_before == e_pipe)		//need to skip command if and or or
+	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next,stat);
 		return (meta_next);
 	}
 	else if (meta_before == e_empty)
 	{
-		// printf("%s\n", tree->command);
 		arg.command = ft_split(tree->command, ' ');
 		exec(&arg, env);
 		return (meta_next);
@@ -188,7 +163,6 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (stat == 0)
 		{
-			// printf("%s\n", tree->command);
 			arg.command = ft_split(tree->command, ' ');
 			exec(&arg, env);
 			return (meta_next);
@@ -198,7 +172,6 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (stat != 0)
 		{
-			// printf("%s\n", tree->command);
 			arg.command = ft_split(tree->command, ' ');
 			exec(&arg, env);
 			return (meta_next);
