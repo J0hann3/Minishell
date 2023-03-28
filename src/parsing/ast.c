@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/27 17:11:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 14:07:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,33 @@ static enum e_meta_character	get_meta(char *input)
 	return (e_empty);
 }
 
-static int	get_max_depth(t_ast	*root, int depth)
+// static int	get_max_depth(t_ast	*root, int depth)
+// {
+// 	if (!root)
+// 		return (depth + 1);
+// 	if (root->left)
+// 		return (get_max_depth(root->left, depth + 1));
+// 	if (root->right)
+// 		return (get_max_depth(root->left, depth + 1));
+// 	return (depth + 1);
+// }
+
+static int	get_height(t_ast *root)
 {
+	int	leftHeight;
+	int	rightHeight;
+
 	if (!root)
-		return (depth + 1);
-	if (root->left)
-		return (get_max_depth(root->left, depth + 1));
-	if (root->right)
-		return (get_max_depth(root->left, depth + 1));
-	return (depth + 1);
+		return (0);
+	else
+	{
+		leftHeight = get_height(root->left);
+		rightHeight = get_height(root->right);
+		if (leftHeight > rightHeight)
+			return (leftHeight + 1);
+		else
+			return (rightHeight + 1);
+	}
 }
 
 static const char *meta_to_char(enum e_meta_character meta)
@@ -195,6 +213,6 @@ t_ast	*create_tree(char *input)
 	t_ast	*root;
 
 	root = create_sub_tree(&input, NULL);
-	print_tree(root, 0, get_max_depth(root, 0));
+	print_tree(root, 0, get_height(root));
 	return (root);
 }

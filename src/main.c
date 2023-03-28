@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/27 16:44:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 15:47:07 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,36 @@
 
 // int main(int argc, char **argv, char **envp)
 // {
-// 	t_env_info *env;
-// 	t_instruction	command;
+// 	// t_env_info *env;
+// 	// t_instruction	command;
 // 	int			i;
-// 	// char		*ligne;
-// 	i = 0;
-// 	argv[argc - 1] = NULL;
+// 	// // char		*ligne;
+// 	// i = 0;
+// 	// argv[argc - 1] = NULL;
 
-// 	env = init_env((const char **)envp);
-// 	command.command = init_arg((const char **)argv);
+// 	// env = init_env((const char **)envp);
+// 	// command.command = init_arg((const char **)argv);
 
-// 	exec(&command, env);
-// 	free_str(env->env);
-// 	exit(env->error);
-// 	free(env);
+// 	int fd = open("test", O_RDWR);
+// 	printf("fd:%d\n", fd);
+// 	if (fd < 0)
+// 		return (perror("error"), 1);
+// 	int pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		dup2(fd, STDOUT_FILENO);
+// 		printf("fd:%d\n", fd);
+// 		printf("test\n");
+// 		write(fd, "hello10", 7);
+// 		close(fd);
+// 		return (0);
+// 	}
+// 	waitpid(pid, &i, 0);
+// 	close(fd);
+// 	printf("fd:%d\n", fd);
+// 	printf("test\n");
+// 	write(fd, "hello", 5);
+// 	write(1, "hello5", 6);
 // 	// ft_export(argv, env);
 // 	// while(1)
 // 	// {
@@ -47,7 +63,6 @@
 // 	// 	ft_pwd(argv, env);
 // 	// 	// free_str(argv);
 // 	// }
-	
 // 	return (0);
 // }
 
@@ -74,14 +89,13 @@ int	main(int argc, char *argv[], char *envp[])
 			break ;
 		add_history(input);
 		ret_err = syntax_errors(input);
-		if (ret_err == 0)
-			tree = create_tree(input);
-		else
+		if (ret_err != 0)
 		{
 			printf("ERROR:	%d\n",ret_err);
 			free(input);
 			return (ret_err);
 		}
+		tree = create_tree(input);
 		explore_tree(tree, env, &meta_before, 0);
 		free(input);
 	}
