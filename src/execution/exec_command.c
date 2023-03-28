@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 15:23:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 17:07:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	int		stat;
 
 	//Check command
+	env->error = 0;
 	if (inst == NULL)
 		return (-1);
 	if (inst->command == NULL)
@@ -173,7 +174,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	if (inst->command[0] == NULL)
 		return (-1);
 	//Redirection
-	redirection(inst, env);
+	// redirection(inst, env);
 	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
