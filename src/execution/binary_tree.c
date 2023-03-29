@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 20:00:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 21:40:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,16 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		if (pipe(fildes) != 0)
 		{
 			env->error = 1;
-			return (-1);
+			return ;
 		}
+		dprintf(2, "[%d][%d][%d]\n",fildes[0], fildes[1], fd_tmp);
 	}
+	dprintf(2, "[%d]\n",fd_tmp);
 	pid = fork();
 	if (pid == -1)
 	{
 		env->error = 1;
-		return (-1);
+		return ;
 	}
 	if (pid == 0)
 	{
@@ -112,20 +114,24 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		}
 		arg.command = ft_split(tree->command, ' ');
 		exec(&arg, env);
+		if (fd_tmp != 0)
+			close(fd_tmp);
 		if (m_n == e_pipe)
 			close(fildes[1]);
-		else
-		{
-			close(fd_tmp);
-			fd_tmp = 0;
-		}
 		exit(0);
 	}
 	else
 	{
-		waitpid(pid, &stat, 0);
+		if (fd_tmp != 0)
+			close(fd_tmp);
 		if (m_n == e_pipe)
+		{
 			close(fildes[1]);
+			fd_tmp = fildes[0];
+		}
+		else
+			fd_tmp = 0;
+		waitpid(pid, &stat, 0);
 		if (WIFEXITED(stat))
 			env->error = WEXITSTATUS(stat);
 		else if (WIFSIGNALED(stat))
@@ -135,7 +141,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		// 	// printf("stop\n");
 		// 	stat = WSTOPSIG(stat);
 		// }
-		fd_tmp = fildes[0];
 	}
 }
 
@@ -187,22 +192,24 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 	if (tree->meta != e_empty)
 	{
 		tmp = tree->meta;
+		if (tree->left != NULL && tree->left->command != NULL)
+			meta_before = skip_or_exec_command(tree->left, env, meta_before, stat);
+		else
+			explore_tree(tree->left, env, meta_before, env->error);
+		meta_before = tmp;
+		if (tree->right != NULL && tree->right->command != NULL)
+			meta_before = skip_or_exec_command(tree->right, env, meta_before, env->error);
+		else if (meta_before == e_and)
+		{
+			if (env->error == 0)
+				explore_tree(tree->right, env, meta_before, env->error);
+		}
+		else if (meta_before == e_or)
+		{
+			if (env->error != 0)
+				explore_tree(tree->right, env, meta_before, env->error);
+		}
 	}
-	if (tree->left != NULL && tree->left->command != NULL)
-		meta_before = skip_or_exec_command(tree->left, env, meta_before, stat);
-	else
-		explore_tree(tree->left, env, meta_before, env->error);
-	meta_before = tmp;
-	if (tree->right != NULL && tree->right->command != NULL)
-		meta_before = skip_or_exec_command(tree->right, env, meta_before, env->error);
-	else if (meta_before == e_and)
-	{
-		if (env->error == 0)
-			explore_tree(tree->right, env, meta_before, env->error);
-	}
-	else if (meta_before == e_or)
-	{
-		if (env->error != 0)
-			explore_tree(tree->right, env, meta_before, env->error);
-	}
+	else if (tree->command != NULL)
+		meta_before = skip_or_exec_command(tree, env, meta_before, stat);
 }
