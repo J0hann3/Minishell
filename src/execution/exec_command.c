@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 17:07:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/28 20:38:20 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ static char	*find_path_command(char *str, t_env_info *env)
 			path = find_absolute_path(str);
 		else
 			path = ft_strdup(str);
-		// printf("PATH TEST : %s\n", path);
 		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
 			return (path);
 		env->error = 127;
