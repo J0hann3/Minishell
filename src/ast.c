@@ -6,56 +6,15 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/27 18:45:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/27 19:08:21 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-static enum e_meta_character	get_meta(char *input)
-{
-	if (is_operator(input))
-	{
-		if (is_and_or(input))
-		{
-			if (*input == '|')
-				return (e_or);
-			return (e_and);
-		}
-		return (e_pipe);
-	}
-	return (e_empty);
-}
-
-static int	get_height(t_ast *root)
-{
-	int	leftHeight;
-	int	rightHeight;
-
-	if (!root)
-		return (0);
-	else
-	{
-		leftHeight = get_height(root->left);
-		rightHeight = get_height(root->right);
-		if (leftHeight > rightHeight)
-			return (leftHeight + 1);
-		else
-			return (rightHeight + 1);
-	}
-}
-
-static const char *meta_to_char(enum e_meta_character meta)
-{
-	if (meta == e_pipe)
-		return ("|");
-	if (meta == e_or)
-		return ("||");
-	if (meta == e_and)
-		return ("&&");
-	else
-		return ("");
-}
+enum e_meta_character	get_meta(char *input);
+int						get_height(t_ast *root);
+const char				*meta_to_char(enum e_meta_character meta);
 
 size_t	get_command_size(const char *input)
 {
