@@ -6,12 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 17:40:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:26:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"
 #include "../includes/parsing.h"
 
 #include <sys/stat.h>
@@ -73,7 +72,6 @@ int	main(int argc, char *argv[], char *envp[])
 	int			ret_err;
 	t_env_info	*env;
 	t_ast		*tree;
-	// enum e_meta_character meta_before;
 
 	(void)argc;
 	(void)argv;
@@ -95,10 +93,12 @@ int	main(int argc, char *argv[], char *envp[])
 			return (ret_err);
 		}
 		tree = create_tree(input);
-		// meta_before = e_empty;
 		explore_tree(tree, env, e_empty, 0);
+		free_tree(tree);
 		free(input);
 	}
+	free_str(env->env);
+	free(env);
 	rl_clear_history();
 	return (ret_err);
 }

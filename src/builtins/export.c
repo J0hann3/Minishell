@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/20 20:01:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 23:10:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	ft_len(char **str)
 	int	i;
 
 	i = 0;
+	if (str == NULL)
+		return (0);
 	while (str[i] != NULL)
 	{
 		++i;
@@ -55,7 +57,7 @@ static int	is_valid_name(char *str, t_env_info	*env)
 		{
 			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
 			{
-				env->error = 1;		//error
+				env->error = 1;
 				ft_write_error("export", str, "not a valid identifier");		//need '' around str
 				return (0);
 			}
@@ -84,7 +86,6 @@ static int	trim_invalid_varible(char **arg, t_env_info	*env)
 	suppr = -1;
 	while (arg[i] != NULL)
 	{
-		// printf("%s is valid : %d\n", arg[i], is_valid_name(arg[i]));
 		if (!is_valid_name(arg[i], env))
 		{
 			free(arg[i]);
@@ -180,25 +181,30 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	char	**new;
 
 	len_arg = trim_invalid_varible(arg, env);
-	if (len_arg < 0)		//not sure it's can happened
+	if (len_arg < 0)
 		return (free_arg(arg, len_arg), NULL);
 	if (len_arg == 0)
 		return (free_arg(arg, len_arg), env);
 	len_env = ft_len(env->env);
-	// printf("len_malloc: %d	len_env: %d		len_arg: %d\n", len_env + len_arg + 1, len_env, len_arg);
+	if (env->len_env > len_env + len_arg)
+	{
+		add_new_variable(arg, env->env, len_arg, len_env);
+		env->len_env = len_arg + len_env;
+		return (env);
+	}
 	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
 	if (new == NULL)
 	{
-		env->error = 2;			// code error ?? + write ????
+		env->error = 2;
 		return (free_arg(arg, len_arg), NULL);
 	}
 	env->len_env = len_env + len_arg;
 	ft_copy(new, env->env);
-	free(env->env);
 	add_new_variable(arg, new, len_arg, len_env);
+	env->env = new;
+	free(env->env);
 	free(arg[0]);
 	free(arg);
-	env->env = new;
 	return (env);
 }
 

@@ -6,14 +6,14 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/29 21:29:02 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/29 22:43:54 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g #-Werror
+CFLAGS = -Wall -Wextra -g -Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
@@ -40,7 +40,8 @@ SRC_UTILS = ft_calloc.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
-			utils.c
+			utils.c \
+			free_tree.c
 
 PARSING = parsing/
 SRC_PARSING = syntax_errors.c \

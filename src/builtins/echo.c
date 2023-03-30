@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 18:12:16 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:51:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	ft_echo(char **arg, const t_env_info	*env)
 		write(1, arg[i], ft_strlen(arg[i]));
 		if (arg[++i] != NULL)
 			write(1, " ", 1);
-
 	}
 	if (option == 1)
 		write(1, "\n", 1);

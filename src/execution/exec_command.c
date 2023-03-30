@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 20:38:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:41:19 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,9 @@ static char	*explore_path(char *name, char *env_path)
 		if (path == NULL)
 		{
 			++i;
-			continue ;	//code error
+			continue ;
 		}
-		// printf("TEST : %s\n", path);
-		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
 			return (free_str(var_path), path);
 		free(path);
 		++i;
@@ -106,8 +105,17 @@ static char	*find_path_command(char *str, t_env_info *env)
 			path = find_absolute_path(str);
 		else
 			path = ft_strdup(str);
-		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)		//not sure condition F_OX is usefull ?
-			return (path);
+		if (access(path, F_OK) == 0)
+		{
+			if (access(path, X_OK) == 0)
+				return (path);
+			else
+			{
+				env->error = 126;
+				ft_write_error(NULL, str, strerror(errno));
+				return(free(path), NULL);
+			}
+		}
 		env->error = 127;
 		ft_write_error(NULL, str, strerror(errno));
 		return (free(path), NULL);
@@ -174,14 +182,12 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (-1);
 	//Redirection
 	// redirection(inst, env);
-	
 	//	Find Path
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
 		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (env->error);
-	
 	//exec in fork
 	pid = fork();
 	if (pid == -1)
@@ -194,13 +200,12 @@ int	exec(t_instruction *inst, t_env_info *env)
 		execve(path, inst->command, env->env);
 		return (env->error);
 	}
-
 	//recup exit of function
 	waitpid(pid, &stat, 0);
 	if (WIFEXITED(stat))
-	{
 		env->error = WEXITSTATUS(stat);
-	}
+	else if (WIFSIGNALED(stat))
+		env->error = 128 + WTERMSIG(stat);
 	free(path);
 	free_str(inst->command);
 	return (env->error);

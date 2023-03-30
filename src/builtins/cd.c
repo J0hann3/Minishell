@@ -6,27 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 18:10:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 23:03:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * cd //bin/ls		-> bash: cd: //bin/ls: Not a directory
- * cd "		/bin"	-> bash: cd: $'\t/bin/ls': No such file or directory
- * cd /../../..		-> go to /
- * cd /../../../bin -> go to bin
- * 
- * 
- * chdir(changes the current dir)	-> arg = curpath
- * if erreur
- * 		->print error
- * set OLD_PWD
- * set PWD
- * 
- * 
- */
 
 static char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 {
@@ -34,29 +18,25 @@ static char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 	size_t	len;
 	size_t	j;
 
-	j = 0;
 	len = ft_strlen(s1) + ft_strlen(s2);
 	if (add_slash == 1)
 		++len;
 	res = malloc(sizeof(char) * len + 1);
 	if (res == NULL)
 		return (0);
-	while (s1[j])
-	{
+	j = -1;
+	while (s1[++j])
 		res[j] = s1[j];
-		j++;
-	}
 	if (add_slash == 1)
 	{
 		res[j] = '/';
 		++j;
 	}
-	len = 0;
-	while (s2[len])
+	len = -1;
+	while (s2[++len])
 	{
 		res[j] = s2[len];
 		j++;
-		len++;
 	}
 	res[j] = 0;
 	return (res);
@@ -102,6 +82,19 @@ static void	update_env(char **env, char *str)
 	free(str);
 }
 
+static int	check_arg(char **arg, t_env_info *env)
+{
+	if (arg[1] == NULL)
+		return (free_str(arg), 0);
+	if (arg[2] != NULL)
+	{
+		env->error = 1;
+		ft_write_error("cd", NULL, "too many arguments");
+		return (free_str(arg), 0);
+	}
+	return (1);
+}
+
 /**
  * @brief 
  * 
@@ -115,37 +108,24 @@ static void	update_env(char **env, char *str)
 int	ft_cd(char **arg, t_env_info	*env)
 {
 	char	*path;
-	// int		len_path;
-	// int		len;
 
-	if (arg[1] == NULL)
-		return (0);
-	if (arg[2] != NULL)
-	{
-		env->error = 1;		//code error
-		ft_write_error("cd", NULL, "too many arguments");
+	if (check_arg(arg, env) == 0)
 		return (1);
-	}
 	if (arg[1][0] != '/')
 		path = find_absolute_path(arg[1]);
 	else
 		path = ft_strdup(arg[1]);
 	if (path == NULL)
 	{
-		env->error = 2;		//code error ??
+		env->error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(1);		// need to free something
+		return(free_str(arg), 1);
 	}
-	// len = ft_strlen(path);
-	// printf("PATH [%ld] : %s\n", ft_strlen(path), path);
-	// len_path = canonical_form(path);
-	// add_first_slash(path, len_path, len);
-	// path = clean_path(path, len_path);
 	if (chdir(path) == -1)
 	{
-		env->error = 1;		//code error
+		env->error = 1;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free(path), 1);		// need to free something
+		return(free_str(arg), free(path), 1);
 	}
 	update_env(env->env, path);
 	free_str(arg);

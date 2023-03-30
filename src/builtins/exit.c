@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 18:11:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:52:31 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@
  * @param arg char *: value to exit
  * @param env char **: code error modifie or use to exit
  */
-void	ft_exit(char **arg, t_env_info *env)
+void	ft_exit(char **arg, t_env_info *env)			// need to also free tree
 {
 	unsigned char	erreur;
 
 	if (arg[1] == NULL)
 	{
-		free_str(env->env);
-		free_str(arg);
 		erreur = env->error;
+		free_str(arg);
+		free_str(env->env);
 		free(env);
 		write(2, "exit\n", 5);
 		exit(erreur);
@@ -57,10 +57,3 @@ void	ft_exit(char **arg, t_env_info *env)
 	write(2, "exit\n", 5);
 	exit(erreur);
 }
-
-/**
- *  cd | exit ghgf fgjg ; echo $?		->bash: exit: ghgf: numeric argument required  -> 2
- *  cd | exit 6465 fgjg ; echo $?		->bash: exit: fgjg: too many arguments  -> 1
- */
-
-

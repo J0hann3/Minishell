@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:21:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:19:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3);
 int		ft_strcmp(const char *s1, const char *s2);
+void	free_tree(t_ast *tree);
 
 #endif

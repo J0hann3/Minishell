@@ -6,14 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 21:40:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 23:17:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "exec.h"
 
-enum e_meta_character	find_next_meta(t_ast *node)
+static enum e_meta_character	find_next_meta(t_ast *node)
 {
 	enum e_meta_character	tmp;
 	
@@ -30,50 +29,18 @@ enum e_meta_character	find_next_meta(t_ast *node)
 	return (e_empty);
 }
 
-// /**
-//  * @brief create and fork for execution
-//  * child (pid==0)-> write permission
-//  * parent (pid > 0) -> read permission and wait
-//  * 
-//  * @param env 	write error in env if necessary
-//  * @return int : pid of process on success, else -1
-//  */
-// int	ft_pipe(t_env_info *env, int fildes[2])
-// {
-// 	int	pid;
-	
-
-// 	if (pipe(fildes) != 0)
-// 	{
-// 		env->error = 1;
-// 		return (-1);
-// 	}
-// 	pid = fork();
-// 	if (pid == -1)
-// 	{
-// 		env->error = 1;
-// 		return (-1);
-// 	}
-// 	else if (pid == 0)
-// 	{
-// 		close(fildes[0]);
-// 		printf("[%d]close test : %d\n", pid, fildes[0]);
-// 		close(STDOUT_FILENO);
-// 		// if (dup2(fildes[1], STDOUT_FILENO) == -1)
-// 		// 	return (perror("Error"), -1);
-// 		// close(fildes[1]);
-// 		// printf("[%d]close : %d\n", pid, fildes[1]);
-// 		// printf("test----------------\n");
-// 		return (13);
-// 	}
-// 	else
-// 	{
-// 	// 	close(fildes[1]);
-// 	// 	printf("[%d]close : %d\n", pid, fildes[1]);
-// 		return (pid);
-// 	}
-// }
-
+/**
+ * @brief create and fork for execution
+ * child (pid==0)-> execute command with the good redirection
+ * parent (pid > 0) -> wait
+ * 
+ * @param tree 	command to execute in the tree
+ * @param env 	write error in env if necessary
+ * @param m_b 	meta character before command to exec
+ * @param m_n 	meta character after command to exec
+ * @param stat 	error value of the last command executed
+ * @return void
+ */
 void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
 {
 	t_instruction			arg;
@@ -88,9 +55,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			env->error = 1;
 			return ;
 		}
-		dprintf(2, "[%d][%d][%d]\n",fildes[0], fildes[1], fd_tmp);
 	}
-	dprintf(2, "[%d]\n",fd_tmp);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -100,11 +65,15 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	if (pid == 0)
 	{
 		if (fd_tmp != 0)
+		{
 			dup2(fd_tmp, STDIN_FILENO);
+			close(fd_tmp);
+		}
 		if (m_n == e_pipe)
 		{
 			dup2(fildes[1], STDOUT_FILENO);
 			close(fildes[0]);
+			close(fildes[1]);
 		}
 		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
 		{
@@ -114,10 +83,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		}
 		arg.command = ft_split(tree->command, ' ');
 		exec(&arg, env);
-		if (fd_tmp != 0)
-			close(fd_tmp);
-		if (m_n == e_pipe)
-			close(fildes[1]);
 		exit(0);
 	}
 	else
@@ -136,21 +101,24 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			env->error = WEXITSTATUS(stat);
 		else if (WIFSIGNALED(stat))
 			env->error = 128 + WTERMSIG(stat);
-		// else if (WIFSTOPPED(stat))
-		// {
-		// 	// printf("stop\n");
-		// 	stat = WSTOPSIG(stat);
-		// }
 	}
 }
 
+/**
+ * @brief exec command if needed or return
+ * 
+ * @param tree command to exec in tree
+ * @param env write error in env if necessary
+ * @param meta_before meta character before command to exec
+ * @param stat error value of the last command executed
+ * @return enum e_meta_character : meta character for the next command
+ */
 static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
 {
 	enum e_meta_character	meta_next;
 	t_instruction 			arg;
 
 	meta_next = find_next_meta(tree);
-	// printf("meta_before : %d		meta_next: %d		stat:%d\n",meta_before, meta_next, stat);
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next,stat);
@@ -182,7 +150,14 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	return (meta_before);
 }
-
+/**
+ * @brief explore the tree to exec command if needed or skip branch or command
+ * 
+ * @param tree 
+ * @param env 
+ * @param meta_before meta character before command to exec
+ * @param stat error value of the last command executed
+ */
 void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
 {
 	enum e_meta_character	tmp;

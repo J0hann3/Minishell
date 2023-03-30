@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/27 17:56:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/29 22:20:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <string.h>
-# include "utils.h"
-# include "builtins.h"
 
 enum	e_meta_character
 {
@@ -49,5 +47,8 @@ typedef struct s_ast
 	enum e_meta_character	meta;
 }	t_ast;
 
+# include "utils.h"
+# include "builtins.h"
+# include "exec.h"
 
 #endif
