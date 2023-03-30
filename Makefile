@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/29 22:43:54 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/30 03:18:07 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRC_BUILTINS =	echo.c \
 				unset.c \
 				cd.c
 
+UTILS = utils/
 SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
 			ft_atouc.c \
@@ -41,6 +42,7 @@ SRC_UTILS = ft_calloc.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
 			utils.c \
+			init.c \
 			free_tree.c
 
 PARSING = parsing/
@@ -54,10 +56,9 @@ SRC_PARSING = syntax_errors.c \
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
-			$(SRC_UTILS) \
+			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			main.c \
-			error.c \
-			init.c \
+			error.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -92,6 +93,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(BUILTINS)
 	mkdir -p $(OBJ_DIR)$(EXECUTION)
 	mkdir -p $(OBJ_DIR)$(PARSING)
+	mkdir -p $(OBJ_DIR)$(UTILS)
 
 clean:
 	rm -rf $(OBJ_DIR)
