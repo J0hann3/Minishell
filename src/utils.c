@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/16 17:54:10 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/30 06:13:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*cpy;
 
+	if (!s)
+		return (0);
 	cpy = s;
 	while (*s)
 		s++;
@@ -88,4 +90,81 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 	ft_memcpy(new_ptr, ptr, prev_size);
 	free(ptr);
 	return (new_ptr);
+}
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*res;
+	size_t	i;
+
+	res = malloc(sizeof(char) * (n + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (s[i] && i < n)
+	{
+		res[i] = ((char *)s)[i];
+		i++;
+	}
+	res[i] = 0;
+	return (res);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*res;
+	size_t	i;
+
+	res = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		res[i] = ((char *)s)[i];
+		i++;
+	}
+	res[i] = 0;
+	return (res);
+}
+
+static size_t	get_size(unsigned int n)
+{
+	size_t	size;
+
+	if (!n)
+		return (1);
+	size = 0;
+	while (n > 0)
+	{
+		size++;
+		n /= 10;
+	}
+	return (size);
+}
+
+char	*ft_itoa(int n)
+{
+	unsigned int	ncpy;
+	char			*res;
+	size_t			size;
+
+	size = (n < 0);
+	ncpy = n * (1 | -size);
+	size += get_size(ncpy);
+	res = malloc(sizeof(char) * (size + 1));
+	if (!res)
+		return (NULL);
+	res[size--] = '\0';
+	if (!ncpy)
+		res[0] = '0';
+	while (ncpy > 0)
+	{
+		res[size] = (ncpy % 10) + '0';
+		ncpy /= 10;
+		size--;
+	}
+	if (n < 0)
+		res[0] = '-';
+	return (res);
 }

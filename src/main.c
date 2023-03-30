@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/22 19:33:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/30 05:50:31 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,9 @@ int	syntax_errors(char *input)
 
 int	main(int argc, char *argv[], char *env[])
 {
-	char	*input;
-	int		ret_err;
+	char		*input;
+	int			ret_err;
+	t_env_info	env_info = {0, 0, env};
 
 	(void)argc;
 	(void)argv;
@@ -99,7 +100,11 @@ int	main(int argc, char *argv[], char *env[])
 			break ;
 		add_history(input);
 		ret_err = syntax_errors(input);
-		create_tree(input);
+		if (!ret_err)
+		{
+			create_tree(input);
+			printf("'%s'\n",expand_dollars(input, ft_strlen(input), &env_info));
+		}
 		free(input);
 	}
 	rl_clear_history();

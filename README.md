@@ -26,3 +26,15 @@ Parsing :
 	"&&" et "||" : besoin argument des deux cotés
 	"<" et ">" droite uniquement
 	"<<" et ">>" droite uniquement
+
+
+
+expand $ avant le *
+$ + signe non accepte dns pour variable export -> remplace rien
+$ + variable name -> remplace par la valer de l'env, si n'existe pas, remplace par ''
+$ + accepte + non accepte -> remplace et affiche le non accepte a la suite
+cas speciaux :
+$* -> ne fais rien comme un caractere non accepte basique, puis interprete quand meme l'etoile
+$? remplace par la valeur actuelle d'erreur
+
+

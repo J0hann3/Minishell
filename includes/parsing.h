@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/22 17:55:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/30 06:13:36 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,20 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
+typedef struct	s_env_info
+{
+	int		error;
+	int		len_env;
+	char	**env;
+}	t_env_info;
+
 // utils.c
 size_t	ft_strlen(const char *s);
 bool	eq(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strndup(const char *s, size_t n);
+char	*ft_strdup(const char *s);
+char	*ft_itoa(int n);
 
 // parsing_utils.c
 bool	is_operator(const char *c);
@@ -71,5 +81,8 @@ t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstadd_back(t_list **lst, void *content);
 int		ft_lstsize(t_list *lst);
+
+// expand.c
+char *expand_dollars(const char *input, size_t len, t_env_info *env_info);
 
 #endif
