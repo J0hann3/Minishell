@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/31 22:29:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 22:32:38 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,6 @@ static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
 	elem_add = 0;
 	while (elem_add < len_arg || arg[i] != NULL)
 	{
-		// printf("str = %s\n", arg[i]);
 		if (arg[i] == NULL)
 		{
 			++i;
@@ -222,12 +221,10 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	if (len_arg == 0)
 		return (free_arg(arg, len_arg), env);
 	len_env = ft_len(env->env);
-	printf("env[%d]	arg[%d]	total[%d]\n", len_env, len_arg, len_arg + len_env);
 	if (env->len_env > len_env + len_arg)
 	{
 		add_new_variable(arg, env->env, len_arg, len_env);
 		env->len_env = len_arg + len_env;
-		printf("not malloc\n");
 		return (env);
 	}
 	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/21 17:43:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 22:37:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,13 @@ void	ft_write_error(char *command, char *argument, char *message)
 	free(tmp);
 	write(2, str, ft_strlen(str));
 	free(str);
+}
+
+void	free_all(t_env_info *env, char **arg)
+{
+	if (arg != NULL)
+		free_str(arg);
+	free_str(env->env);
+	free_tree(env->tree);
+	free(env);
 }

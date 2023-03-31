@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_tree.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/31 20:26:27 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 22:39:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,12 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
 		{
 			close(fildes[1]);
+			free_all(env, NULL);
 			exit(1);
 		}
 		arg.command = ft_split(tree->command, ' ');
 		exec(&arg, env);
+		free_all(env, arg.command);
 		exit(0);
 	}
 	else

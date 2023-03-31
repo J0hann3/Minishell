@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/31 21:38:54 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 22:34:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(int argc, char *argv[], char *envp[])
 			break ;
 		explore_tree(env->tree, env, e_empty, 0);
 		free_tree(env->tree);
+		env->tree = NULL;
 		free(input);
 	}
 	free_str(env->env);
