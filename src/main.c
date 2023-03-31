@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/31 21:19:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 21:38:54 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,15 @@ int	main(int argc, char *argv[], char *envp[])
 	char		*input;
 	int			ret_err;
 	t_env_info	*env;
-	t_ast		*tree;
+	// t_ast		*tree;
 
 	(void)argc;
 	(void)argv;
 	(void)env;
 	input = (char *)1;
 	env = init_env((const char **)envp);
+	if (env == NULL)
+		return (1);
 	ret_err = 0;
 	while (input != NULL)
 	{
@@ -95,7 +97,7 @@ int	main(int argc, char *argv[], char *envp[])
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;
-		explore_tree(tree, env, e_empty, 0);
+		explore_tree(env->tree, env, e_empty, 0);
 		free_tree(env->tree);
 		free(input);
 	}

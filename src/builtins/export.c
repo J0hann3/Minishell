@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 23:10:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 22:29:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,11 @@ static int	is_valid_name(char *str, t_env_info	*env)
 			}
 		}
 		else
+		{
+			env->error = 1;
+			ft_write_error("export", str, "not a valid identifier");		//need '' around str
 			return (0);
+		}
 		++i;
 	}
 	if (equal == 1)
@@ -99,13 +103,13 @@ static int	trim_invalid_varible(char **arg, t_env_info	*env)
 	return (i + suppr);
 }
 
-int	is_variable_existing(char **env, char *str, int len_env)
+int	is_variable_existing(char **env, char *str)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < len_env)
+	while (env[i] != NULL)
 	{
 		j = 0;
 		while (str[j] != 0 && env[i][j] != 0)
@@ -121,10 +125,40 @@ int	is_variable_existing(char **env, char *str, int len_env)
 	return (-1);
 }
 
-static void	modifie_var(char **env, char *str, int len)
+static int	modifie_var(char **arg, char **env, int len_arg)
 {
-	free(env[len]);
-	env[len] = str;
+	int		i;
+	int		elem;
+	int		modif;
+	int		var_exist;
+
+	i = 1;
+	elem = 0;
+	modif = 0;
+	while (elem < len_arg || arg[i] != NULL)
+	{
+		if (arg[i] == NULL)
+		{
+			++i;
+			continue ;
+		}
+		var_exist = is_variable_existing(env, arg[i]);
+		if (var_exist != -1)
+		{
+			free(env[var_exist]);
+			env[var_exist] = arg[i];
+			arg[i] = NULL;
+			modif++;
+			++i;
+			++elem;
+		}
+		else
+		{
+			elem++;
+			i++;
+		}
+	}
+	return (len_arg - modif);
 }
 
 static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
@@ -143,10 +177,11 @@ static void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
 			++i;
 			continue ;
 		}
-		var_exist = is_variable_existing(env, arg[i], len_env);
+		var_exist = is_variable_existing(env, arg[i]);
 		if (var_exist != -1)
 		{
-			modifie_var(env, arg[i], var_exist);
+			free(env[var_exist]);
+			env[var_exist] = arg[i];
 			++i;
 			++elem_add;
 		}
@@ -181,18 +216,21 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	char	**new;
 
 	len_arg = trim_invalid_varible(arg, env);
+	len_arg = modifie_var(arg, env->env, len_arg);
 	if (len_arg < 0)
 		return (free_arg(arg, len_arg), NULL);
 	if (len_arg == 0)
 		return (free_arg(arg, len_arg), env);
 	len_env = ft_len(env->env);
+	printf("env[%d]	arg[%d]	total[%d]\n", len_env, len_arg, len_arg + len_env);
 	if (env->len_env > len_env + len_arg)
 	{
 		add_new_variable(arg, env->env, len_arg, len_env);
 		env->len_env = len_arg + len_env;
+		printf("not malloc\n");
 		return (env);
 	}
-	new = malloc(sizeof(char *) * (len_env + len_arg + 1));
+	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));
 	if (new == NULL)
 	{
 		env->error = 2;
@@ -201,8 +239,8 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	env->len_env = len_env + len_arg;
 	ft_copy(new, env->env);
 	add_new_variable(arg, new, len_arg, len_env);
-	env->env = new;
 	free(env->env);
+	env->env = new;
 	free(arg[0]);
 	free(arg);
 	return (env);

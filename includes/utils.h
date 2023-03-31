@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 22:19:05 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 22:15:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*ft_strdup(const char *s);
 void	free_str(char **str);
 int		is_alpha(char c);
 int		is_digit(char c);
-int		is_variable_existing(char **env, char *str, int len_env);
 int		ft_len(char **str);
 int		ft_getenv(char **env, char *str);
 int		ft_atouc(const char *str);
