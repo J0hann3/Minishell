@@ -38,3 +38,6 @@ $* -> ne fais rien comme un caractere non accepte basique, puis interprete quand
 $? remplace par la valeur actuelle d'erreur
 
 
+fds : -2 par defaut, si rien n'a ete ouvert, ou tente
+	  -1 si une erreur pendant l'ouverture = jojo ne fais rien
+arrete a la premiere erreur d'ouverture pour >, >> et <

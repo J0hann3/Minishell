@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/31 05:06:53 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 22:50:19 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,42 @@ char	*get_file_name(char *input)
 	return (ft_strndup(input, i));
 }
 
+void	replace_name(char **input, size_t size, bool is_double)
+{
+	char	*tmp;
+	size_t	i;
+	size_t	j;
+
+	if (is_double)
+		(*input)--;
+	(*input)--;
+	tmp = *input;
+	i = 0;
+	j = 0;
+	while ((*input)[i])
+	{
+		if (i < size + 1 + is_double)
+			i++;
+		else
+			tmp[j++] = (*input)[i++];
+	}
+	tmp[j] = 0;
+	*input = tmp;
+}
+
 int	read_fd(char *input, size_t *i)
 {
 	int		fd;
 	char	*file_name;
 
 	(*i)++;
-	input++;
+	while (is_wspace(*++input))
+		(*i)++;
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
 	*i += ft_strlen(file_name);
+	
 	if (!*file_name)
 		return (free(file_name), -2); // ambigous redirect
 	fd = open(file_name, O_RDONLY);
@@ -49,18 +74,19 @@ int	open_fd(char *input, size_t *i)
 
 	(*i)++;
 	input++;
-	open_mode = O_CREAT;
-	if (*input == '>')
-		open_mode |= O_APPEND;
+	open_mode = O_CREAT | O_WRONLY | O_TRUNC;
+	if (*input == '>' && input++)
+		open_mode = O_CREAT | O_WRONLY | O_APPEND;
+	while (is_wspace(*input) && input++)
+		(*i)++;
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
+	replace_name(&input, ft_strlen(file_name), open_mode & O_APPEND);
 	*i += ft_strlen(file_name);
 	if (!*file_name)
 		return (free(file_name), -2); // ambigous redirect
-	printf("file name : %s\n", file_name);
 	fd = open(file_name, open_mode, 0666);
-	printf("son fd : %d\n", fd);
 	free(file_name);
 	return (fd);
 }
@@ -71,11 +97,10 @@ bool	open_all_fds(t_instruction *instruction, char *input)
 	size_t	i;
 	int		in_fd;
 	int		out_fd;
-	char	buf[10000];
 
 	i = 0;
-	in_fd = -1;
-	out_fd = -1;
+	in_fd = -2;
+	out_fd = -2;
 	while (input[i])
 	{
 		if (input[i] == '\"' || input[i] == '\'')
@@ -99,10 +124,10 @@ bool	open_all_fds(t_instruction *instruction, char *input)
 			if (out_fd > -1)
 				close(out_fd);
 			out_fd = open_fd(input + i, &i);
-			if (in_fd == -1)
+			if (out_fd == -1)
 			{
 				if (errno == EACCES)
-					printf("Permission denied\n");
+					perror("error");
 				continue ;
 			}
 			printf("fd sortie : %d\n", out_fd);
@@ -110,12 +135,12 @@ bool	open_all_fds(t_instruction *instruction, char *input)
 		else
 			i++;
 	}
+	printf("input : '%s'\n", input);
 	printf("fin : in = %d, out = %d\n", in_fd, out_fd);
 	if (out_fd > 0)
 	{
 		printf("fd : %d\n", out_fd);
 		write(out_fd, "sortie", 6);
 	}
-	write(3, "truc", 4);
 	return (true);
 }

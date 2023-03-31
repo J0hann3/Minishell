@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/30 06:23:33 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 19:42:15 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*ft_strnjoin(char *s1, char const *s2, size_t size)
 	j = 0;
 	res = malloc(sizeof(char) * len + 1);
 	if (res == 0)
-		return (0);
+		return (NULL);
 	while (s1 && s1[j])
 	{
 		res[j] = s1[j];
@@ -126,7 +126,7 @@ char	*expand(const char *input, size_t *i, t_env_info *env_info)
 	env_index = ft_getenv(env_info->env, tmp);
 	free(tmp);
 	if (env_index == -1)
-		return (NULL);
+		return (calloc(1, sizeof(char)));
 	tmp = env_info->env[env_index];
 	j = 0;
 	while (tmp[j] && tmp[j] != '=')
@@ -142,7 +142,9 @@ char	*expand_dollars(const char *input, size_t len, t_env_info *env_info)
 	char	*tmp;
 	char	*res;
 	
-	res = NULL;
+	res = calloc(1, sizeof(char));
+	if (!res)
+		return (NULL);
 	i = 0;
 	begin_join = 0;
 	while (i < len)

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/31 03:49:51 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 22:19:00 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	main(int argc, char *argv[], char *env[])
 	ret_err = 0;
 	while (input != NULL)
 	{
-		input = readline("minishell$>");
+		input = readline("minishell$> ");
 		if (!input)
 			break ;
 		add_history(input);
@@ -107,6 +107,8 @@ int	main(int argc, char *argv[], char *env[])
 			create_tree(input);
 			tmp = expand_dollars(input, ft_strlen(input), &env_info);
 			// expand *
+			if (!tmp)
+				return (1);
 			open_all_fds(&instruc, tmp);
 		}
 		else
