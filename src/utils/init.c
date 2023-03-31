@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 19:35:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 21:10:23 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_env_info	*init_env(const char **env)
 	}
 	new->len_env = len;
 	new->error = 0;
+	new->tree = NULL;
 	new->env = ft_calloc(len + 1, sizeof(char *));
 	if (new->env == NULL)
 		return (free(new), NULL);

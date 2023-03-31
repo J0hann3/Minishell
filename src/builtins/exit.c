@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 22:52:31 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 21:19:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,16 @@ void	ft_exit(char **arg, t_env_info *env)			// need to also free tree
 		erreur = env->error;
 		free_str(arg);
 		free_str(env->env);
+		free_tree(env->tree);
 		free(env);
 		write(2, "exit\n", 5);
 		exit(erreur);
 	}
-	env->error = ft_atouc(arg[1]);	//code erreur
+	env->error = ft_atouc(arg[1]);
 	if (env->error == -1)
 	{
 		ft_write_error("exit", arg[1], "numeric argument required");
-		env->error = 2;				//code erreur
+		env->error = 2;
 	}
 	else if (arg[2] != NULL)
 	{
@@ -51,6 +52,7 @@ void	ft_exit(char **arg, t_env_info *env)			// need to also free tree
 		return ;
 	}
 	erreur = env->error;
+	free_tree(env->tree);
 	free_str(env->env);
 	free_str(arg);
 	free(env);

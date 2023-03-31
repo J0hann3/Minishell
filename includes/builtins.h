@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:15:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 21:10:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct	s_env_info
 	int		error;
 	int		len_env;
 	char	**env;
+	t_ast	*tree;
 }	t_env_info;
 
 // ------Init ------

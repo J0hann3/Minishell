@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/30 03:18:07 by jvigny           ###   ########.fr        #
+#    Updated: 2023/03/31 21:11:10 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --track-fds=all --trace-children=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=all --trace-children=yes  --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)
