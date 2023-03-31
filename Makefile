@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/30 05:11:36 by qthierry         ###   ########.fr        #
+#    Updated: 2023/03/31 05:00:43 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC_LIST =	main.c \
 			ast.c \
 			ast_utils.c \
 			parsing_parenthesis.c \
+			open_fd.c \
 			expand.c \
 			utils.c
 
@@ -49,7 +50,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind ./$(NAME)
+	valgrind --track-origins=yes --leak-check=full --track-fds=yes --trace-children=yes ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)

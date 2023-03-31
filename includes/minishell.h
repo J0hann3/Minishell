@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/23 00:19:19 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 03:02:39 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_instruction
 	char	**command;
 	int		infile;
 	int		outfile;
+	int		outerror;
 }	t_instruction;
 
 typedef struct	s_ast

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/30 06:13:36 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 03:32:22 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
@@ -83,6 +84,9 @@ t_list	*ft_lstadd_back(t_list **lst, void *content);
 int		ft_lstsize(t_list *lst);
 
 // expand.c
-char *expand_dollars(const char *input, size_t len, t_env_info *env_info);
+char	*expand_dollars(const char *input, size_t len, t_env_info *env_info);
+
+// open_fd.c
+bool	open_all_fds(t_instruction *instruction, char *input);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/30 05:50:31 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/03/31 03:49:51 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,11 @@ int	syntax_errors(char *input)
 
 int	main(int argc, char *argv[], char *env[])
 {
-	char		*input;
-	int			ret_err;
-	t_env_info	env_info = {0, 0, env};
+	char			*input;
+	char			*tmp;
+	int				ret_err;
+	t_env_info		env_info = {0, 0, env};
+	t_instruction	instruc;
 
 	(void)argc;
 	(void)argv;
@@ -103,8 +105,12 @@ int	main(int argc, char *argv[], char *env[])
 		if (!ret_err)
 		{
 			create_tree(input);
-			printf("'%s'\n",expand_dollars(input, ft_strlen(input), &env_info));
+			tmp = expand_dollars(input, ft_strlen(input), &env_info);
+			// expand *
+			open_all_fds(&instruc, tmp);
 		}
+		else
+			printf("Erreur de syntax\n");
 		free(input);
 	}
 	rl_clear_history();
