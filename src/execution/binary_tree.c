@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_tree.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 23:17:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/03/31 20:26:27 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	int						fildes[2];
 	static int				fd_tmp = 0;
 
+	if (m_b == e_pipe && fd_tmp == 0)
+		return ;
 	if (m_n == e_pipe )
 	{
 		if (pipe(fildes) != 0)
@@ -77,9 +79,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		}
 		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
 		{
-			printf("don't execute command\n");
 			close(fildes[1]);
-			exit(0);
+			exit(1);
 		}
 		arg.command = ft_split(tree->command, ' ');
 		exec(&arg, env);
@@ -98,7 +99,11 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			fd_tmp = 0;
 		waitpid(pid, &stat, 0);
 		if (WIFEXITED(stat))
+		{
 			env->error = WEXITSTATUS(stat);
+			if (env->error == 1)
+				fd_tmp = 0;
+		}
 		else if (WIFSIGNALED(stat))
 			env->error = 128 + WTERMSIG(stat);
 	}
