@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/31 22:50:19 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 10:17:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@ char	*get_file_name(char *input)
 	return (ft_strndup(input, i));
 }
 
-void	replace_name(char **input, size_t size, bool is_double)
+void	replace_name(char **input, size_t size, int offset_op)
 {
 	char	*tmp;
 	size_t	i;
-	size_t	j;
+	int		j;
 
-	if (is_double)
+	i = 0;
+	while (i++ < (size_t)offset_op)
 		(*input)--;
 	(*input)--;
 	tmp = *input;
@@ -37,7 +38,7 @@ void	replace_name(char **input, size_t size, bool is_double)
 	j = 0;
 	while ((*input)[i])
 	{
-		if (i < size + 1 + is_double)
+		if (i < size + 1 + offset_op)
 			i++;
 		else
 			tmp[j++] = (*input)[i++];
@@ -46,19 +47,19 @@ void	replace_name(char **input, size_t size, bool is_double)
 	*input = tmp;
 }
 
-int	read_fd(char *input, size_t *i)
+int	read_fd(char *input)
 {
 	int		fd;
 	char	*file_name;
+	bool	has_space;
 
-	(*i)++;
+	has_space = false;
 	while (is_wspace(*++input))
-		(*i)++;
+		has_space = true;
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
-	*i += ft_strlen(file_name);
-	
+	replace_name(&input, ft_strlen(file_name), has_space);
 	if (!*file_name)
 		return (free(file_name), -2); // ambigous redirect
 	fd = open(file_name, O_RDONLY);
@@ -66,24 +67,24 @@ int	read_fd(char *input, size_t *i)
 	return (fd);
 }
 
-int	open_fd(char *input, size_t *i)
+int	open_fd(char *input)
 {
 	int		fd;
 	int		open_mode;
 	char	*file_name;
+	bool	has_space;
 
-	(*i)++;
 	input++;
+	has_space = false;
 	open_mode = O_CREAT | O_WRONLY | O_TRUNC;
 	if (*input == '>' && input++)
 		open_mode = O_CREAT | O_WRONLY | O_APPEND;
 	while (is_wspace(*input) && input++)
-		(*i)++;
+		has_space = true;
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
-	replace_name(&input, ft_strlen(file_name), open_mode & O_APPEND);
-	*i += ft_strlen(file_name);
+	replace_name(&input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
 	if (!*file_name)
 		return (free(file_name), -2); // ambigous redirect
 	fd = open(file_name, open_mode, 0666);
@@ -92,55 +93,48 @@ int	open_fd(char *input, size_t *i)
 }
 
 
-bool	open_all_fds(t_instruction *instruction, char *input)
+bool	open_all_fds(t_instruction *instruc, char *input)
 {
 	size_t	i;
-	int		in_fd;
-	int		out_fd;
 
 	i = 0;
-	in_fd = -2;
-	out_fd = -2;
+	instruc->infile = -2;
+	instruc->outfile = -2;
 	while (input[i])
 	{
 		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i);
 		else if (input[i] == '<' && input[i + 1] != '<')
 		{
-			if (in_fd > -1)
-				close(in_fd);
-			in_fd = read_fd(input + i, &i);
-			if (in_fd == -1)
+			if (instruc->infile > -1)
+				close(instruc->infile);
+			instruc->infile = read_fd(input + i);
+			if (instruc->infile <= -1)
 			{
-				if (errno == EACCES)
-					printf("Permission denied\n");
+				if (instruc->infile == -2)
+					printf("Ambigous redirect\n"); // tmp
 				else
-					printf("%d\nNo such file of directory\n", errno);
-				continue ;
+					perror("Error");
+				return (false);
 			}
 		}
 		else if (input[i] == '>')
 		{
-			if (out_fd > -1)
-				close(out_fd);
-			out_fd = open_fd(input + i, &i);
-			if (out_fd == -1)
+			if (instruc->outfile > -1)
+				close(instruc->outfile);
+			instruc->outfile = open_fd(input + i);
+			if (instruc->outfile <= -1)
 			{
-				if (errno == EACCES)
-					perror("error");
-				continue ;
+				if (instruc->outfile == -2)
+					printf("Ambigous redirect\n"); // tmp
+				else
+					perror("Error");
+				return (false);
 			}
-			printf("fd sortie : %d\n", out_fd);
+			printf("fd sortie : %d\n", instruc->outfile);
 		}
 		else
 			i++;
-	}
-	printf("input : '%s'\n", input);
-	printf("fin : in = %d, out = %d\n", in_fd, out_fd);
-	if (out_fd > 0)
-	{
-		printf("fd : %d\n", out_fd);
-		write(out_fd, "sortie", 6);
 	}
 	return (true);
 }

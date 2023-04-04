@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/27 19:08:21 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 10:50:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_ast	*create_leaf(const char *input)
 		input++;
 	}
 	node->size = input - start;
-	if (*(input - 1) == ' ')
+	if (input != start && *(input - 1) == ' ')
 		node->size--;
 	return (node);
 }

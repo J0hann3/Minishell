@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/31 03:32:22 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 10:36:19 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
 char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
+void	*ft_calloc(size_t nmemb, size_t size);
+void	ft_bzero(void *s, size_t n);
+
+// ft_split.c
+char	**ft_split(const char *string, char c);
 
 // parsing_utils.c
 bool	is_operator(const char *c);

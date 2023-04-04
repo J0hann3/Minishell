@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/31 22:23:26 by qthierry         ###   ########.fr        #
+#    Updated: 2023/04/04 10:36:26 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC_LIST =	main.c \
 			parsing_parenthesis.c \
 			open_fd.c \
 			expand.c \
+			ft_split.c \
 			utils.c
 
 SRC_DIR = ./src/

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/30 06:13:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 10:36:49 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,5 +166,29 @@ char	*ft_itoa(int n)
 	}
 	if (n < 0)
 		res[0] = '-';
+	return (res);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+		((char *)s)[i++] = 0;
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*res;
+
+	if (!nmemb || !size)
+		return (malloc(0));
+	if ((size_t)-1 / nmemb < size)
+		return (NULL);
+	res = malloc(nmemb * size);
+	if (!res)
+		return (res);
+	ft_bzero(res, nmemb * size);
 	return (res);
 }
