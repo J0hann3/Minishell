@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 10:57:52 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 18:59:37 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,11 @@ static char	*get_word(const char **string, char c)
 	while (**string && **string == c)
 		(*string)++;
 	while ((*string)[size] && (*string)[size] != c)
+	{
+		if ((*string)[size] == '\'' || (*string)[size] == '\"')
+			size += skip_quotes(*(string + size));
 		size++;
+	}
 	res = malloc(sizeof(char) * (size + 1));
 	if (!res)
 		return (NULL);

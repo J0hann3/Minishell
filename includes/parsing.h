@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 10:36:19 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 18:12:04 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ void	ft_bzero(void *s, size_t n);
 
 // ft_split.c
 char	**ft_split(const char *string, char c);
+
+// remove_quotes.c
+void	remove_quotes(char *string);
 
 // parsing_utils.c
 bool	is_operator(const char *c);

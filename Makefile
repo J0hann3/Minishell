@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/04 17:44:38 by qthierry         ###   ########.fr        #
+#    Updated: 2023/04/04 18:11:09 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC_LIST =	main.c \
 			open_fd.c \
 			expand.c \
 			ft_split.c \
+			remove_quotes.c \
 			utils.c
 
 SRC_DIR = ./src/

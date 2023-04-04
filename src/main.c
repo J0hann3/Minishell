@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 13:13:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 18:24:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	print_instruc(t_instruction *instruc) // tmp
 	i = 0;
 	printf("Commands :\n");
 	while (instruc->command[i])
-		printf("'%s'\n", instruc->command[i++]);
+		printf("`%s`\n", instruc->command[i++]);
 	printf("Infile  : '%d'\n", instruc->infile);
 	printf("Outfile : '%d'\n", instruc->outfile);
 }
@@ -121,6 +121,7 @@ t_instruction	*called_by_jo_from_tree(char *input, char **env) //tmp
 	char			*expanded_command;
 	t_env_info		env_info = {0, 0, env};
 	t_instruction	*instruc;
+	size_t			i;
 	
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
@@ -130,6 +131,11 @@ t_instruction	*called_by_jo_from_tree(char *input, char **env) //tmp
 		return (free(expanded_command), free_instructions(instruc), NULL);
 	// expand *
 	instruc->command = ft_split(expanded_command, ' ');
+	if (!instruc->command)
+		return (NULL);
+	i = 0;
+	while (instruc->command[i])
+		remove_quotes(instruc->command[i++]);
 	print_instruc(instruc);
 	free(expanded_command);
 	return (instruc);
@@ -138,7 +144,6 @@ t_instruction	*called_by_jo_from_tree(char *input, char **env) //tmp
 int	main(int argc, char *argv[], char *env[])
 {
 	char			*input;
-	char			*tmp;
 	int				ret_err;
 	t_instruction	*instruc;
 

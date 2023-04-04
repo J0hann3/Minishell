@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 11:52:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 18:01:00 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,9 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 	instruc->outfile = -2;
 	while (input[i])
 	{
-		if (input[i] == '<' && input[i + 1] != '<')
+		if (input[i] == '\"' || input[i] == '\'')
+			i += skip_quotes(input + i) + 1;
+		else if (input[i] == '<' && input[i + 1] != '<')
 		{
 			if (instruc->infile > -1)
 				close(instruc->infile);
