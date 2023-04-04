@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/31 19:42:15 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 17:31:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,27 @@ char	*expand(const char *input, size_t *i, t_env_info *env_info)
 	env_index = ft_getenv(env_info->env, tmp);
 	free(tmp);
 	if (env_index == -1)
-		return (calloc(1, sizeof(char)));
+	{
+		tmp = ft_calloc(3, sizeof(char));
+		if (!tmp)
+			return (NULL);
+		tmp[0] = '\'';
+		tmp[1] = '\'';
+		return (tmp);
+	}
 	tmp = env_info->env[env_index];
 	j = 0;
 	while (tmp[j] && tmp[j] != '=')
 		j++;
-	tmp = ft_strdup(tmp + j + 1);
+	tmp = ft_calloc(ft_strlen(tmp + j) + 2, sizeof(char));
+	if (!tmp)
+		return (NULL);
+	tmp[0] = '\'';
+	size = 1;
+	while (env_info->env[env_index][j])
+		tmp[size++] = env_info->env[env_index][++j];
+	tmp[size - 1] = '\'';
+	printf("expand : %s\n", tmp);
 	return (tmp);
 }
 
@@ -142,7 +157,7 @@ char	*expand_dollars(const char *input, size_t len, t_env_info *env_info)
 	char	*tmp;
 	char	*res;
 	
-	res = calloc(1, sizeof(char));
+	res = ft_calloc(1, sizeof(char));
 	if (!res)
 		return (NULL);
 	i = 0;

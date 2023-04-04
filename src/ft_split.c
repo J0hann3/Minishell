@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 10:48:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 10:57:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,14 @@ static int	count_words(const char *string, char c)
 			string++;
 		if (!*string)
 			break ;
-		while (*string && *string != c)
+		while (*string)
+		{
+			if (*string == '\'' || *string == '\"')
+				string += skip_quotes(string);
+			else if (*string == c)
+				break ;
 			string++;
+		}
 		res++;
 	}
 	return (res);

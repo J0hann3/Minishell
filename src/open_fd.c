@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 10:17:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/04 11:52:17 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,32 @@
 char	*get_file_name(char *input)
 {
 	size_t	i;
+	size_t	j;
+	char	*cpy;
+	char	quote;
+	bool	is_in_quote;
 
+	cpy = input;
+	is_in_quote = false;
 	i = 0;
-	while (input[i]
-		&& !is_wspace(input[i]) && input[i] != '<' && input[i] != '>')
-		i++;
+	j = 0;
+	while (input[i] && !(is_wspace(input[i]) && !is_in_quote)
+		&& input[i] != '<' && input[i] != '>')
+	{
+		if ((input[i] == '\"' || input[i] == '\'') && !is_in_quote)
+		{
+			quote = input[i++];
+			is_in_quote = true;
+		}
+		else if (is_in_quote && input[i] == quote)
+		{
+			is_in_quote = false;
+			i++;
+		}
+		else
+			cpy[j++] = input[i++];
+	}
+	cpy[j] = 0;
 	return (ft_strndup(input, i));
 }
 
@@ -102,9 +123,7 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 	instruc->outfile = -2;
 	while (input[i])
 	{
-		if (input[i] == '\"' || input[i] == '\'')
-			i += skip_quotes(input + i);
-		else if (input[i] == '<' && input[i + 1] != '<')
+		if (input[i] == '<' && input[i + 1] != '<')
 		{
 			if (instruc->infile > -1)
 				close(instruc->infile);
