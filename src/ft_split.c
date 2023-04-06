@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 18:59:37 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/06 03:02:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*get_word(const char **string, char c)
 	while ((*string)[size] && (*string)[size] != c)
 	{
 		if ((*string)[size] == '\'' || (*string)[size] == '\"')
-			size += skip_quotes(*(string + size));
+			size += skip_quotes((*string) + size);
 		size++;
 	}
 	res = malloc(sizeof(char) * (size + 1));
@@ -89,7 +89,6 @@ char	**ft_split(const char *string, char c)
 	if (!string)
 		return (NULL);
 	nb_words = count_words(string, c);
-	printf("nb mots : %d\n", nb_words);
 	res = malloc(sizeof(char *) * (nb_words + 1));
 	if (!res)
 		return (NULL);
