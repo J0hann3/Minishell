@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 17:31:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/06 22:44:40 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,24 @@ int	ft_getenv(char **env, char *str)
 	return (-1);
 }
 
-char	*expand(const char *input, size_t *i, t_env_info *env_info)
+int	is_ambigous_redirect(char *input, int index)
+{
+	int	i;
+
+	i = 0;
+	while (i < index)
+	{
+		if (*(input - i) == '<' || *(input - i) == '>')
+			return (1);
+		else if (is_wspace(*(input - i)))
+			i++;
+		else
+			i++;
+	}
+	return (0);
+}
+
+char	*expand(char *input, size_t *i, t_env_info *env_info)
 {
 	char	*tmp;
 	int		env_index;
@@ -126,31 +143,21 @@ char	*expand(const char *input, size_t *i, t_env_info *env_info)
 	env_index = ft_getenv(env_info->env, tmp);
 	free(tmp);
 	if (env_index == -1)
-	{
-		tmp = ft_calloc(3, sizeof(char));
-		if (!tmp)
-			return (NULL);
-		tmp[0] = '\'';
-		tmp[1] = '\'';
+	{								//$		
+		if (is_ambigous_redirect(input - 1, *i - size))
+			printf("ambigous bizarre -------- \n");//ambigous
+		tmp = ft_calloc(1, sizeof(char));
 		return (tmp);
 	}
 	tmp = env_info->env[env_index];
-	j = 0;
-	while (tmp[j] && tmp[j] != '=')
-		j++;
-	tmp = ft_calloc(ft_strlen(tmp + j) + 2, sizeof(char));
-	if (!tmp)
-		return (NULL);
-	tmp[0] = '\'';
-	size = 1;
-	while (env_info->env[env_index][j])
-		tmp[size++] = env_info->env[env_index][++j];
-	tmp[size - 1] = '\'';
-	printf("expand : %s\n", tmp);
+	size = 0;
+	while (tmp[size] && tmp[size] != '=')
+		size++;
+	tmp = ft_strdup(tmp + size + 1);
 	return (tmp);
 }
 
-char	*expand_dollars(const char *input, size_t len, t_env_info *env_info)
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
 {
 	size_t	i;
 	int		begin_join;

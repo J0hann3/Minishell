@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 18:12:04 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/06 22:20:43 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ t_list	*ft_lstadd_back(t_list **lst, void *content);
 int		ft_lstsize(t_list *lst);
 
 // expand.c
-char	*expand_dollars(const char *input, size_t len, t_env_info *env_info);
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info);
 
 // open_fd.c
 bool	open_all_fds(t_instruction *instruction, char *input);
