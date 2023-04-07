@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 18:01:00 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/06 23:45:13 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,7 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 			instruc->infile = read_fd(input + i);
 			if (instruc->infile <= -1)
 			{
-				if (instruc->infile == -2)
-					printf("Ambigous redirect\n"); // tmp
-				else
-					perror("Error");
+				perror("Error");
 				return (false);
 			}
 		}
@@ -146,10 +143,7 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 			instruc->outfile = open_fd(input + i);
 			if (instruc->outfile <= -1)
 			{
-				if (instruc->outfile == -2)
-					printf("Ambigous redirect\n"); // tmp
-				else
-					perror("Error");
+				perror("Error");
 				return (false);
 			}
 			printf("fd sortie : %d\n", instruc->outfile);
