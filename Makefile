@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
+#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/30 03:18:07 by jvigny           ###   ########.fr        #
+#    Updated: 2023/04/11 19:26:04 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -Werror
+CFLAGS = -g -Wall -Wextra #-fsanitize=address #-Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
@@ -59,6 +59,11 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			main.c \
 			error.c
+			open_fd.c \
+			expand.c \
+			ft_split.c \
+			remove_quotes.c \
+			utils.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -80,7 +85,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --track-fds=all --trace-children=yes ./$(NAME)
+	valgrind --leak-check=full --track-fds=all --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)

@@ -3,70 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/28 14:07:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 19:24:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static enum e_meta_character	get_meta(char *input)
-{
-	if (is_operator(input))
-	{
-		if (is_and_or(input))
-		{
-			if (*input == '|')
-				return (e_or);
-			return (e_and);
-		}
-		return (e_pipe);
-	}
-	return (e_empty);
-}
-
-// static int	get_max_depth(t_ast	*root, int depth)
-// {
-// 	if (!root)
-// 		return (depth + 1);
-// 	if (root->left)
-// 		return (get_max_depth(root->left, depth + 1));
-// 	if (root->right)
-// 		return (get_max_depth(root->left, depth + 1));
-// 	return (depth + 1);
-// }
-
-static int	get_height(t_ast *root)
-{
-	int	leftHeight;
-	int	rightHeight;
-
-	if (!root)
-		return (0);
-	else
-	{
-		leftHeight = get_height(root->left);
-		rightHeight = get_height(root->right);
-		if (leftHeight > rightHeight)
-			return (leftHeight + 1);
-		else
-			return (rightHeight + 1);
-	}
-}
-
-static const char *meta_to_char(enum e_meta_character meta)
-{
-	if (meta == e_pipe)
-		return ("|");
-	if (meta == e_or)
-		return ("||");
-	if (meta == e_and)
-		return ("&&");
-	else
-		return ("");
-}
+enum e_meta_character	get_meta(char *input);
+int						get_height(t_ast *root);
+const char				*meta_to_char(enum e_meta_character meta);
 
 size_t	get_command_size(const char *input)
 {
@@ -100,7 +48,7 @@ t_ast	*create_leaf(const char *input)
 		input++;
 	}
 	node->size = input - start;
-	if (*(input - 1) == ' ')
+	if (input != start && *(input - 1) == ' ')
 		node->size--;
 	return (node);
 }
@@ -166,13 +114,8 @@ t_ast	*create_sub_tree(char **input, t_ast *child)
 	{
 		left->parent->right = create_leaf(*input);
 		*input += left->parent->right->size;
-		left->parent->right->parent = left->parent;
-		//if (**input == ')')
-		//{
-		//	(*input)++;
-		//	return (left->parent);
-		//}
 	}
+	left->parent->right->parent = left->parent;
 	while (**input == ' ')
 		(*input)++;
 	if (is_operator(*input))

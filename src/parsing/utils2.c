@@ -5,8 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+<<<<<<< HEAD:src/parsing/utils2.c
 /*   Created: 2023/03/24 17:52:35 by jvigny            #+#    #+#             */
 /*   Updated: 2023/03/24 18:21:42 by jvigny           ###   ########.fr       */
+=======
+/*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
+/*   Updated: 2023/04/04 10:36:49 by qthierry         ###   ########.fr       */
+>>>>>>> origin/Quentin:src/utils.c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +21,8 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*cpy;
 
+	if (!s)
+		return (0);
 	cpy = s;
 	while (*s)
 		s++;
@@ -90,6 +97,7 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 	return (new_ptr);
 }
 
+<<<<<<< HEAD:src/parsing/utils2.c
 bool	has_error_for_meta(char *input, size_t i)
 {
 	if (input[i] == '&' && input[i + 1] != '&')
@@ -159,3 +167,105 @@ int	syntax_errors(char *input)
 	}
 	return (0);
 }
+=======
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*res;
+	size_t	i;
+
+	res = malloc(sizeof(char) * (n + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (s[i] && i < n)
+	{
+		res[i] = ((char *)s)[i];
+		i++;
+	}
+	res[i] = 0;
+	return (res);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*res;
+	size_t	i;
+
+	res = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		res[i] = ((char *)s)[i];
+		i++;
+	}
+	res[i] = 0;
+	return (res);
+}
+
+static size_t	get_size(unsigned int n)
+{
+	size_t	size;
+
+	if (!n)
+		return (1);
+	size = 0;
+	while (n > 0)
+	{
+		size++;
+		n /= 10;
+	}
+	return (size);
+}
+
+char	*ft_itoa(int n)
+{
+	unsigned int	ncpy;
+	char			*res;
+	size_t			size;
+
+	size = (n < 0);
+	ncpy = n * (1 | -size);
+	size += get_size(ncpy);
+	res = malloc(sizeof(char) * (size + 1));
+	if (!res)
+		return (NULL);
+	res[size--] = '\0';
+	if (!ncpy)
+		res[0] = '0';
+	while (ncpy > 0)
+	{
+		res[size] = (ncpy % 10) + '0';
+		ncpy /= 10;
+		size--;
+	}
+	if (n < 0)
+		res[0] = '-';
+	return (res);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+		((char *)s)[i++] = 0;
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*res;
+
+	if (!nmemb || !size)
+		return (malloc(0));
+	if ((size_t)-1 / nmemb < size)
+		return (NULL);
+	res = malloc(nmemb * size);
+	if (!res)
+		return (res);
+	ft_bzero(res, nmemb * size);
+	return (res);
+}
+>>>>>>> origin/Quentin:src/utils.c
