@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/06 23:38:47 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:44:40 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ int	read_fd(char *input)
 	if (!file_name)
 		return (-1);
 	replace_name(&input, ft_strlen(file_name), has_space);
-	if (!*file_name)
-		return (free(file_name), -2); // ambigous redirect
 	fd = open(file_name, O_RDONLY);
 	free(file_name);
 	return (fd);
@@ -106,9 +104,8 @@ int	open_fd(char *input)
 	if (!file_name)
 		return (-1);
 	replace_name(&input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
-	if (!*file_name)
-		return (free(file_name), -2); // ambigous redirect
 	fd = open(file_name, open_mode, 0666);
+	printf("file name : `%s`\n", file_name);
 	free(file_name);
 	return (fd);
 }

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/06 23:39:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:44:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,22 +106,35 @@ int	ft_getenv(char **env, char *str)
 	return (-1);
 }
 
-int	is_ambigous_redirect(char *input, int index)
+bool	has_space(const char *string)
+{
+	while (*string)
+	{
+		if (is_wspace(*string))
+			return (true);
+		else
+			string++;
+	}
+	return (false);
+}
+
+bool	is_ambigous_redirect(char *input, int index)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (i < index)
 	{
 		if (*(input - i) == '<' || *(input - i) == '>')
-			return (1);
+			return (true);
 		else if (is_wspace(*(input - i)))
 			i++;
 		else
-			i++;
+			return (false);
 	}
-	return (0);
+	return (false);
 }
+
 
 char	*expand(char *input, size_t *i, t_env_info *env_info)
 {
@@ -146,15 +159,19 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 	if (env_index == -1)
 	{
 		if (is_ambigous_redirect(input - 1, *i - size))
-			printf("ambigous bizarre -------- \n");//ambigous
-		tmp = ft_calloc(1, sizeof(char));
-		return (tmp);
+		{
+			printf("ambigous -------- \n");//ambigous
+			env_info->error = 1; // ambigous error to change
+		}
+		return (ft_calloc(1, sizeof(char)));
 	}
 	tmp = env_info->env[env_index];
-	size = 0;
-	while (tmp[size] && tmp[size] != '=')
-		size++;
-	tmp = ft_strdup(tmp + size + 1);
+	j = 0;
+	while (tmp[j] && tmp[j] != '=')
+		j++;
+	tmp = ft_strdup(tmp + j + 1);
+	if (is_ambigous_redirect(input - 1, *i - size) && (!*tmp || has_space(tmp)))
+		env_info->error = 1;
 	return (tmp);
 }
 
@@ -164,7 +181,7 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
 	int		begin_join;
 	char	*tmp;
 	char	*res;
-	
+
 	res = ft_calloc(1, sizeof(char));
 	if (!res)
 		return (NULL);
@@ -181,7 +198,9 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
 			i++;
 			tmp = expand(input + i, &i, env_info);
 			if (!tmp)
-				return (NULL);
+				return (free(res), NULL);
+			if (env_info->error == 4)
+				return (free(tmp), res);				//error on ambigous to change
 			begin_join = i;
 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
 			free(tmp);
