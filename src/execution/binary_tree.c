@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 19:54:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:27:22 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			close(fildes[1]);
 			exit(0);
 		}
-		arg = second_parsing(tree->command, env);
+		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
 		exit(0);
 	}
@@ -127,7 +127,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	else if (meta_before == e_empty)
 	{
-		arg = second_parsing(tree->command, env);
+		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
 		return (meta_next);
 	}
@@ -135,7 +135,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (stat == 0)
 		{
-			arg = second_parsing(tree->command, env);
+			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env);
 			return (meta_next);
 		}
@@ -144,7 +144,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (stat != 0)
 		{
-			arg = second_parsing(tree->command, env);
+			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env);
 			return (meta_next);
 		}

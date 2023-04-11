@@ -6,23 +6,23 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:56:10 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:28:03 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-static void	print_instruc(t_instruction *instruc) // tmp
-{
-	int	i;
+// static void	print_instruc(t_instruction *instruc) // tmp
+// {
+// 	int	i;
 
-	i = 0;
-	printf("Commands :\n");
-	while (instruc->command[i])
-		printf("`%s`\n", instruc->command[i++]);
-	printf("Infile  : '%d'\n", instruc->infile);
-	printf("Outfile : '%d'\n", instruc->outfile);
-}
+// 	i = 0;
+// 	printf("Commands :\n");
+// 	while (instruc->command[i])
+// 		printf("`%s`\n", instruc->command[i++]);
+// 	printf("Infile  : '%d'\n", instruc->infile);
+// 	printf("Outfile : '%d'\n", instruc->outfile);
+// }
 
 static void	free_instructions(t_instruction *instruc)
 {
@@ -46,7 +46,7 @@ static void	free_instructions(t_instruction *instruc)
 	free(instruc);
 }
 
-t_instruction	*second_parsing(char *input, t_env_info *env_info)
+t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info)
 {
 	char			*expanded_command;
 	t_instruction	*instruc;
@@ -56,7 +56,7 @@ t_instruction	*second_parsing(char *input, t_env_info *env_info)
 	if (!instruc)
 		return (NULL);
 	// heredocs
-	expanded_command = expand_dollars(input, ft_strlen(input), env_info);
+	expanded_command = expand_dollars(input, command_size, env_info);
 	if(!(expanded_command && env_info->error != 1 && open_all_fds(instruc, expanded_command))) // changer error
 		return (free(expanded_command), free_instructions(instruc), NULL);
 	// expand *
@@ -66,7 +66,7 @@ t_instruction	*second_parsing(char *input, t_env_info *env_info)
 	i = 0;
 	while (instruc->command[i])
 		remove_quotes(instruc->command[i++]);
-	print_instruc(instruc);
+	// print_instruc(instruc);
 	free(expanded_command);
 	return (instruc);
 }

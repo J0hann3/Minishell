@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:57:48 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:20:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ int	open_fd(char *input)
 		return (-1);
 	replace_name(&input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
 	fd = open(file_name, open_mode, 0666);
-	printf("file name : `%s`\n", file_name);
 	free(file_name);
 	return (fd);
 }
@@ -127,7 +126,7 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 			if (instruc->infile > -1)
 				close(instruc->infile);
 			instruc->infile = read_fd(input + i);
-			if (instruc->infile <= -1)
+			if (instruc->infile == -1)
 			{
 				perror("Error");
 				return (false);
@@ -138,12 +137,11 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 			if (instruc->outfile > -1)
 				close(instruc->outfile);
 			instruc->outfile = open_fd(input + i);
-			if (instruc->outfile <= -1)
+			if (instruc->outfile == -1)
 			{
-				perror("Error ici");
+				perror("Error");
 				return (false);
 			}
-			printf("fd sortie : %d\n", instruc->outfile);
 		}
 		else
 			i++;

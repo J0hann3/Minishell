@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:52:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:26:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*expand_dollars(char *input, size_t len, t_env_info *env_info);
 
 //second_parsing.c
-t_instruction	*second_parsing(char *input, t_env_info *env_info);
+t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info);
 
 // open_fd.c
 bool	open_all_fds(t_instruction *instruction, char *input);

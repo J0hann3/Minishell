@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/11 20:01:12 by qthierry         ###   ########.fr        #
+#    Updated: 2023/04/11 20:35:54 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,8 @@ SRC_UTILS = ft_calloc.c \
 			ft_strcmp.c \
 			utils.c \
 			init.c \
-			free_tree.c
+			free_tree.c \
+			error.c
 
 PARSING = parsing/
 SRC_PARSING = syntax_errors.c \
@@ -63,7 +64,6 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			main.c \
-			error.c \
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))

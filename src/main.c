@@ -6,83 +6,12 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:56:26 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:05:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "../includes/parsing.h"
-
-#include <sys/stat.h>
-#include <fcntl.h>
-
-
-
-// int main(int argc, char **argv, char **envp)
-// {
-// 	// t_env_info *env;
-// 	// t_instruction	command;
-// 	int			i;
-// 	// // char		*ligne;
-// 	// i = 0;
-// 	// argv[argc - 1] = NULL;
-
-// 	// env = init_env((const char **)envp);
-// 	// command.command = init_arg((const char **)argv);
-
-// 	int fd = open("test", O_RDWR);
-// 	printf("fd:%d\n", fd);
-// 	if (fd < 0)
-// 		return (perror("error"), 1);
-// 	int pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		dup2(fd, STDOUT_FILENO);
-// 		printf("fd:%d\n", fd);
-// 		printf("test\n");
-// 		write(fd, "hello10", 7);
-// 		close(fd);
-// 		return (0);
-// 	}
-// 	waitpid(pid, &i, 0);
-// 	close(fd);
-// 	printf("fd:%d\n", fd);
-// 	printf("test\n");
-// 	write(fd, "hello", 5);
-// 	write(1, "hello5", 6);
-// 	// ft_export(argv, env);
-// 	// while(1)
-// 	// {
-// 	// 	env->error = 0;
-// 	// 	rl_outstream = stderr;
-// 	// 	ligne = readline("minishell$> ");
-// 	// 	add_history(ligne);
-// 	// 	argv = ft_split_quote(ligne, ' ');
-// 	// 	ft_cd(argv, env);
-// 	// 	ft_pwd(argv, env);
-// 	// 	// free_str(argv);
-// 	// }
-// 	return (0);
-// }
-
-
-// int	main(int argc, char *argv[], char *envp[])
-// {
-// 	if (input[i] == '&' && input[i + 1] != '&')
-// 		return (0);
-// 	else if (input[i] == '<' || input[i] == '>')
-// 	{
-// 		if (!has_argument_right(input + i))
-// 			return (1);
-// 	}
-// 	else if (input[i] == '|' || input[i] == '&')
-// 	{
-// 		if (!has_argument_left(input, (input + i))
-// 			|| !has_argument_right(input + i))
-// 			return (1);
-// 	}
-// 	return (0);
-// }
 
 int	main(int argc, char *argv[], char *envp[])
 {

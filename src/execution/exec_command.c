@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 20:00:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:31:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,19 +146,19 @@ static char	*find_path_command(char *str, t_env_info *env)
  */
 void	redirection(t_instruction *inst, t_env_info *env)
 {
-	if (inst->infile != 0)
+	if (inst->infile != -2)
 		if (dup2(inst->infile, STDIN_FILENO) != 0)
 		{
 			env->error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
-	if (inst->outfile != 0)
+	if (inst->outfile != -2)
 		if (dup2(inst->outfile, STDOUT_FILENO) != 0)
 		{
 			env->error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
-	if (inst->outerror != 0)
+	if (inst->outerror != -2)
 		if (dup2(inst->outerror, STDERR_FILENO) != 0)
 		{
 			env->error = 1;

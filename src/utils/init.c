@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/22 19:35:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 20:16:56 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_env_info	*init_env(const char **env)
 	new->env = ft_calloc(len + 1, sizeof(char *));
 	if (new->env == NULL)
 		return (free(new), NULL);
-	printf("len_env_init : %d\n", len);
+	// printf("len_env_init : %d\n", len);
 	while (i < len)
 	{
 		new->env[i] = ft_strdup(env[i]);
@@ -65,7 +65,7 @@ char	**init_arg(const char **arg)
 		len++;
 	}
 	new = ft_calloc(len + 1, sizeof(char *));
-	printf("len_arg_init : %d\n", len);
+	// printf("len_arg_init : %d\n", len);
 	if (new == NULL)
 		return (NULL);
 	while (j < len)

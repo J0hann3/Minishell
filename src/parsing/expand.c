@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:57:28 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:17:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 	{
 		if (is_ambigous_redirect(input - 1, *i - size))
 		{
-			printf("ambigous -------- \n");//ambigous
+			// printf("ambigous -------- \n");//ambigous
 			env_info->error = 1; // ambigous error to change
 		}
 		return (ft_calloc(1, sizeof(char)));

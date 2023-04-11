@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:35:42 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 20:16:47 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ int	syntax_errors(char *input)
 	if (has_error_on_operators_and_parenthesis(input))
 		return (2);
 	remove_multiple_wspaces(input);
-	printf("canon : `%s`\n", input);
 	i = 0;
 	while (input[i])
 	{
