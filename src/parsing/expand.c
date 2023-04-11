@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:48:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		return (NULL);
 	env_index = ft_getenv(env_info->env, tmp);
 	free(tmp);
+	
 	if (env_index == -1)
 	{
 		if (is_ambigous_redirect(input - 1, *i - size))
