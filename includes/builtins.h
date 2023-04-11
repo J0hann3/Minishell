@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:15:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 19:28:57 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 
 # include <stdint.h>
 # include <errno.h>
-
-typedef struct	s_env_info
-{
-	int		error;
-	int		len_env;
-	char	**env;
-}	t_env_info;
 
 // ------Init ------
 t_env_info	*init_env(const char **env);

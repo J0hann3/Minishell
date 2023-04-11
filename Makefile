@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/11 19:26:04 by qthierry         ###   ########.fr        #
+#    Updated: 2023/04/11 20:01:12 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ UTILS = utils/
 SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
 			ft_atouc.c \
+			ft_split_quote.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
@@ -51,6 +52,10 @@ SRC_PARSING = syntax_errors.c \
 			ast.c \
 			ast_utils.c \
 			parsing_parenthesis.c \
+			second_parsing.c \
+			open_fd.c \
+			expand.c \
+			remove_quotes.c \
 			utils2.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
@@ -58,12 +63,7 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			main.c \
-			error.c
-			open_fd.c \
-			expand.c \
-			ft_split.c \
-			remove_quotes.c \
-			utils.c
+			error.c \
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))

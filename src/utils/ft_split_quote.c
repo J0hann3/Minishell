@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:24:56 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 19:59:27 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static char	*get_word(const char **string, char c)
 	return (res);
 }
 
-char	**ft_split(const char *string, char c)
+char	**ft_split_quote(const char *string, char c)
 {
 	int		nb_words;
 	int		i;

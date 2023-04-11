@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:24:49 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 19:52:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,11 @@
 # include <signal.h>
 # include "../includes/minishell.h"
 
-# define TOMATE 1 * 4
-
 typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
 }	t_list;
-
-typedef struct	s_env_info
-{
-	int		error;
-	int		len_env;
-	char	**env;
-}	t_env_info;
 
 // utils.c
 size_t	ft_strlen(const char *s);
@@ -49,11 +40,10 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
 char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
-void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_bzero(void *s, size_t n);
 
 // ft_split.c
-char	**ft_split(const char *string, char c);
+char	**ft_split_quote(const char *string, char c);
 
 // remove_quotes.c
 void	remove_quotes(char *string);
@@ -91,18 +81,19 @@ t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstadd_back(t_list **lst, void *content);
 int		ft_lstsize(t_list *lst);
 
-<<<<<<< HEAD
 int		syntax_errors(char *input);
 void	remove_multiple_wspaces(char *input);
 bool	has_error_for_meta(char *input, size_t i);
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
-=======
+
 // expand.c
 char	*expand_dollars(char *input, size_t len, t_env_info *env_info);
 
+//second_parsing.c
+t_instruction	*second_parsing(char *input, t_env_info *env_info);
+
 // open_fd.c
 bool	open_all_fds(t_instruction *instruction, char *input);
->>>>>>> origin/Quentin
 
 #endif

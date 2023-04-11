@@ -3,15 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-<<<<<<< HEAD
-/*   Created: 2023/03/08 15:54:04 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 22:26:11 by jvigny           ###   ########.fr       */
-=======
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 18:55:52 by qthierry         ###   ########.fr       */
->>>>>>> origin/Quentin
+/*   Updated: 2023/04/11 19:56:26 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +57,7 @@
 // 	// 	rl_outstream = stderr;
 // 	// 	ligne = readline("minishell$> ");
 // 	// 	add_history(ligne);
-// 	// 	argv = ft_split(ligne, ' ');
+// 	// 	argv = ft_split_quote(ligne, ' ');
 // 	// 	ft_cd(argv, env);
 // 	// 	ft_pwd(argv, env);
 // 	// 	// free_str(argv);
@@ -89,127 +84,15 @@
 // 	return (0);
 // }
 
-void	remove_multiple_wspaces(char *input)
-{
-	char	*dest;
-	char	*start;
-	size_t	space;
-
-	space = 1;
-	dest = input;
-	start = input;
-	while (*input)
-	{
-		if (*input == '\'' || *input == '\"')
-		{
-			space = *input;
-			*dest++ = *input++;
-			while (*input != (char)space)
-				*dest++ = *input++;
-		}
-		space = ((space + 1) * (*input++ == ' ' || *(input - 1) == '\t'));
-		if (space <= 1)
-			*dest++ = *(input - 1) + ((' ' - '\t') * (*(input - 1) == '\t'));
-	}
-	*dest = 0;
-	while ((*dest == ' ' || !*dest) && dest != start)
-		*(dest--) = 0;
-}
-
-int	syntax_errors(char *input)
-{
-	size_t	i;
-
-	if (quotes_not_closed(input))
-		return (2);
-	if (has_parenthesis_not_closed(input))
-		return (2);
-	remove_useless_parenthesis(&input);
-	if (has_error_on_operators_and_parenthesis(input))
-		return (2);
-	remove_multiple_wspaces(input);
-	printf("canon : `%s`\n", input);
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '\"' || input[i] == '\'')
-			i += skip_quotes(input + i);
-		if ((is_meta_character(input[i])) && has_error_for_meta(input, i))
-			return (2);
-		i++;
-	}
-	return (0);
-}
-
-void	free_instructions(t_instruction *instruc)
-{
-	size_t	i;
-
-	if (!instruc)
-		return ;
-	if (instruc->infile > 0)
-		close(instruc->infile);
-	if (instruc->outfile > 0)
-		close(instruc->outfile);
-	if (instruc->outerror > 0)
-		close(instruc->outerror);
-	if (instruc->command)
-	{
-		i = 0;
-		while (instruc->command[i])
-			free(instruc->command[i++]);
-		free(instruc->command);
-	}
-	free(instruc);
-}
-
-void	print_instruc(t_instruction *instruc) // tmp
-{
-	int	i;
-
-	i = 0;
-	printf("Commands :\n");
-	while (instruc->command[i])
-		printf("`%s`\n", instruc->command[i++]);
-	printf("Infile  : '%d'\n", instruc->infile);
-	printf("Outfile : '%d'\n", instruc->outfile);
-}
-
-t_instruction	*called_by_jo_from_tree(char *input, char **env) //tmp
-{
-	char			*expanded_command;
-	t_env_info		env_info = {0, 0, env};
-	t_instruction	*instruc;
-	size_t			i;
-	
-	instruc = ft_calloc(1, sizeof(t_instruction));
-	if (!instruc)
-		return (NULL);
-	// heredocs
-	expanded_command = expand_dollars(input, ft_strlen(input), &env_info);
-	if(!(expanded_command && env_info.error != 1 && open_all_fds(instruc, expanded_command))) // changer error
-		return (free(expanded_command), free_instructions(instruc), NULL);
-	// expand *
-	instruc->command = ft_split(expanded_command, ' ');
-	if (!instruc->command)
-		return (NULL);
-	i = 0;
-	while (instruc->command[i])
-		remove_quotes(instruc->command[i++]);
-	print_instruc(instruc);
-	free(expanded_command);
-	return (instruc);
-}
-
-int	main(int argc, char *argv[], char *env[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	char			*input;
 	int				ret_err;
-	t_instruction	*instruc;
+	t_env_info		*env;
+	t_ast			*tree;
 
 	(void)argc;
 	(void)argv;
-	(void)env;
 	input = (char *)1;
 	env = init_env((const char **)envp);
 	ret_err = 0;

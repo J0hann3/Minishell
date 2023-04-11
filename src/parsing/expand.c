@@ -6,27 +6,11 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:24:55 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 19:57:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
-
-static int	is_alpha(char c) //a changer
-{
-	if (c >= 'a' && c <= 'z')
-		return (1);
-	if (c >= 'A' && c <= 'Z')
-		return (1);
-	return (0);
-}
-
-static int	is_digit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
+#include "parsing.h"
 
 static bool	is_expandable(const char *input)
 {
@@ -73,37 +57,6 @@ static int	get_size_of_var(const char *str)
 			return (i);
 	}
 	return (i);
-}
-
-/**
- * @brief search str in the env
- * 
- * @param env char **: terminate by NULL ->where to search variable 
- * @param str char *: Name of variable to find
- * @return int index where is find the variable, if not find return -1
- */
-int	ft_getenv(char **env, char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (env[i] != NULL)
-	{
-		j = 0;
-		while (env[i][j] != '\0')
-		{
-			if (env[i][j] == '=' && str[j] == '\0')
-				return (i);
-			if (str[j] == '\0')
-				break ;
-			if (str[j] != env[i][j])
-				break ;
-			++j;
-		}
-		++i;
-	}
-	return (-1);
 }
 
 bool	has_space(const char *string)

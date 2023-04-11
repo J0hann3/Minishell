@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   binary_tree.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 23:17:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 19:54:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parsing.h"
 
 static enum e_meta_character	find_next_meta(t_ast *node)
 {
@@ -43,7 +44,7 @@ static enum e_meta_character	find_next_meta(t_ast *node)
  */
 void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
 {
-	t_instruction			arg;
+	t_instruction			*arg;
 	int						pid;
 	int						fildes[2];
 	static int				fd_tmp = 0;
@@ -81,8 +82,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			close(fildes[1]);
 			exit(0);
 		}
-		arg.command = ft_split(tree->command, ' ');
-		exec(&arg, env);
+		arg = second_parsing(tree->command, env);
+		exec(arg, env);
 		exit(0);
 	}
 	else
@@ -116,7 +117,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
 {
 	enum e_meta_character	meta_next;
-	t_instruction 			arg;
+	t_instruction 			*arg;
 
 	meta_next = find_next_meta(tree);
 	if (meta_next == e_pipe || meta_before == e_pipe)
@@ -126,16 +127,16 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	else if (meta_before == e_empty)
 	{
-		arg.command = ft_split(tree->command, ' ');
-		exec(&arg, env);
+		arg = second_parsing(tree->command, env);
+		exec(arg, env);
 		return (meta_next);
 	}
 	else if (meta_before == e_and)
 	{
 		if (stat == 0)
 		{
-			arg.command = ft_split(tree->command, ' ');
-			exec(&arg, env);
+			arg = second_parsing(tree->command, env);
+			exec(arg, env);
 			return (meta_next);
 		}
 	}
@@ -143,8 +144,8 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (stat != 0)
 		{
-			arg.command = ft_split(tree->command, ' ');
-			exec(&arg, env);
+			arg = second_parsing(tree->command, env);
+			exec(arg, env);
 			return (meta_next);
 		}
 	}
