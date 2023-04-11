@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/07 00:18:47 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 18:51:08 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		if (is_ambigous_redirect(input - 1, *i - size))
 		{
 			printf("ambigous -------- \n");//ambigous
-			env_info->error = 4; // ambigous error to change
+			env_info->error = 1; // ambigous error to change
 		}
 		return (ft_calloc(1, sizeof(char)));
 	}
@@ -170,7 +170,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
 	if (is_ambigous_redirect(input - 1, *i - size) && (!*tmp || has_space(tmp)))
-		env_info->error = 4;
+		env_info->error = 1;
 	return (tmp);
 }
 

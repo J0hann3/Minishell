@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/04 18:24:33 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 18:55:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,9 @@ t_instruction	*called_by_jo_from_tree(char *input, char **env) //tmp
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
 		return (NULL);
+	// heredocs
 	expanded_command = expand_dollars(input, ft_strlen(input), &env_info);
-	if(!(expanded_command && open_all_fds(instruc, expanded_command)))
+	if(!(expanded_command && env_info.error != 1 && open_all_fds(instruc, expanded_command))) // changer error
 		return (free(expanded_command), free_instructions(instruc), NULL);
 	// expand *
 	instruc->command = ft_split(expanded_command, ' ');
