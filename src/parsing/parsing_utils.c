@@ -6,11 +6,11 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:59:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:24:53 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/minishell.h"
 
 bool	is_meta_character(char c)
 {

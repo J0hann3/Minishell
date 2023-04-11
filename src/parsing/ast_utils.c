@@ -6,11 +6,11 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:23:55 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 19:24:51 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/11 22:25:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/minishell.h"
 
 t_ast	*create_node(const char *command)
 {
