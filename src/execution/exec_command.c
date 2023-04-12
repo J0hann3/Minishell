@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 16:14:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 17:10:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	if (inst->command == NULL)
 		return (-1);
 	if (inst->command[0] == NULL)
-		return (-1);
+		return (free_str(inst->command), -1);
 	//Redirection
 	// redirection(inst, env);
 	//	Find Path
@@ -187,18 +187,18 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return (env->error);
+		return (free_str(inst->command), env->error);
 	//exec in fork
 	pid = fork();
 	if (pid == -1)
 	{
 		env->error = 1;
-		return (env->error);
+		return (free(path), free_str(inst->command), env->error);
 	}
 	if (pid == 0)
 	{
 		execve(path, inst->command, env->env);
-		return (env->error);
+		return (free(path), free_str(inst->command), env->error);
 	}
 	//recup exit of function
 	waitpid(pid, &stat, 0);

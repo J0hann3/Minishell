@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/12 16:42:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 17:51:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ int	main(int argc, char *argv[], char *envp[])
 	free_str(env->env);
 	free(env);
 	rl_clear_history();
-	return (ret_err);
+	write(1, "exit\n", 5);
+	return (env->error);
 }

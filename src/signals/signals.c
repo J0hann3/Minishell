@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/12 16:02:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 18:54:25 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,24 @@
 void crtl_c_interactive(int sig)
 {
 	(void)sig;
-	printf("coucou\n");
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	// need to change env->error to 130 = (128 + sig)
 }
 
 void	init_signals(void)
 {
 	struct sigaction action;
+	struct sigaction act_ign;
 	
+	// CTRL-/
+	act_ign.sa_handler = SIG_IGN;
+	sigemptyset(&act_ign.sa_mask);
+	act_ign.sa_flags = 0;
+	sigaction(SIGQUIT, &act_ign, NULL);
+	// CTRL-C
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = 0;
 	action.sa_handler = crtl_c_interactive;
@@ -31,6 +42,6 @@ void	init_signals(void)
 /**
  * In Interactive mode
  * ctrl-C displays a new prompt on a new line.
- * ctrl-D exits the shell.
+ * ctrl-D exits the shell.		->work only in empty line
  * ctrl-\ does nothing
  */
