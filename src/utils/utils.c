@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:42:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ void	free_str(char **str)
 		++i;
 	}
 	free(str);
+}
+
+void	free_env(t_env_info *env)
+{
+	free_str(env->env);
+	free_tree(&(env->tree));
+	free(env);
 }
 
 int	is_alpha(char c)

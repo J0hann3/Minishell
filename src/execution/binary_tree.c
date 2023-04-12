@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:52:08 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 16:08:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
 		{
 			close(fildes[1]);
-			free_all(env, NULL);
+			free_env(env);
 			exit(1);
 		}
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
-		free_all(env, arg->command);
+		free_env(env);
 		free(arg);
 		exit(0);
 	}

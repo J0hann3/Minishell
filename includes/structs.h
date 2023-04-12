@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 22:07:00 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/12 15:54:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ enum	e_meta_character
 
 typedef struct	s_env_info
 {
-	int		error;
-	int		len_env;
-	char	**env;
+	int				error;
+	int				len_env;
+	char			**env;
+	struct s_ast	*tree;
 }	t_env_info;
 
 typedef struct s_instruction

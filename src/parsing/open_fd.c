@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_fd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:48:23 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/12 15:56:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	read_fd(char *input)
 	has_space = false;
 	while (is_wspace(*++input))
 		has_space = true;
-	file_name = get_file_ngit config pull.rebase falseame(input);
+	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
 	replace_name(&input, ft_strlen(file_name), has_space);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:41:42 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:02:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,10 @@ void	init_signals(void)
 	action.sa_handler = crtl_c_interactive;
 	sigaction(SIGINT, &action, NULL);
 }
+
+/**
+ * In Interactive mode
+ * ctrl-C displays a new prompt on a new line.
+ * ctrl-D exits the shell.
+ * ctrl-\ does nothing
+ */

@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 22:08:10 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:14:49 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	is_builtins(char **arg, t_env_info *env)
+static int	is_builtins(t_instruction *arg, t_env_info *env)
 {
-	if (ft_strcmp(arg[0], "echo") == 0)
-		return (ft_echo(arg, (const t_env_info *)env), 1);
-	if (ft_strcmp(arg[0], "cd") == 0)
-		return (ft_cd(arg, env), 1);
-	if (ft_strcmp(arg[0], "pwd") == 0)
-		return (ft_pwd(arg, env), 1);
-	if (ft_strcmp(arg[0], "export") == 0)
-		return (ft_export(arg, env), 1);
-	if (ft_strcmp(arg[0], "unset") == 0)
-		return (ft_unset(arg, env), 1);
-	if (ft_strcmp(arg[0], "env") == 0)
-		return (ft_env(arg, env), 1);
-	if (ft_strcmp(arg[0], "exit") == 0)
+	if (ft_strcmp(arg->command[0], "echo") == 0)
+		return (ft_echo(arg->command, (const t_env_info *)env), 1);
+	if (ft_strcmp(arg->command[0], "cd") == 0)
+		return (ft_cd(arg->command, env), 1);
+	if (ft_strcmp(arg->command[0], "pwd") == 0)
+		return (ft_pwd(arg->command, env), 1);
+	if (ft_strcmp(arg->command[0], "export") == 0)
+		return (ft_export(arg->command, env), 1);
+	if (ft_strcmp(arg->command[0], "unset") == 0)
+		return (ft_unset(arg->command, env), 1);
+	if (ft_strcmp(arg->command[0], "env") == 0)
+		return (ft_env(arg->command, env), 1);
+	if (ft_strcmp(arg->command[0], "exit") == 0)
 		return (ft_exit(arg, env), 1);
 	return (0);
 }
@@ -183,7 +183,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	//Redirection
 	// redirection(inst, env);
 	//	Find Path
-	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst->command, env) != 0)
+	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)

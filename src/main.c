@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/12 15:51:35 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 16:42:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	main(int argc, char *argv[], char *envp[])
 	char				*input;
 	int					ret_err;
 	t_env_info			*env;
-	t_ast				*tree;
-	// struct sigaction	action;
 
 	(void)argc;
 	(void)argv;
@@ -45,7 +43,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (env->tree == NULL)
 			break ;
 		explore_tree(env->tree, env, e_empty, 0);
-		free_tree(env->tree);
+		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
 	}
