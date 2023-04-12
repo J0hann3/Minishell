@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/12 15:48:12 by jvigny           ###   ########.fr        #
+#    Updated: 2023/04/12 15:52:26 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,11 +58,14 @@ SRC_PARSING = syntax_errors.c \
 			expand.c \
 			remove_quotes.c \
 			utils2.c
+SIGNALS = signals/
+SRC_SIGNALS = signals.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
+			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
 			main.c \
 
 SRC_DIR = ./src/
@@ -99,6 +102,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(EXECUTION)
 	mkdir -p $(OBJ_DIR)$(PARSING)
 	mkdir -p $(OBJ_DIR)$(UTILS)
+	mkdir -p $(OBJ_DIR)$(SIGNALS)
 
 clean:
 	rm -rf $(OBJ_DIR)

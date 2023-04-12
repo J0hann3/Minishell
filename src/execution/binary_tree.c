@@ -6,12 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:46:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 15:52:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "parsing.h"
+#include "../../includes/minishell.h"
 
 static enum e_meta_character	find_next_meta(t_ast *node)
 {
@@ -87,6 +86,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
 		free_all(env, arg->command);
+		free(arg);
 		exit(0);
 	}
 	else
@@ -136,6 +136,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
+		free(arg);
 		return (meta_next);
 	}
 	else if (meta_before == e_and)
@@ -144,6 +145,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 		{
 			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env);
+			free(arg);
 			return (meta_next);
 		}
 	}
@@ -153,6 +155,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 		{
 			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env);
+			free(arg);
 			return (meta_next);
 		}
 	}

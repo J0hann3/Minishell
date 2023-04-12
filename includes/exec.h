@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:19:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/28 17:39:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 22:07:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-# include "minishell.h"
+# include "structs.h"
 
 int		ft_pipe(t_env_info *env, int fildes [2]);
 int		exec(t_instruction *inst, t_env_info *env);

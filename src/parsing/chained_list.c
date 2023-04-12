@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   chained_list.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 03:25:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/24 18:21:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../../includes/minishell.h"
 
 t_list	*ft_lstnew(void *content)
 {

@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/03/31 21:19:18 by jvigny           ###   ########.fr       */
+=======
+/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+>>>>>>> origin/Quentin
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 /**
  * 126    A file to be executed was found, but it was not an executable utility

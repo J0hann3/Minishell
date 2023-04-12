@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/03/31 22:32:38 by jvigny           ###   ########.fr       */
+=======
+/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+>>>>>>> origin/Quentin
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_len(char **str)
 {

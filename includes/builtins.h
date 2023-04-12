@@ -6,15 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:47:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 15:51:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include <stdint.h>
-# include <errno.h>
+# include "structs.h"
 
 // ------Init ------
 t_env_info	*init_env(const char **env);

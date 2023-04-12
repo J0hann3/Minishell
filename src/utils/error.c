@@ -6,11 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:47:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 15:52:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 /**
  * @brief write messsages of error in stderror in fromat
