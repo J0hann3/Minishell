@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/24 17:52:35 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/24 18:21:42 by jvigny           ###   ########.fr       */
+/*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
+/*   Updated: 2023/04/11 20:16:47 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*cpy;
 
+	if (!s)
+		return (0);
 	cpy = s;
 	while (*s)
 		s++;
@@ -147,7 +149,6 @@ int	syntax_errors(char *input)
 	if (has_error_on_operators_and_parenthesis(input))
 		return (2);
 	remove_multiple_wspaces(input);
-	printf("canon : `%s`\n", input);
 	i = 0;
 	while (input[i])
 	{
@@ -158,4 +159,72 @@ int	syntax_errors(char *input)
 		i++;
 	}
 	return (0);
+}
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*res;
+	size_t	i;
+
+	res = malloc(sizeof(char) * (n + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (s[i] && i < n)
+	{
+		res[i] = ((char *)s)[i];
+		i++;
+	}
+	res[i] = 0;
+	return (res);
+}
+
+static size_t	get_size(unsigned int n)
+{
+	size_t	size;
+
+	if (!n)
+		return (1);
+	size = 0;
+	while (n > 0)
+	{
+		size++;
+		n /= 10;
+	}
+	return (size);
+}
+
+char	*ft_itoa(int n)
+{
+	unsigned int	ncpy;
+	char			*res;
+	size_t			size;
+
+	size = (n < 0);
+	ncpy = n * (1 | -size);
+	size += get_size(ncpy);
+	res = malloc(sizeof(char) * (size + 1));
+	if (!res)
+		return (NULL);
+	res[size--] = '\0';
+	if (!ncpy)
+		res[0] = '0';
+	while (ncpy > 0)
+	{
+		res[size] = (ncpy % 10) + '0';
+		ncpy /= 10;
+		size--;
+	}
+	if (n < 0)
+		res[0] = '-';
+	return (res);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+		((char *)s)[i++] = 0;
 }

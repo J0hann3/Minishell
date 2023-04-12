@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/31 21:10:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/12 15:47:10 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,6 @@
 
 # include <stdint.h>
 # include <errno.h>
-
-typedef struct	s_env_info
-{
-	int		error;
-	int		len_env;
-	char	**env;
-	t_ast	*tree;
-}	t_env_info;
 
 // ------Init ------
 t_env_info	*init_env(const char **env);

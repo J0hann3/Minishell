@@ -6,14 +6,14 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/03/31 21:11:10 by jvigny           ###   ########.fr        #
+#    Updated: 2023/04/12 15:48:12 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -Werror
+CFLAGS = -g -Wall -Wextra #-fsanitize=address #-Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
@@ -38,12 +38,14 @@ UTILS = utils/
 SRC_UTILS = ft_calloc.c \
 			ft_strdup.c \
 			ft_atouc.c \
+			ft_split_quote.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
 			utils.c \
 			init.c \
-			free_tree.c
+			free_tree.c \
+			error.c
 
 PARSING = parsing/
 SRC_PARSING = syntax_errors.c \
@@ -51,6 +53,10 @@ SRC_PARSING = syntax_errors.c \
 			ast.c \
 			ast_utils.c \
 			parsing_parenthesis.c \
+			second_parsing.c \
+			open_fd.c \
+			expand.c \
+			remove_quotes.c \
 			utils2.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
@@ -58,7 +64,6 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			main.c \
-			error.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -80,7 +85,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=all --trace-children=yes  --suppressions=suppr.valgrind ./$(NAME)
+	valgrind --leak-check=full --track-fds=all --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)

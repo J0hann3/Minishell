@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/03/24 18:14:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 20:26:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
 # include "../includes/minishell.h"
-
-# define TOMATE 1 * 4
 
 typedef struct s_list
 {
@@ -38,6 +37,16 @@ typedef struct s_list
 size_t	ft_strlen(const char *s);
 bool	eq(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strndup(const char *s, size_t n);
+char	*ft_strdup(const char *s);
+char	*ft_itoa(int n);
+void	ft_bzero(void *s, size_t n);
+
+// ft_split.c
+char	**ft_split_quote(const char *string, char c);
+
+// remove_quotes.c
+void	remove_quotes(char *string);
 
 // parsing_utils.c
 bool	is_operator(const char *c);
@@ -77,5 +86,14 @@ void	remove_multiple_wspaces(char *input);
 bool	has_error_for_meta(char *input, size_t i);
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
+
+// expand.c
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info);
+
+//second_parsing.c
+t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info);
+
+// open_fd.c
+bool	open_all_fds(t_instruction *instruction, char *input);
 
 #endif

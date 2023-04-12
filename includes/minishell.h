@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/03/29 22:20:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/11 19:28:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ enum	e_meta_character
 	e_pipe,
 	e_and
 };
+
+typedef struct	s_env_info
+{
+	int		error;
+	int		len_env;
+	char	**env;
+}	t_env_info;
 
 typedef struct s_instruction
 {
