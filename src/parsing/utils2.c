@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:44:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int	syntax_errors(char *input)
 			return (2);
 		i++;
 	}
-	return (0);
+	return (i == 0);
 }
 
 char	*ft_strndup(const char *s, size_t n)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/12 18:54:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/13 18:32:49 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void crtl_c_interactive(int sig)
+void	crtl_c_interactive(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
@@ -22,11 +22,13 @@ void crtl_c_interactive(int sig)
 	// need to change env->error to 130 = (128 + sig)
 }
 
-void	init_signals(void)
+void	do_nothing(int sig)
 {
-	struct sigaction action;
-	struct sigaction act_ign;
-	
+	return ((void)sig);
+}
+
+void	init_signals(struct sigaction action, struct sigaction act_ign)
+{	
 	// CTRL-/
 	act_ign.sa_handler = SIG_IGN;
 	sigemptyset(&act_ign.sa_mask);
