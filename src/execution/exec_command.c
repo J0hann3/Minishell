@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 17:10:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/14 17:53:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,26 +143,55 @@ static char	*find_path_command(char *str, t_env_info *env)
  * @param inst 
  * @param env 
  */
-void	redirection(t_instruction *inst, t_env_info *env)
+static void	redirection(t_instruction *inst, t_env_info *env)
 {
+	printf("in : %d	out : %d	error : %d\n", inst->infile, inst->outfile, inst->outerror);
 	if (inst->infile != -2)
-		if (dup2(inst->infile, STDIN_FILENO) != 0)
+		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
 			env->error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 	if (inst->outfile != -2)
-		if (dup2(inst->outfile, STDOUT_FILENO) != 0)
+		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
 			env->error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
-	if (inst->outerror != -2)
-		if (dup2(inst->outerror, STDERR_FILENO) != 0)
+	// if (inst->outerror != -2)
+		// if (dup2(inst->outerror, STDERR_FILENO) == -1)
+		// {
+		// 	env->error = 1;
+		// 	ft_write_error(NULL, NULL, strerror(errno));
+		// }
+}
+
+static void	reset_redirection(t_instruction *inst, t_env_info *env)
+{
+	if (inst->infile != -2)
+	{
+		if (dup2(0, STDIN_FILENO) == -1)
 		{
 			env->error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
+		close(inst->infile);
+	}
+	if (inst->outfile != -2)
+	{
+		if (dup2(1, STDOUT_FILENO) == -1)
+		{
+			env->error = 1;
+			ft_write_error(NULL, NULL, strerror(errno));
+		}
+		close(inst->outfile);
+	}
+	// if (inst->outerror != -2)
+	// 	if (dup2(2, STDERR_FILENO) == -1)
+	// 	{
+	// 		env->error = 1;
+	// 		ft_write_error(NULL, NULL, strerror(errno));
+	// 	}
 }
 
 
@@ -172,7 +201,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 	int		pid;
 	int		stat;
 
-	//Check command
 	env->error = 0;
 	if (inst == NULL)
 		return (-1);
@@ -180,15 +208,12 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (-1);
 	if (inst->command[0] == NULL)
 		return (free_str(inst->command), -1);
-	//Redirection
-	// redirection(inst, env);
-	//	Find Path
+	redirection(inst, env);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (env->error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (free_str(inst->command), env->error);
-	//exec in fork
 	pid = fork();
 	if (pid == -1)
 	{
@@ -200,8 +225,8 @@ int	exec(t_instruction *inst, t_env_info *env)
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), env->error);
 	}
-	//recup exit of function
 	waitpid(pid, &stat, 0);
+	reset_redirection(inst, env);
 	if (WIFEXITED(stat))
 		env->error = WEXITSTATUS(stat);
 	else if (WIFSIGNALED(stat))
