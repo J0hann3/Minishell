@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/13 18:45:45 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/14 20:10:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,10 @@ int	main(int argc, char *argv[], char *envp[])
 			free(input);
 			continue ;
 		}
-		action.sa_handler = SIG_DFL;
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;
 		explore_tree(env->tree, env, e_empty, 0);
-		action.sa_handler = crtl_c_interactive;
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);

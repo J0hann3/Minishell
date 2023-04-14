@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/13 18:32:49 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/14 20:22:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ void	init_signals(struct sigaction action, struct sigaction act_ign)
 	sigaction(SIGINT, &action, NULL);
 }
 
+
 /**
  * In Interactive mode
- * ctrl-C displays a new prompt on a new line.
+ * ctrl-C displays a new prompt on a new line.	->noe interactive = stop process and new prompt
  * ctrl-D exits the shell.		->work only in empty line
- * ctrl-\ does nothing
+ * ctrl-\ does nothing		->none interactive = SIG_DFL
  */
