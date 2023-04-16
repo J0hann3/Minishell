@@ -6,11 +6,43 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 16:02:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+/**
+ * @brief Check if the input is allow to be parse
+ * 0 if the input is accepted
+ * 1 if the input is empty
+ * 2 if the input has a syntax error
+ * @param input 
+ * @return int 
+ */
+int	syntax_errors(char *input)
+{
+	size_t	i;
+
+	if (quotes_not_closed(input))
+		return (2);
+	if (has_parenthesis_not_closed(input))
+		return (2);
+	remove_useless_parenthesis(&input);
+	if (has_error_on_operators_and_parenthesis(input))
+		return (2);
+	remove_multiple_wspaces(input);
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\"' || input[i] == '\'')
+			i += skip_quotes(input + i);
+		if ((is_meta_character(input[i])) && has_error_for_meta(input, i))
+			return (2);
+		i++;
+	}
+	return (i == 0);
+}
 
 bool	has_parenthesis_not_closed(const char *input)
 {

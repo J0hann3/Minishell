@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/13 18:44:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 15:07:46 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,30 +135,6 @@ void	remove_multiple_wspaces(char *input)
 	*dest = 0;
 	while ((*dest == ' ' || !*dest) && dest != start)
 		*(dest--) = 0;
-}
-
-int	syntax_errors(char *input)
-{
-	size_t	i;
-
-	if (quotes_not_closed(input))
-		return (2);
-	if (has_parenthesis_not_closed(input))
-		return (2);
-	remove_useless_parenthesis(&input);
-	if (has_error_on_operators_and_parenthesis(input))
-		return (2);
-	remove_multiple_wspaces(input);
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == '\"' || input[i] == '\'')
-			i += skip_quotes(input + i);
-		if ((is_meta_character(input[i])) && has_error_for_meta(input, i))
-			return (2);
-		i++;
-	}
-	return (i == 0);
 }
 
 char	*ft_strndup(const char *s, size_t n)

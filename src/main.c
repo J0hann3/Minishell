@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/13 18:45:45 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 15:59:08 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ int	main(int argc, char *argv[], char *envp[])
 	char				*input;
 	int					ret_err;
 	t_env_info			*env;
-	struct sigaction 	action;
-	struct sigaction 	act_ign;
+	// t_list				*here_list;
+	struct sigaction	action;
+	struct sigaction	act_ign;
 
-	(void)argc;
-	(void)argv;
+	if (argc != 1)
+		return (1);
 	init_signals(action, act_ign);
+	(void)argv;
 	input = (char *)1;
 	env = init_env((const char **)envp);
 	if (env == NULL)
@@ -46,6 +48,8 @@ int	main(int argc, char *argv[], char *envp[])
 			free(input);
 			continue ;
 		}
+		// if (get_here_list(here_list, input) < 1)
+		// 	return (2);
 		action.sa_handler = SIG_DFL;
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
@@ -60,5 +64,9 @@ int	main(int argc, char *argv[], char *envp[])
 	free(env);
 	rl_clear_history();
 	write(1, "exit\n", 5);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+
 	return (0); //TODO : return env->error
 }
