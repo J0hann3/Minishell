@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 15:59:08 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 20:06:01 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			printf("ERROR:	%d\n", ret_err);
 			free(input);
-			return (ret_err);
+			continue ;
+			// return (ret_err); // leak on return, change to break env->error
 		}
 		else if (ret_err == 1)
 		{

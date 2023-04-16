@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 15:18:36 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 20:33:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ bool	is_double_meta(const char *c);
 // syntax_errors
 bool	has_parenthesis_not_closed(const char *input);
 bool	quotes_not_closed(const char *input);
-bool	has_argument_right(char *op_ptr);
-bool	has_argument_left(const char *start_input, char *op_ptr);
+bool	has_argument_right(char *op_ptr, char **error_token);
+bool	has_argument_left(const char *start_input, char *op_ptr,
+					char **error_token);
 
 // ast_utils.c
 t_ast	*create_node(const char *command);
