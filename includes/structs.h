@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/14 19:39:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 20:28:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <string.h>
 # include <stdint.h>
@@ -37,6 +38,7 @@ enum	e_meta_character
 
 typedef struct	s_env_info
 {
+	struct sigaction act[2];
 	int				error;
 	int				len_env;
 	char			**env;

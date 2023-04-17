@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/14 20:10:44 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 20:32:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,25 @@ int	main(int argc, char *argv[], char *envp[])
 	char				*input;
 	int					ret_err;
 	t_env_info			*env;
-	struct sigaction 	action;
-	struct sigaction 	act_ign;
 
 	(void)argc;
 	(void)argv;
-	init_signals(action, act_ign);
-	input = (char *)1;
+
+	const char *prompt;
+
 	env = init_env((const char **)envp);
+	prompt = "minishell$> ";
+	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
+	{
+		prompt = "";
+	}
+	input = (char *)1;
 	if (env == NULL)
 		return (1);
 	ret_err = 0;
 	while (input != NULL)
 	{
-		input = readline("minishell$> ");
+		input = readline(prompt);
 		if (!input)
 			break ;
 		add_history(input);
@@ -55,8 +60,9 @@ int	main(int argc, char *argv[], char *envp[])
 		free(input);
 	}
 	free_str(env->env);
+	ret_err = env->error;
 	free(env);
 	rl_clear_history();
-	write(1, "exit\n", 5);
-	return (0); //TODO : return env->error
+	write(2, "exit\n", 5);
+	return (ret_err);
 }

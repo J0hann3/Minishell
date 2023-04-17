@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:06:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char *find_absolute_path(char *str)
 	return (path);
 }
 
-static void	update_env(char **env, char *str)
+static void	update_env(char **env, char *str)	//need to create OLD_PWD
 {
 	int	i_pwd;
 	int	i_old_pwd;

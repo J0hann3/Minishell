@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:52:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 20:29:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_env_info	*init_env(const char **env)
 	{
 		len++;
 	}
+	init_signals(new->act);
 	new->len_env = len;
 	new->error = 0;
 	new->tree = NULL;

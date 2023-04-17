@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:27:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/14 20:11:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 20:49:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@
 # include "structs.h"
 
 // signals.c
-void	init_signals(struct sigaction action, struct sigaction act_ign);
-void	crtl_c_interactive(int sig);
-// void	dfl_signal(struct sigaction action, struct sigation act_ign);
-// void	activ_signal(struct sigaction action, struct sigation act_ign);
-
+void	init_signals(struct sigaction act[2]);
+void	ign_signals(struct sigaction act[2]);
+void	none_interactive(struct sigaction act[2]);
+void	reset_signals(struct sigaction act[2]);
 
 #endif

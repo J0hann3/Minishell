@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   binary_tree.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/13 18:49:43 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/17 20:49:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	}
 	if (pid == 0)
 	{
+		none_interactive(env->act);
 		if (fd_tmp != 0)
 		{
 			dup2(fd_tmp, STDIN_FILENO);
@@ -91,6 +92,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	}
 	else
 	{
+		ign_signals(env->act);
 		if (fd_tmp != 0)
 			close(fd_tmp);
 		if (m_n == e_pipe)
@@ -101,6 +103,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		else
 			fd_tmp = 0;
 		waitpid(pid, &stat, 0);
+		reset_signals(env->act);
 		if (WIFEXITED(stat))
 		{
 			env->error = WEXITSTATUS(stat);

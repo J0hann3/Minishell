@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/14 20:14:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 20:49:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static char	*explore_path(char *name, char *env_path)
 	char	**var_path;
 	char	*path;
 	int		i;
+	int		fd;
 
 	i = 0;
 	var_path = ft_split(env_path, ':');
@@ -86,7 +87,12 @@ static char	*explore_path(char *name, char *env_path)
 			continue ;
 		}
 		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
+		{
+			fd = open(path, O_DIRECTORY);
+			if (fd != -1)
+				return(close(fd), free_str(var_path), close(fd), NULL);
 			return (free_str(var_path), path);
+		}
 		free(path);
 		++i;
 	}
@@ -98,6 +104,7 @@ static char	*find_path_command(char *str, t_env_info *env)
 {
 	char	*path;
 	int		i_path;
+	int		fd;
 
 	if (contain_slash(str) != 0)
 	{
@@ -108,7 +115,12 @@ static char	*find_path_command(char *str, t_env_info *env)
 		if (access(path, F_OK) == 0)
 		{
 			if (access(path, X_OK) == 0)
+			{
+				fd = open(path, O_DIRECTORY);
+				if (fd != -1)
+					return(close(fd), env->error = 127, ft_write_error(NULL, str, "Is a directory"), NULL);
 				return (path);
+			}
 			else
 			{
 				env->error = 126;
@@ -123,7 +135,8 @@ static char	*find_path_command(char *str, t_env_info *env)
 	i_path = ft_getenv(env->env, "PATH");
 	if (i_path == -1)
 	{
-		env->error = 1;			//code error au pif
+		env->error = 127;
+		ft_write_error(NULL, str, "command not found");
 		return (NULL);
 	}
 	path = explore_path(str, env->env[i_path]);
@@ -221,10 +234,13 @@ int	exec(t_instruction *inst, t_env_info *env)
 	}
 	if (pid == 0)
 	{
+		none_interactive(env->act);
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), env->error);
 	}
+	ign_signals(env->act);
 	waitpid(pid, &stat, 0);
+	reset_signals(env->act);
 	reset_redirection(inst, env);
 	if (WIFEXITED(stat))
 		env->error = WEXITSTATUS(stat);
