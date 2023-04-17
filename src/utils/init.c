@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 21:07:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 21:59:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_env_info	*init_env(const char **env)
 	new = ft_calloc(1, sizeof(t_env_info));
 	if (new == NULL)
 		return (NULL);
-	while (env[len] != NULL)
+	while (env[len] != NULL)			//protect env ??
 	{
 		len++;
 	}

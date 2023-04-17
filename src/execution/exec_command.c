@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 20:49:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 22:24:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (reset_redirection(inst, env), free_str(inst->command), env->error);
+	none_interactive(env->act);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -234,7 +235,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 	}
 	if (pid == 0)
 	{
-		none_interactive(env->act);
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), env->error);
 	}

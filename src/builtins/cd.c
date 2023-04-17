@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 18:06:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 21:55:50 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ char *find_absolute_path(char *str)
 	return (path);
 }
 
-static void	update_env(char **env, char *str)	//need to create OLD_PWD
+static void	update_env(char **env, char *str, t_env_info *env_info)		//don't know if need to create OLDPWD
 {
 	int	i_pwd;
 	int	i_old_pwd;
+	char	*res;
 
 	i_old_pwd = ft_getenv(env, "OLDPWD");
 	i_pwd = ft_getenv(env, "PWD");
@@ -73,7 +74,11 @@ static void	update_env(char **env, char *str)	//need to create OLD_PWD
 	if (i_pwd != -1)
 	{
 		if (i_old_pwd != -1)
-			env[i_old_pwd] = env[i_pwd];
+		{
+			res = ft_strjoin("OLD", env[i_pwd]);		//check malloc
+			free(env[i_pwd]);
+			env[i_old_pwd] = res;
+		}
 		else
 			free(env[i_pwd]);
 		env[i_pwd] = str;
@@ -127,7 +132,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), free(path), 1);
 	}
-	update_env(env->env, path);
+	update_env(env->env, path, env);
 	free_str(arg);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/17 20:48:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 22:41:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@ void	crtl_c_interactive(int sig)
 	// need to change env->error to 130 = (128 + sig)
 }
 
-void	do_nothing(int sig)
+void	new_line(int sig)
 {
-	return ((void)sig);
+	if (sig == SIGQUIT)
+		write(1, "Quit (core dumped)", 18);
+	write(1, "\n", 1);
+	(void)sig;
 }
 
 void	init_signals(struct sigaction act[2])
@@ -44,17 +47,17 @@ void	init_signals(struct sigaction act[2])
 void	ign_signals(struct sigaction act[2])
 {
 	// CTRL-C
-	act[0].sa_handler = SIG_IGN;
+	act[0].sa_handler = new_line;
 	sigaction(SIGINT, &act[0], NULL);
 	// CTRL-/
-	act[1].sa_handler = SIG_IGN;
+	act[1].sa_handler = new_line;
 	sigaction(SIGQUIT, &(act[1]), NULL);
 }
 
 void	none_interactive(struct sigaction act[2])
 {
 	// CTRL-C
-	act[0].sa_handler = crtl_c_interactive;	//new ligne after ^C
+	act[0].sa_handler = SIG_DFL;
 	sigaction(SIGINT, &act[0], NULL);
 	// CTRL-/
 	act[1].sa_handler = SIG_DFL;		//need to write Quit (core dumped)
