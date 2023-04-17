@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 20:29:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/17 21:07:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ t_env_info	*init_env(const char **env)
 	int			i;
 	int			len;
 	t_env_info	*new;
+	char		*pwd;
+	char		*tmp;
 
 	i = 0;
 	len = 0;
@@ -37,13 +39,46 @@ t_env_info	*init_env(const char **env)
 	new->len_env = len;
 	new->error = 0;
 	new->tree = NULL;
-	new->env = ft_calloc(len + 1, sizeof(char *));
+	if (ft_getenv((char **)env, "PWD") == -1)
+		new->len_env++;
+	if (ft_getenv((char **)env, "SHLVL") == -1)
+		new->len_env++;
+	if (ft_getenv((char **)env, "_") == -1)
+		new->len_env++;
+	new->env = ft_calloc(new->len_env + 1, sizeof(char *));
 	if (new->env == NULL)
 		return (free(new), NULL);
 	// printf("len_env_init : %d\n", len);
 	while (i < len)
 	{
 		new->env[i] = ft_strdup(env[i]);
+		if (new->env[i] == NULL)
+			return (free_str(new->env), free(new), NULL);
+		++i;
+	}
+	if (ft_getenv((char **)env, "PWD") == -1)
+	{
+		pwd = getcwd(NULL, 0);
+		if (pwd == NULL)
+			return (free_str(new->env), free(new), NULL);
+		tmp = pwd;
+		pwd = ft_strjoin("PWD=", tmp);
+		free(tmp);
+		new->env[i] = pwd;
+		if (new->env[i] == NULL)
+			return (free_str(new->env), free(new), NULL);
+		++i;
+	}
+	if (ft_getenv((char **)env, "SHLVL") == -1)
+	{
+		new->env[i] = ft_strdup("SHLVL=1");
+		if (new->env[i] == NULL)
+			return (free_str(new->env), free(new), NULL);
+		++i;
+	}
+	if (ft_getenv((char **)env, "_") == -1)
+	{
+		new->env[i] = ft_strdup("_=");
 		if (new->env[i] == NULL)
 			return (free_str(new->env), free(new), NULL);
 		++i;
