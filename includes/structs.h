@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 20:28:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/19 15:45:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <signal.h>
+
 
 enum	e_meta_character
 {
@@ -65,5 +66,7 @@ typedef struct s_ast
 	size_t					size;
 	enum e_meta_character	meta;
 }	t_ast;
+
+int	g_signals;
 
 #endif

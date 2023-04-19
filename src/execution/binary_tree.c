@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 20:49:24 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/19 13:19:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,14 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		reset_signals(env->act);
 		if (WIFEXITED(stat))
 		{
-			env->error = WEXITSTATUS(stat);
+			if (WEXITSTATUS(stat) != 0) 
+				env->error = WEXITSTATUS(stat);
 			if (env->error == 1)
 				fd_tmp = 0;
 		}
 		else if (WIFSIGNALED(stat))
 			env->error = 128 + WTERMSIG(stat);
+		printf("Error pipe : %d\n",env->error);
 	}
 }
 

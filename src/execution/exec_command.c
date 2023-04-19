@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 22:24:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/19 13:24:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,9 +243,13 @@ int	exec(t_instruction *inst, t_env_info *env)
 	reset_signals(env->act);
 	reset_redirection(inst, env);
 	if (WIFEXITED(stat))
-		env->error = WEXITSTATUS(stat);
+	{
+		if (WEXITSTATUS(stat) != 0) 
+			env->error = WEXITSTATUS(stat);
+	}
 	else if (WIFSIGNALED(stat))
 		env->error = 128 + WTERMSIG(stat);
+	printf("Error : %d	SIG : %d	nb_sig : %d\n",env->error, WTERMSIG(stat), WSTOPSIG(stat));
 	free(path);
 	free_str(inst->command);
 	return (env->error);

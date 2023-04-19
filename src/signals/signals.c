@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/17 22:41:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/19 13:33:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	crtl_c_interactive(int sig)
 {
-	(void)sig;
+	g_signals = 128 + sig;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -24,10 +24,12 @@ void	crtl_c_interactive(int sig)
 
 void	new_line(int sig)
 {
+	g_signals = 128 + sig;
+	printf("SIG : %d\n", sig);
 	if (sig == SIGQUIT)
 		write(1, "Quit (core dumped)", 18);
 	write(1, "\n", 1);
-	(void)sig;
+	// need to change env->error to 130 = (128 + sig) or 131
 }
 
 void	init_signals(struct sigaction act[2])

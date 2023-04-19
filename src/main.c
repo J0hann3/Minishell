@@ -6,23 +6,24 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/17 20:32:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/19 15:45:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+
 int	main(int argc, char *argv[], char *envp[])
 {
-	char				*input;
-	int					ret_err;
-	t_env_info			*env;
+	char		*input;
+	int			ret_err;
+	t_env_info	*env;
+	const char *prompt;
 
 	(void)argc;
 	(void)argv;
 
-	const char *prompt;
-
+	g_signals = 0;
 	env = init_env((const char **)envp);
 	prompt = "minishell$> ";
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
