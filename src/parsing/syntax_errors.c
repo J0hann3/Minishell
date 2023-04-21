@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 20:45:08 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:49:17 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,13 @@ int	is_operator_ok(char **input, char **error_token, char *start_ptr)
 		&& has_argument_right(*input, error_token));
 }
 
+bool	has_closing_parenthesis(char **input, char **error_token)
+{
+	(*input)++;
+	
 
+	return (false);
+}
 
 /**
  * @brief
@@ -166,8 +172,8 @@ int	check_syntax_at(char **input, char **error_token, char *start_ptr)
 		return (is_redirection_ok(input, error_token));
 	if (is_operator(*input))
 		return (is_operator_ok(input, error_token, start_ptr));
-	// if (**input == '(')
-	// 	return (has_closing_parenthesis(input, error_token));
+	if (**input == '(')
+		return (has_closing_parenthesis(input, error_token));
 	return (-1); // unexpected
 }
 

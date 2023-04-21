@@ -6,11 +6,12 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 20:06:01 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:06:41 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <dirent.h>
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -36,7 +37,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		ret_err = syntax_errors(input);
+		// ret_err = syntax_errors(input);
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
