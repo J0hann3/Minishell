@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:48:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:27:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 	if (*input == '?')
 	{
 		(*i)++;
-		return (ft_itoa(env_info->error));
+		return (ft_itoa(g_error));
 	}
 	size = get_size_of_var(input);
 	*i += size;
@@ -114,7 +114,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		if (is_ambigous_redirect(input - 1, *i - size))
 		{
 			// printf("ambigous -------- \n");//ambigous
-			env_info->error = 1; // ambigous error to change
+			g_error = 1; // ambigous error to change
 		}
 		return (ft_calloc(1, sizeof(char)));
 	}
@@ -124,7 +124,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
 	if (is_ambigous_redirect(input - 1, *i - size) && (!*tmp || has_space(tmp)))
-		env_info->error = 1;
+		g_error = 1;
 	return (tmp);
 }
 
@@ -152,7 +152,7 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
 			tmp = expand(input + i, &i, env_info);
 			if (!tmp)
 				return (free(res), NULL);
-			if (env_info->error == 4)
+			if (g_error == 4)
 				return (free(tmp), res);				//error on ambigous to change
 			begin_join = i;
 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));

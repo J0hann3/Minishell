@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/21 14:34:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 20:42:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	crtl_c_interactive(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	// need to change env->error to 130 = (128 + sig)
+	// need to change g_error to 130 = (128 + sig)
 }
 
 void	new_line(int sig)
@@ -28,10 +28,11 @@ void	new_line(int sig)
 	// g_signals = 128 + sig;
 	(void)sig;
 	// printf("SIG : %d\n", sig);
+	// kill(-1, )
 	if (sig == SIGQUIT)
 		write(1, "Quit (core dumped)", 18);			// reset redirection before print
 	write(1, "\n", 1);
-	// need to change env->error to 130 = (128 + sig) or 131
+	// need to change g_error to 130 = (128 + sig) or 131
 }
 
 void	init_signals(struct sigaction act[2])
@@ -98,7 +99,7 @@ void	reset_signals(struct sigaction act[2])
 		// - ctrl-C -> newline prompt
 		// - ctrl-\ -> rien du tout
 	// pendant commande : -> sur child uniquement
-		// - ctrl-C -> stop la commande (defaut) toute la ligne + newline
+		// - ctrl-C -> stop (defaut) toute la ligne + newline
 		// - ctrl-\ -> quit fonction la commande mais pas toute la ligne = SIG_DFL + newline
 // non interactif : 
 	// - ctrl-\ -> core dump la commande, mais continue le main

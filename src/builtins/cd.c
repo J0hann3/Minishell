@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 14:07:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 17:27:00 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static int	check_arg(char **arg, t_env_info *env)
 		return (free_str(arg), 0);
 	if (arg[2] != NULL)
 	{
-		env->error = 1;
+		g_error = 1;
 		ft_write_error("cd", NULL, "too many arguments");
 		return (free_str(arg), 0);
 	}
@@ -122,13 +122,13 @@ int	ft_cd(char **arg, t_env_info	*env)
 		path = ft_strdup(arg[1]);
 	if (path == NULL)
 	{
-		env->error = 2;
+		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), 1);
 	}
 	if (chdir(path) == -1)
 	{
-		env->error = 1;
+		g_error = 1;
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), free(path), 1);
 	}

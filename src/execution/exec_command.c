@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 14:22:16 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 20:42:59 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,38 +118,38 @@ static char	*find_path_command(char *str, t_env_info *env)
 			{
 				fd = open(path, O_DIRECTORY);
 				if (fd != -1)
-					return(close(fd), env->error = 127, ft_write_error(NULL, str, "Is a directory"), NULL);
+					return(close(fd), g_error = 127, ft_write_error(NULL, str, "Is a directory"), NULL);
 				return (path);
 			}
 			else
 			{
-				env->error = 126;
+				g_error = 126;
 				ft_write_error(NULL, str, strerror(errno));
 				return(free(path), NULL);
 			}
 		}
-		env->error = 127;
+		g_error = 127;
 		ft_write_error(NULL, str, strerror(errno));
 		return (free(path), NULL);
 	}
 	i_path = ft_getenv(env->env, "PATH");
 	if (i_path == -1)
 	{
-		env->error = 127;
+		g_error = 127;
 		ft_write_error(NULL, str, "command not found");
 		return (NULL);
 	}
 	path = explore_path(str, env->env[i_path]);
 	if (path == NULL)
 	{
-		env->error = 127;
+		g_error = 127;
 		ft_write_error(NULL, str, "command not found");
 	}
 	return (path);
 }
 
 /**
- * @brief make redirection if fd != 0 + add env->error and write error ??
+ * @brief make redirection if fd != 0 + add g_error and write error ??
  * [ATTENTION]Don't have the name of arg_fd so I can't write the error
  * don't know what to do if something failed
  * 
@@ -164,7 +164,7 @@ static void	redirection(t_instruction *inst, t_env_info *env)
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
 			close(inst->infile);
-			env->error = 1;
+			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->infile);
@@ -175,7 +175,7 @@ static void	redirection(t_instruction *inst, t_env_info *env)
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
 			close(inst->outfile);
-			env->error = 1;
+			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->outfile);
@@ -188,7 +188,7 @@ static void	reset_redirection(t_instruction *inst, t_env_info *env)
 	{
 		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
 		{
-			env->error = 1;
+			g_error = 1;
 			close(inst->s_infile);
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
@@ -198,7 +198,7 @@ static void	reset_redirection(t_instruction *inst, t_env_info *env)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
 		{
-			env->error = 1;
+			g_error = 1;
 			close(inst->s_outfile);
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
@@ -213,7 +213,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	int		pid;
 	int		stat;
 
-	env->error = 0;
+	g_error = 0;
 	if (inst == NULL)
 		return (-1);
 	if (inst->command == NULL)
@@ -222,21 +222,21 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (free_str(inst->command), -1);
 	redirection(inst, env);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
-		return (reset_redirection(inst, env), env->error);
+		return (reset_redirection(inst, env), g_error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return (reset_redirection(inst, env), free_str(inst->command), env->error);
+		return (reset_redirection(inst, env), free_str(inst->command), g_error);
 	pid = fork();
 	if (pid == -1)
 	{
-		env->error = 1;
-		return (reset_redirection(inst, env), free(path), free_str(inst->command), env->error);
+		g_error = 1;
+		return (reset_redirection(inst, env), free(path), free_str(inst->command), g_error);
 	}
 	if (pid == 0)
 	{
 		none_interactive(env->act);
 		execve(path, inst->command, env->env);
-		return (free(path), free_str(inst->command), env->error);
+		return (free(path), free_str(inst->command), g_error);
 	}
 	ign_signals(env->act);
 	waitpid(pid, &stat, 0);
@@ -245,12 +245,12 @@ int	exec(t_instruction *inst, t_env_info *env)
 	if (WIFEXITED(stat))
 	{
 		if (WEXITSTATUS(stat) != 0) 
-			env->error = WEXITSTATUS(stat);
+			g_error = WEXITSTATUS(stat);
 	}
 	else if (WIFSIGNALED(stat))
-		env->error = 128 + WTERMSIG(stat);
-	// printf("Error : %d	SIG : %d	nb_sig : %d\n",env->error, WTERMSIG(stat), WSTOPSIG(stat));
+		g_error = 128 + WTERMSIG(stat);
+	// printf("Error : %d	SIG : %d	nb_sig : %d\n",g_error, WTERMSIG(stat), WSTOPSIG(stat));
 	free(path);
 	free_str(inst->command);
-	return (env->error);
+	return (g_error);
 }

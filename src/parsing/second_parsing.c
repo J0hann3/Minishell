@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:27:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 		return (NULL);
 	// heredocs
 	expanded_command = expand_dollars(input, command_size, env_info);
-	if(!(expanded_command && env_info->error != 1 && open_all_fds(instruc, expanded_command))) // changer error
+	if(!(expanded_command && g_error != 1 && open_all_fds(instruc, expanded_command))) // changer error
 		return (free(expanded_command), free_instructions(instruc), NULL);
 	// expand *
 	instruc->command = ft_split_quote(expanded_command, ' ');

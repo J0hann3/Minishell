@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 15:54:44 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 19:20:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	ft_copy(char **dest, char **src)
  * can only contain letters numbers and underscores
  * return 1 if valid name
 */
-static int	is_valid_name(char *str, t_env_info	*env)
+static int	is_valid_name(char *str)
 {
 	int	i;
 	int	equal;
@@ -57,7 +57,7 @@ static int	is_valid_name(char *str, t_env_info	*env)
 		{
 			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
 			{
-				env->error = 1;
+				g_error = 1;
 				ft_write_error("export", str, "not a valid identifier");		//need '' around str
 				return (0);
 			}
@@ -69,7 +69,7 @@ static int	is_valid_name(char *str, t_env_info	*env)
 		}
 		else
 		{
-			env->error = 1;
+			g_error = 1;
 			ft_write_error("export", str, "not a valid identifier");		//need '' around str
 			return (0);
 		}
@@ -81,7 +81,7 @@ static int	is_valid_name(char *str, t_env_info	*env)
 		return (0);
 }
 
-static int	trim_invalid_varible(char **arg, t_env_info	*env)
+static int	trim_invalid_varible(char **arg)
 {
 	int	suppr;
 	int	i;
@@ -90,7 +90,7 @@ static int	trim_invalid_varible(char **arg, t_env_info	*env)
 	suppr = -1;
 	while (arg[i] != NULL)
 	{
-		if (!is_valid_name(arg[i], env))
+		if (!is_valid_name(arg[i]))
 		{
 			free(arg[i]);
 			arg[i] = NULL;
@@ -214,7 +214,7 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	int		len_arg;
 	char	**new;
 
-	len_arg = trim_invalid_varible(arg, env);
+	len_arg = trim_invalid_varible(arg);
 	len_arg = modifie_var(arg, env->env, len_arg);
 	if (len_arg < 0)
 		return (free_arg(arg, len_arg), NULL);
@@ -230,7 +230,7 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));
 	if (new == NULL)
 	{
-		env->error = 2;
+		g_error = 2;
 		return (free_arg(arg, len_arg), NULL);
 	}
 	env->len_env = len_env + len_arg;

@@ -6,12 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/21 14:58:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 20:41:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+int	g_error;
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -22,8 +23,18 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
+	// int fds[2];
 
-	// g_signals = 0;
+	// pipe(fds);
+	// int i = 0;
+	// while (1)
+	// {
+	// 	printf("ici %d\n", i++);	
+	// 	write(fds[1], "a", 1);
+	// }
+
+	// return 0;
+	g_error = 0;
 	env = init_env((const char **)envp);
 	prompt = "minishell$> ";
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
@@ -55,13 +66,13 @@ int	main(int argc, char *argv[], char *envp[])
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;
-		explore_tree(env->tree, env, e_empty_new, 0);
+		explore_tree(env->tree, env, e_empty, 0);
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
 	}
 	free_str(env->env);
-	ret_err = env->error;
+	ret_err = g_error;
 	free(env);
 	rl_clear_history();
 	write(2, "exit\n", 5);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 15:14:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 17:27:00 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	{
 		if (pipe(fildes) != 0)
 		{
-			env->error = 1;
+			g_error = 1;
 			return ;
 		}
 	}
 	pid = fork();
 	if (pid == -1)
 	{
-		env->error = 1;
+		g_error = 1;
 		return ;
 	}
 	if (pid == 0)
@@ -107,13 +107,13 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		if (WIFEXITED(stat))
 		{
 			if (WEXITSTATUS(stat) != 0) 
-				env->error = WEXITSTATUS(stat);
-			if (env->error == 1)
+				g_error = WEXITSTATUS(stat);
+			if (g_error == 1)
 				fd_tmp = 0;
 		}
 		else if (WIFSIGNALED(stat))
-			env->error = 128 + WTERMSIG(stat);
-		// printf("Error pipe : %d\n",env->error);
+			g_error = 128 + WTERMSIG(stat);
+		// printf("Error pipe : %d\n",g_error);
 	}
 }
 
@@ -132,15 +132,17 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	t_instruction 			*arg;
 
 	meta_next = find_next_meta(tree);
-	printf("Error : %d	meta : %d\n", env->error, meta_before);
-	if (env->error == 130 && meta_before != e_empty_new)
-		return (meta_next);
+	// if (g_error == 130 && meta_before != e_empty_new)
+	// {
+	// 	printf("Error : %d	meta : %d\n", g_error, meta_before);
+	// 	return (meta_next);
+	// }
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next,stat);
 		return (meta_next);
 	}
-	else if (meta_before == e_empty)
+	else if (meta_before == e_empty || meta_before == e_empty_new)
 	{
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env);
@@ -181,30 +183,32 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 {
 	enum e_meta_character	tmp;
 
-	printf("Error : %d	meta : %d\n", env->error == 130, meta_before != e_empty_new);
-	if (env->error == 130 && meta_before != e_empty_new)
-		return ;
 	if (tree == NULL)
 		return;
+	// if (g_error == 130 && meta_before != e_empty_new)
+	// {
+	// 	printf("Error : %d	meta : %d\n", g_error, meta_before);
+	// 	return ;
+	// }
 	if (tree->meta != e_empty)
 	{
 		tmp = tree->meta;
 		if (tree->left != NULL && tree->left->command != NULL)
 			meta_before = skip_or_exec_command(tree->left, env, meta_before, stat);
 		else
-			explore_tree(tree->left, env, meta_before, env->error);
+			explore_tree(tree->left, env, meta_before, g_error);
 		meta_before = tmp;
 		if (tree->right != NULL && tree->right->command != NULL)
-			meta_before = skip_or_exec_command(tree->right, env, meta_before, env->error);
+			meta_before = skip_or_exec_command(tree->right, env, meta_before, g_error);
 		else if (meta_before == e_and)
 		{
-			if (env->error == 0)
-				explore_tree(tree->right, env, meta_before, env->error);
+			if (g_error == 0)
+				explore_tree(tree->right, env, meta_before, g_error);
 		}
 		else if (meta_before == e_or)
 		{
-			if (env->error != 0)
-				explore_tree(tree->right, env, meta_before, env->error);
+			if (g_error != 0)
+				explore_tree(tree->right, env, meta_before, g_error);
 		}
 	}
 	else if (tree->command != NULL)

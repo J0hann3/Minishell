@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 16:19:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 17:27:00 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,28 @@ void	ft_exit(t_instruction *arg, t_env_info *env)			// need to also free tree
 
 	if (arg->command[1] == NULL)
 	{
-		erreur = env->error;
+		erreur = g_error;
 		free_str(arg->command);
 		free(arg);
 		free_env(env);
 		write(2, "exit\n", 5);
 		exit(erreur);
 	}
-	env->error = ft_atouc(arg->command[1]);
-	if (env->error == -1)
+	g_error = ft_atouc(arg->command[1]);
+	if (g_error == -1)
 	{
 		ft_write_error("exit", arg->command[1], "numeric argument required");
-		env->error = 2;
+		g_error = 2;
 	}
 	else if (arg->command[2] != NULL)
 	{
 		ft_write_error("exit", NULL, "too many arguments");
 		free_str(arg->command);
 		free(arg);
-		env->error = 1;
+		g_error = 1;
 		return ;
 	}
-	erreur = env->error;
+	erreur = g_error;
 	free_env(env);
 	free_str(arg->command);
 	free(arg);

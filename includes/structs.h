@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 14:57:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 17:26:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <fcntl.h>
 # include <signal.h>
 
+extern int	g_error;
 
 enum	e_meta_character
 {
@@ -40,11 +41,10 @@ enum	e_meta_character
 
 typedef struct	s_env_info
 {
-	struct sigaction act[2];
-	int				error;
-	int				len_env;
-	char			**env;
-	struct s_ast	*tree;
+	char				**env;
+	int					len_env;
+	struct sigaction	act[2];
+	struct s_ast		*tree;
 }	t_env_info;
 
 typedef struct s_instruction
@@ -68,6 +68,6 @@ typedef struct s_ast
 	enum e_meta_character	meta;
 }	t_ast;
 
-// int	g_signals;
+
 
 #endif
