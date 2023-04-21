@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/19 13:24:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 14:22:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (reset_redirection(inst, env), free_str(inst->command), env->error);
-	none_interactive(env->act);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -235,6 +234,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	}
 	if (pid == 0)
 	{
+		none_interactive(env->act);
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), env->error);
 	}
@@ -249,7 +249,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	}
 	else if (WIFSIGNALED(stat))
 		env->error = 128 + WTERMSIG(stat);
-	printf("Error : %d	SIG : %d	nb_sig : %d\n",env->error, WTERMSIG(stat), WSTOPSIG(stat));
+	// printf("Error : %d	SIG : %d	nb_sig : %d\n",env->error, WTERMSIG(stat), WSTOPSIG(stat));
 	free(path);
 	free_str(inst->command);
 	return (env->error);

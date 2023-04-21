@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/19 13:19:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 15:14:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		}
 		else if (WIFSIGNALED(stat))
 			env->error = 128 + WTERMSIG(stat);
-		printf("Error pipe : %d\n",env->error);
+		// printf("Error pipe : %d\n",env->error);
 	}
 }
 
@@ -132,6 +132,9 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	t_instruction 			*arg;
 
 	meta_next = find_next_meta(tree);
+	printf("Error : %d	meta : %d\n", env->error, meta_before);
+	if (env->error == 130 && meta_before != e_empty_new)
+		return (meta_next);
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next,stat);
@@ -178,6 +181,9 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 {
 	enum e_meta_character	tmp;
 
+	printf("Error : %d	meta : %d\n", env->error == 130, meta_before != e_empty_new);
+	if (env->error == 130 && meta_before != e_empty_new)
+		return ;
 	if (tree == NULL)
 		return;
 	if (tree->meta != e_empty)

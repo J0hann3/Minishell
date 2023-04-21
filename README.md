@@ -35,7 +35,7 @@ execve -> mutattion de process
 Redirections are processed in the order they appear, from left to right. 
 
 - godbolt
-- learngitbranchingx
+- learngitbranching
 
 GIT :
 	git checkout -b [yourbranchname] ->create branch and change at the same time

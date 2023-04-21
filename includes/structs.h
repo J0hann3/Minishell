@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/19 15:45:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 14:57:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ enum	e_meta_character
 	e_empty = 0,
 	e_or,
 	e_pipe,
-	e_and
+	e_and,
+	e_empty_new
 };
 
 typedef struct	s_env_info
@@ -67,6 +68,6 @@ typedef struct s_ast
 	enum e_meta_character	meta;
 }	t_ast;
 
-int	g_signals;
+// int	g_signals;
 
 #endif

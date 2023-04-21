@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/17 21:55:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 14:07:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char *find_absolute_path(char *str)
 	return (path);
 }
 
-static void	update_env(char **env, char *str, t_env_info *env_info)		//don't know if need to create OLDPWD
+static void	update_env(char **env, char *str)		//don't know if need to create OLDPWD
 {
 	int	i_pwd;
 	int	i_old_pwd;
@@ -132,7 +132,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), free(path), 1);
 	}
-	update_env(env->env, path, env);
+	update_env(env->env, path);
 	free_str(arg);
 	return (0);
 }

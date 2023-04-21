@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/19 15:45:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/21 14:58:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 
-	g_signals = 0;
+	// g_signals = 0;
 	env = init_env((const char **)envp);
 	prompt = "minishell$> ";
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
@@ -55,7 +55,7 @@ int	main(int argc, char *argv[], char *envp[])
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;
-		explore_tree(env->tree, env, e_empty, 0);
+		explore_tree(env->tree, env, e_empty_new, 0);
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
