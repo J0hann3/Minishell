@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 17:27:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 15:40:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	update_env(char **env, char *str)		//don't know if need to create OL
 	free(str);
 }
 
-static int	check_arg(char **arg, t_env_info *env)
+static int	check_arg(char **arg)
 {
 	if (arg[1] == NULL)
 		return (free_str(arg), 0);
@@ -114,7 +114,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 {
 	char	*path;
 
-	if (check_arg(arg, env) == 0)
+	if (check_arg(arg) == 0)
 		return (1);
 	if (arg[1][0] != '/')
 		path = find_absolute_path(arg[1]);

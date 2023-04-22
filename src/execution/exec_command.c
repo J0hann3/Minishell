@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 20:42:59 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 18:20:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ static char	*find_path_command(char *str, t_env_info *env)
  * @param inst 
  * @param env 
  */
-static void	redirection(t_instruction *inst, t_env_info *env)
+static void	redirection(t_instruction *inst)
 {
 	if (inst->infile != -2)
 	{
@@ -182,7 +182,7 @@ static void	redirection(t_instruction *inst, t_env_info *env)
 	}
 }
 
-static void	reset_redirection(t_instruction *inst, t_env_info *env)
+static void	reset_redirection(t_instruction *inst)
 {
 	if (inst->infile != -2)
 	{
@@ -207,7 +207,7 @@ static void	reset_redirection(t_instruction *inst, t_env_info *env)
 }
 
 
-int	exec(t_instruction *inst, t_env_info *env)
+int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 {
 	char	*path;
 	int		pid;
@@ -220,17 +220,17 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (-1);
 	if (inst->command[0] == NULL)
 		return (free_str(inst->command), -1);
-	redirection(inst, env);
+	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
-		return (reset_redirection(inst, env), g_error);
+		return (reset_redirection(inst), g_error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return (reset_redirection(inst, env), free_str(inst->command), g_error);
+		return (reset_redirection(inst), free_str(inst->command), g_error);
 	pid = fork();
 	if (pid == -1)
 	{
 		g_error = 1;
-		return (reset_redirection(inst, env), free(path), free_str(inst->command), g_error);
+		return (reset_redirection(inst), free(path), free_str(inst->command), g_error);
 	}
 	if (pid == 0)
 	{
@@ -238,17 +238,16 @@ int	exec(t_instruction *inst, t_env_info *env)
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), g_error);
 	}
-	ign_signals(env->act);
+	if (!has_ign_sig)
+		add_error_signals(env->act);
 	waitpid(pid, &stat, 0);
 	reset_signals(env->act);
-	reset_redirection(inst, env);
+	reset_redirection(inst);
 	if (WIFEXITED(stat))
 	{
 		if (WEXITSTATUS(stat) != 0) 
 			g_error = WEXITSTATUS(stat);
 	}
-	else if (WIFSIGNALED(stat))
-		g_error = 128 + WTERMSIG(stat);
 	// printf("Error : %d	SIG : %d	nb_sig : %d\n",g_error, WTERMSIG(stat), WSTOPSIG(stat));
 	free(path);
 	free_str(inst->command);

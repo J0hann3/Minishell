@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/21 20:42:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 18:22:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,28 @@
 
 void	crtl_c_interactive(int sig)
 {
-	// g_signals = 128 + sig;
-	(void)sig;
+	g_error = 128 + sig;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	// need to change g_error to 130 = (128 + sig)
+}
+
+void	error_new_line(int sig)
+{
+	g_error = 128 + sig;
+	// printf("eeeeeeeSIG : %d		error ; %d\n", sig, g_error);
+	if (sig == SIGQUIT)
+		write(1, "Quit (core dumped)", 18);			// reset redirection before print
+	write(1, "\n", 1);
 }
 
 void	new_line(int sig)
 {
-	// g_signals = 128 + sig;
-	(void)sig;
-	// printf("SIG : %d\n", sig);
-	// kill(-1, )
+	// printf("nnnnnnnSIG : %d		error ; %d\n", sig, g_error);
 	if (sig == SIGQUIT)
 		write(1, "Quit (core dumped)", 18);			// reset redirection before print
 	write(1, "\n", 1);
-	// need to change g_error to 130 = (128 + sig) or 131
 }
 
 void	init_signals(struct sigaction act[2])
@@ -49,7 +52,27 @@ void	init_signals(struct sigaction act[2])
 	sigaction(SIGQUIT, &(act[1]), NULL);
 }
 
+void	add_error_signals(struct sigaction act[2])
+{
+	// CTRL-C
+	act[0].sa_handler = error_new_line;
+	sigaction(SIGINT, &act[0], NULL);
+	// CTRL-/
+	act[1].sa_handler = error_new_line;
+	sigaction(SIGQUIT, &(act[1]), NULL);
+}
+
 void	ign_signals(struct sigaction act[2])
+{
+	// CTRL-C
+	act[0].sa_handler = SIG_IGN;
+	sigaction(SIGINT, &act[0], NULL);
+	// CTRL-/
+	act[1].sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &(act[1]), NULL);
+}
+
+void	new_line_signals(struct sigaction act[2])
 {
 	// CTRL-C
 	act[0].sa_handler = new_line;
