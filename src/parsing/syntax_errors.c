@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 17:13:28 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 20:59:16 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,9 @@ bool	is_quote_closed(char **input, char **error_token)
  * Forward input at the last charcater of the argument.
  * If no valid argument, set error_token to the redirection.
  * This function call heredoc open if encounterd.
- * This function can call and return value of : 
+ * This function can call : 
  * 		is_quote_closed
+ * 		do_here_docs
  * @param input 
  * @param error_token 
  * @return true 
@@ -108,9 +109,13 @@ bool	is_quote_closed(char **input, char **error_token)
 bool	is_redirection_ok(char **input, char **error_token)
 {
 	char	*start;
+	bool	is_here_doc;
 
 	(*input)++;
-	if (**input == '<' || **input == '>')
+	is_here_doc = false;
+	if (**input == '<')
+		is_here_doc = true;
+	if (**input == '>' || **input == '<')
 		(*input)++;
 	while (is_wspace((**input)))
 		(*input)++;
@@ -124,12 +129,10 @@ bool	is_redirection_ok(char **input, char **error_token)
 		(*input)++;
 	}
 	if ((*input) == start)
-	{
-		*error_token = get_error_token((*input));
-		return (false);
-	}
-	else
-		(*input)--;
+		return (*error_token = get_error_token((*input)), false); // enlever une ligne norme ici
+	(*input)--;
+	if (is_here_doc)
+		do_here_docs(start);
 	return (true);
 }
 
@@ -164,7 +167,10 @@ bool	has_closing_parenthesis(char **input, char **error_token)
 {
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
+
 	(*input)++;
+	while (is_wspace((**input)))
+		(*input)++;
 	if (**input == ')')
 	{
 		*error_token = ft_strdup("syntax error near unexpected token `)'");
@@ -222,16 +228,13 @@ int	check_syntax_at(char **input, char **error_token, char *start_ptr)
  */
 int	syntax_errors(char *input)
 {
-	size_t	i;
 	char	*error_token;
 	char	*start_ptr;
 
-	i = 0;
 	error_token = NULL;
 	start_ptr = input;
 	while (*input)
 	{
-		printf("input : '%s'\n", input);
 		if (is_syntax_char(input))
 		{
 			if (check_syntax_at(&input, &error_token, start_ptr) < 1)
@@ -243,7 +246,7 @@ int	syntax_errors(char *input)
 		}
 		input++;
 	}
-	return (i == 0);
+	return (start_ptr == input);
 }
 
 /**

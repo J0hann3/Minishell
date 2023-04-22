@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/15 19:28:03 by qthierry         ###   ########.fr        #
+#    Updated: 2023/04/22 20:31:13 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,11 @@ SRC_PARSING = syntax_errors.c \
 			expand.c \
 			remove_quotes.c \
 			utils2.c
+
+HEREDOCS = heredocs/
+SRC_HEREDOCS = heredocs.c \
+			prompt_here.c
+
 SIGNALS = signals/
 SRC_SIGNALS = signals.c
 			
@@ -66,11 +71,11 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(PARSING), $(SRC_PARSING)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
+			$(addprefix $(HEREDOCS), $(SRC_HEREDOCS)) \
 			main.c \
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
-
 
 OBJ_DIR = ./obj/
 OBJ_LIST = $(patsubst %.c, %.o, $(SRC_LIST))
@@ -103,6 +108,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(PARSING)
 	mkdir -p $(OBJ_DIR)$(UTILS)
 	mkdir -p $(OBJ_DIR)$(SIGNALS)
+	mkdir -p $(OBJ_DIR)$(HEREDOCS)
 
 clean:
 	rm -rf $(OBJ_DIR)

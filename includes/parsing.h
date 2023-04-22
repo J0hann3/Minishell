@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 20:33:45 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 20:26:19 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ bool	quotes_not_closed(const char *input);
 bool	has_argument_right(char *op_ptr, char **error_token);
 bool	has_argument_left(const char *start_input, char *op_ptr,
 					char **error_token);
+bool	is_redirection(char c);
+bool	is_parenthesis(char c);
 
 // ast_utils.c
 t_ast	*create_node(const char *command);
@@ -78,5 +80,11 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 
 // open_fd.c
 bool	open_all_fds(t_instruction *instruction, char *input);
+
+//heredocs.c
+int		do_here_docs(char *input);
+
+// prompt_here.c
+int		prompt_here(char *ender, int fd, char *file_name);
 
 #endif

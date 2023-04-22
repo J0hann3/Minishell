@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/16 20:33:56 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 20:21:18 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,20 @@ bool	eq(char *s1, char *s2)
 {
 	size_t	i;
 
+	if (!s1 && !s2)
+		return (true);
 	if (!s1 || !s2)
-		return (-1);
+		return (false);
 	i = 0;
 	if (ft_strlen(s1) != ft_strlen(s2))
-		return (0);
+		return (false);
 	while (s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])
-			return (0);
+			return (false);
 		i++;
 	}
-	return (1);
+	return (true);
 }
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
@@ -91,24 +93,6 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 	free(ptr);
 	return (new_ptr);
 }
-
-// bool	has_error_for_meta(char *input, size_t i)
-// {
-// 	if (input[i] == '&' && input[i + 1] != '&')
-// 		return (0);
-// 	else if (input[i] == '<' || input[i] == '>')
-// 	{
-// 		if (!has_argument_right(input + i))
-// 			return (1);
-// 	}
-// 	else if (input[i] == '|' || input[i] == '&') // can have > after, error
-// 	{
-// 		if (!has_argument_left(input, (input + i))
-// 			|| !has_argument_right(input + i))
-// 			return (1);
-// 	}
-// 	return (0);
-// }
 
 void	remove_multiple_wspaces(char *input)
 {
