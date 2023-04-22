@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 16:52:54 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 17:13:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char *get_error_token(char *input)
 		return (ft_strdup("syntax error near unexpected token `('"));
 	if (*input == ')')
 		return (ft_strdup("syntax error near unexpected token `)'"));
-	return (ft_strdup("syntax error near unexpected token `newline'"));
+	return (ft_strdup("syntax error near unexpected token `error'"));
 }
 
 /**
@@ -292,9 +292,9 @@ bool	has_argument_left(const char *start_input, char *op_ptr,
 	{
 		tmp--;
 		if (*tmp == '(')
-			return (*error_token = get_error_token(tmp), false);
+			return (*error_token = get_error_token(op_ptr), false);
 		if (tmp != start_input && is_operator(tmp - 1))
-			return (*error_token = get_error_token(tmp), false);
+			return (*error_token = get_error_token(op_ptr), false);
 		else if (!is_wspace(*tmp))
 			return (true);
 	}
@@ -322,8 +322,6 @@ bool	has_argument_right(char *op_ptr, char **error_token)
 	while (*op_ptr)
 	{
 		if (*op_ptr == ')')
-			return (*error_token = get_error_token(op_cpy), false);
-		if (is_operator(op_ptr))
 			return (*error_token = get_error_token(op_cpy), false);
 		else if (!is_wspace(*op_ptr))
 			return (true);
