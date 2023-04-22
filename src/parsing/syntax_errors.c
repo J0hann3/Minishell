@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 16:45:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 16:52:54 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ bool	is_quote_closed(char **input, char **error_token)
 	const char	*error_quote = "unexpected EOF while looking for matching \
 `\"'\nminishell: syntax error: unexpected end of file";
 
-	printf("Testing quotes...\n");
 	quote = **input;
 	(*input)++;
 	while (**input)
@@ -110,7 +109,6 @@ bool	is_redirection_ok(char **input, char **error_token)
 {
 	char	*start;
 
-	printf("Testing redirect...\n");
 	(*input)++;
 	if (**input == '<' || **input == '>')
 		(*input)++;
@@ -164,10 +162,14 @@ bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
  */
 bool	has_closing_parenthesis(char **input, char **error_token)
 {
-	printf("Testing parenth...\n");
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
 	(*input)++;
+	if (**input == ')')
+	{
+		*error_token = ft_strdup("syntax error near unexpected token `)'");
+		return (false);
+	}
 	while (**input)
 	{
 		if (**input == ')')
@@ -180,7 +182,6 @@ bool	has_closing_parenthesis(char **input, char **error_token)
 		else if ((**input == '<' || **input == '>')
 				&& !is_redirection_ok(input, error_token))
 			return (false);
-		printf("char actuel : %s\n", *input);
 		(*input)++;
 	}
 	*error_token = ft_strdup(error_parenth);
@@ -236,6 +237,7 @@ int	syntax_errors(char *input)
 			if (check_syntax_at(&input, &error_token, start_ptr) < 1)
 			{
 				ft_write_error(NULL, NULL, error_token);
+				free(error_token);
 				return (2); // write return message here with error_token
 			}
 		}
