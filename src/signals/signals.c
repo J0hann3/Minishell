@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 18:22:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 19:02:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	new_line(int sig)
 {
 	// printf("nnnnnnnSIG : %d		error ; %d\n", sig, g_error);
 	if (sig == SIGQUIT)
-		write(1, "Quit (core dumped)", 18);			// reset redirection before print
+		return ;
+		// write(1, "Quit (core dumped)", 18);			// reset redirection before print
 	write(1, "\n", 1);
 }
 

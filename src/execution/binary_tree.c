@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/22 18:28:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 19:00:19 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			return (g_error = 1, (void)0);
 	}
 	pid = fork();
-	// printf("PID : %d\n", pid);
 	if (pid == -1)
 		return (g_error = 1, (void)0);
 	if (pid == 0)
@@ -77,7 +76,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		{
 			close(fildes[1]);
 			free_env(env);
-			exit(-1);
+			exit(1);
 		}
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env, 1);
@@ -96,18 +95,14 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	}
 	else
 		add_error_signals(env->act);
-	// printf("Action\n");
 	if (m_b == e_pipe && m_n != e_pipe)
 	{
-		// printf("action 1 : %p, action 2 ; %d\n", env->act[0].sa_handler, env->act[0].sa_handler);
 		waitpid(pid, &stat, 0);
 		new_line_signals(env->act);
 		if (WIFEXITED(stat))
 		{
 			if (WEXITSTATUS(stat) != 0) 
 				g_error = WEXITSTATUS(stat);
-			// if (g_error == 1)
-			// 	fd_tmp = 0;
 		}
 		while ( pid > 0)
 			pid = waitpid(-1, &stat, 0);
