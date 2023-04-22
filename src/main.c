@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/17 19:06:41 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 16:00:10 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		// ret_err = syntax_errors(input);
+		ret_err = syntax_errors(input);
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
@@ -50,6 +50,7 @@ int	main(int argc, char *argv[], char *envp[])
 			free(input);
 			continue ;
 		}
+		return 0;
 		// if (get_here_list(here_list, input) < 1)
 		// 	return (2);
 		action.sa_handler = SIG_DFL;

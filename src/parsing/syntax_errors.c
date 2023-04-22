@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/17 18:49:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/22 16:45:17 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,28 +42,28 @@ bool	is_parenthesis(char c)
 static char *get_error_token(char *input)
 {
 	if (!*input)
-		return (ft_strdup("newline"));
+		return (ft_strdup("syntax error near unexpected token `newline'"));
 	if (*input == '&' && *(input + 1) == '&')
-		return (ft_strdup("&&"));
+		return (ft_strdup("syntax error near unexpected token `&&'"));
 	if (*input == '|' && *(input + 1) == '|')
-		return (ft_strdup("||"));
+		return (ft_strdup("syntax error near unexpected token `||'"));
 	if (*input == '|')
-		return (ft_strdup("|"));
-	if (*input == '>' && *(input + 1) == '>')
-		return (ft_strdup(">>"));
+		return (ft_strdup("syntax error near unexpected token `|'"));
 	if (*input == '<' && *(input + 1) == '<' && *(input + 2) == '<')
-		return (ft_strdup("<<<"));
+		return (ft_strdup("syntax error near unexpected token `<<<'"));
+	if (*input == '>' && *(input + 1) == '>')
+		return (ft_strdup("syntax error near unexpected token `>>'"));
 	if (*input == '<' && *(input + 1) == '<')
-		return (ft_strdup("<<"));
+		return (ft_strdup("syntax error near unexpected token `<<'"));
 	if (*input == '>' && *(input + 1) != '>')
-		return (ft_strdup(">"));
+		return (ft_strdup("syntax error near unexpected token `>'"));
 	if (*input == '<' && *(input + 1) != '<')
-		return (ft_strdup("<"));
+		return (ft_strdup("syntax error near unexpected token `<'"));
 	if (*input == '(')
-		return (ft_strdup("("));
+		return (ft_strdup("syntax error near unexpected token `('"));
 	if (*input == ')')
-		return (ft_strdup(")"));
-	return (ft_strdup(""));
+		return (ft_strdup("syntax error near unexpected token `)'"));
+	return (ft_strdup("syntax error near unexpected token `newline'"));
 }
 
 /**
@@ -77,8 +77,11 @@ static char *get_error_token(char *input)
  */
 bool	is_quote_closed(char **input, char **error_token)
 {
-	char	quote;
+	char		quote;
+	const char	*error_quote = "unexpected EOF while looking for matching \
+`\"'\nminishell: syntax error: unexpected end of file";
 
+	printf("Testing quotes...\n");
 	quote = **input;
 	(*input)++;
 	while (**input)
@@ -87,13 +90,13 @@ bool	is_quote_closed(char **input, char **error_token)
 			return (true);
 		(*input)++;
 	}
-	*error_token = ft_strdup(&quote);
+	*error_token = ft_strdup(error_quote);
 	return (false);
 }
 
 /**
  * @brief Check if the redirection has a valid argument
- * Forward input after the argument.
+ * Forward input at the last charcater of the argument.
  * If no valid argument, set error_token to the redirection.
  * This function call heredoc open if encounterd.
  * This function can call and return value of : 
@@ -107,6 +110,7 @@ bool	is_redirection_ok(char **input, char **error_token)
 {
 	char	*start;
 
+	printf("Testing redirect...\n");
 	(*input)++;
 	if (**input == '<' || **input == '>')
 		(*input)++;
@@ -126,6 +130,8 @@ bool	is_redirection_ok(char **input, char **error_token)
 		*error_token = get_error_token((*input));
 		return (false);
 	}
+	else
+		(*input)--;
 	return (true);
 }
 
@@ -138,19 +144,46 @@ bool	is_redirection_ok(char **input, char **error_token)
  * 		is_quote_closed
  * @param input 
  * @param error_token 
- * @return int 
+ * @return true 
+ * @return false 
  */
-int	is_operator_ok(char **input, char **error_token, char *start_ptr)
+bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 {
 	return (has_argument_left(start_ptr, *input, error_token)
 		&& has_argument_right(*input, error_token));
 }
 
+/**
+ * @brief Checks if the given parenthesis is closed, forward input to the
+ * closing parenthesis, and set error_token if closing parenthesis does not exist
+ * 
+ * @param input 
+ * @param error_token 
+ * @return true 
+ * @return false 
+ */
 bool	has_closing_parenthesis(char **input, char **error_token)
 {
+	printf("Testing parenth...\n");
+	const char *error_parenth = "unexpected EOF while looking for matching \
+`('\nminishell: syntax error: unexpected end of file";
 	(*input)++;
-	
-
+	while (**input)
+	{
+		if (**input == ')')
+			return (true);
+		else if (**input == '(' && !has_closing_parenthesis(input, error_token))
+			return (false);
+		else if ((**input == '"' || **input == '"')
+				&& !is_quote_closed(input, error_token))
+			return (false);
+		else if ((**input == '<' || **input == '>')
+				&& !is_redirection_ok(input, error_token))
+			return (false);
+		printf("char actuel : %s\n", *input);
+		(*input)++;
+	}
+	*error_token = ft_strdup(error_parenth);
 	return (false);
 }
 
@@ -167,14 +200,14 @@ bool	has_closing_parenthesis(char **input, char **error_token)
 int	check_syntax_at(char **input, char **error_token, char *start_ptr)
 {
 	if (**input == '\'' || **input == '"')
-		return (is_quote_closed(input, error_token)); // ok
+		return (is_quote_closed(input, error_token));
 	if (**input == '<' || **input == '>')
 		return (is_redirection_ok(input, error_token));
 	if (is_operator(*input))
 		return (is_operator_ok(input, error_token, start_ptr));
 	if (**input == '(')
 		return (has_closing_parenthesis(input, error_token));
-	return (-1); // unexpected
+	return (-1);
 }
 
 
@@ -202,7 +235,7 @@ int	syntax_errors(char *input)
 		{
 			if (check_syntax_at(&input, &error_token, start_ptr) < 1)
 			{
-				printf("error token : '%s'\n", error_token);
+				ft_write_error(NULL, NULL, error_token);
 				return (2); // write return message here with error_token
 			}
 		}
