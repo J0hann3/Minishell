@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/22 15:40:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 19:51:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,28 +61,45 @@ char *find_absolute_path(char *str)
 	return (path);
 }
 
-static void	update_env(char **env, char *str)		//don't know if need to create OLDPWD
+static void	update_env(t_env_info	*env, char *str)		//don't know if need to create OLDPWD
 {
-	int	i_pwd;
-	int	i_old_pwd;
+	int		i_pwd;
+	int		i_old_pwd;
+	int		len_env;
 	char	*res;
 
-	i_old_pwd = ft_getenv(env, "OLDPWD");
-	i_pwd = ft_getenv(env, "PWD");
-	if (i_old_pwd != -1)
-		free(env[i_old_pwd]);
+	i_old_pwd = ft_getenv(env->env, "OLDPWD");
+	i_pwd = ft_getenv(env->env, "PWD");
 	if (i_pwd != -1)
+	{
+		if (i_old_pwd != -1)		//update oldpwd
+		{
+			res = ft_strjoin("OLD", env->env[i_pwd]);		//check malloc
+			free(env->env[i_pwd]);
+			if (res == NULL)
+				return (free(str), g_error = 1, (void)0);
+			free(env->env[i_old_pwd]);
+			env->env[i_old_pwd] = res;
+		}
+		else
+			free(env->env[i_pwd]);
+		env->env[i_pwd] = ft_strjoin("PWD=", str);
+		free(str);
+		if (env->env[i_pwd] == NULL)
+			return (g_error = 1, (void)0);
+		return ;
+	}
+	else
 	{
 		if (i_old_pwd != -1)
 		{
-			res = ft_strjoin("OLD", env[i_pwd]);		//check malloc
-			free(env[i_pwd]);
-			env[i_old_pwd] = res;
+			len_env = ft_len(env->env);
+			if (len_env <= 0)
+				return ;
+			free(env->env[i_old_pwd]);
+			env->env[i_old_pwd] = env->env[len_env - 1];
+			env->env[len_env - 1] = NULL;
 		}
-		else
-			free(env[i_pwd]);
-		env[i_pwd] = str;
-		return ;
 	}
 	free(str);
 }
@@ -132,7 +149,7 @@ int	ft_cd(char **arg, t_env_info	*env)
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), free(path), 1);
 	}
-	update_env(env->env, path);
+	update_env(env, path);
 	free_str(arg);
 	return (0);
 }

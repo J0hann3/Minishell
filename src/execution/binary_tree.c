@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/22 19:00:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/22 19:22:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,18 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	int				pid;
 	int				fildes[2];
 	static int		fd_tmp = 0;
-
+	
+	if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
+		return ;
 	if (m_b == e_pipe && fd_tmp == 0)
 		return ;
 	if (m_n == e_pipe )
-	{
 		if (pipe(fildes) != 0)
 			return (g_error = 1, (void)0);
-	}
 	pid = fork();
 	if (pid == -1)
 		return (g_error = 1, (void)0);
+		
 	if (pid == 0)
 	{
 		none_interactive(env->act);
@@ -71,12 +72,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			dup2(fildes[1], STDOUT_FILENO);
 			close(fildes[0]);
 			close(fildes[1]);
-		}
-		if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
-		{
-			close(fildes[1]);
-			free_env(env);
-			exit(1);
 		}
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env, 1);
@@ -127,10 +122,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 
 	meta_next = find_next_meta(tree);
 	if (g_error == 130 && meta_before != e_empty_new)
-	{
-		// printf("Error : %d	meta : %d	command:%s\n", g_error, meta_before, tree->command);
 		return (meta_next);
-	}
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next, stat);
@@ -180,10 +172,7 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 	if (tree == NULL)
 		return;
 	if (g_error == 130 && meta_before != e_empty_new)
-	{
-		printf("TREE Error : %d	meta : %d\n", g_error, meta_before);
 		return ;
-	}
 	if (tree->meta != e_empty)
 	{
 		tmp = tree->meta;
