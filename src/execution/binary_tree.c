@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/22 19:22:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 15:13:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,27 @@ static enum e_meta_character	find_next_meta(t_ast *node)
  * @param stat 	error value of the last command executed
  * @return void
  */
-void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n, int stat)
+void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n)
 {
 	t_instruction	*arg;
+	int				stat;
 	int				pid;
 	int				fildes[2];
 	static int		fd_tmp = 0;
 	
-	if ((m_b == e_and && stat != 0) || (m_b == e_or && stat == 0))
+	printf("PIPE\n");
+	if ((m_b == e_and && g_error != 0) || (m_b == e_or && g_error == 0))
 		return ;
 	if (m_b == e_pipe && fd_tmp == 0)
 		return ;
 	if (m_n == e_pipe )
 		if (pipe(fildes) != 0)
 			return (g_error = 1, (void)0);
+	g_error = 0;
+	printf("FORK\n");
 	pid = fork();
 	if (pid == -1)
 		return (g_error = 1, (void)0);
-		
 	if (pid == 0)
 	{
 		none_interactive(env->act);
@@ -75,11 +78,10 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		}
 		arg = second_parsing(tree->command, tree->size, env);
 		exec(arg, env, 1);
-		free_env(env);
 		free(arg);
+		free_env(env);
 		exit(g_error);
 	}
-	
 	if (fd_tmp != 0)
 		close(fd_tmp);
 	if (m_n == e_pipe)
@@ -93,14 +95,18 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	if (m_b == e_pipe && m_n != e_pipe)
 	{
 		waitpid(pid, &stat, 0);
+		printf("WAIT END : %d\n", pid);
 		new_line_signals(env->act);
 		if (WIFEXITED(stat))
 		{
 			if (WEXITSTATUS(stat) != 0) 
 				g_error = WEXITSTATUS(stat);
 		}
-		while ( pid > 0)
+		while (pid > 0)
+		{
 			pid = waitpid(-1, &stat, 0);
+			printf("WAIT\n");
+		}
 		reset_signals(env->act);
 		fd_tmp = 0;
 	}
@@ -115,7 +121,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
  * @param stat error value of the last command executed
  * @return enum e_meta_character : meta character for the next command
  */
-static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
+static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before)
 {
 	enum e_meta_character	meta_next;
 	t_instruction 			*arg;
@@ -125,7 +131,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 		return (meta_next);
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
-		multi_pipe(tree, env, meta_before, meta_next, stat);
+		multi_pipe(tree, env, meta_before, meta_next);
 		return (meta_next);
 	}
 	else if (meta_before == e_empty || meta_before == e_empty_new)
@@ -137,7 +143,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	else if (meta_before == e_and)
 	{
-		if (stat == 0)
+		if (g_error == 0)
 		{
 			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env, 0);
@@ -147,7 +153,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	else if (meta_before == e_or)
 	{
-		if (stat != 0)
+		if (g_error != 0)
 		{
 			arg = second_parsing(tree->command, tree->size, env);
 			exec(arg, env, 0);
@@ -165,7 +171,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
  * @param meta_before meta character before command to exec
  * @param stat error value of the last command executed
  */
-void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before, int stat)
+void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before)
 {
 	enum e_meta_character	tmp;
 
@@ -177,23 +183,23 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 	{
 		tmp = tree->meta;
 		if (tree->left != NULL && tree->left->command != NULL)
-			meta_before = skip_or_exec_command(tree->left, env, meta_before, stat);
+			meta_before = skip_or_exec_command(tree->left, env, meta_before);
 		else
-			explore_tree(tree->left, env, meta_before, g_error);
+			explore_tree(tree->left, env, meta_before);
 		meta_before = tmp;
 		if (tree->right != NULL && tree->right->command != NULL)
-			meta_before = skip_or_exec_command(tree->right, env, meta_before, g_error);
+			meta_before = skip_or_exec_command(tree->right, env, meta_before);
 		else if (meta_before == e_and)
 		{
 			if (g_error == 0)
-				explore_tree(tree->right, env, meta_before, g_error);
+				explore_tree(tree->right, env, meta_before);
 		}
 		else if (meta_before == e_or)
 		{
 			if (g_error != 0)
-				explore_tree(tree->right, env, meta_before, g_error);
+				explore_tree(tree->right, env, meta_before);
 		}
 	}
 	else if (tree->command != NULL)
-		meta_before = skip_or_exec_command(tree, env, meta_before, stat);
+		meta_before = skip_or_exec_command(tree, env, meta_before);
 }

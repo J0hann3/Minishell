@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 18:23:59 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 13:46:56 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	main(int argc, char *argv[], char *envp[])
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;
-		explore_tree(env->tree, env, e_empty_new, 0);
+		explore_tree(env->tree, env, e_empty_new);
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
