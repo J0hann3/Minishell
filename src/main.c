@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 21:00:31 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:13:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,6 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		}
 		continue ;
-		// if (get_here_list(here_list, input) < 1)
-		// 	return (2);
-		printf("coucou\n");
 		action.sa_handler = SIG_DFL;
 		env->tree = create_tree(input);
 		if (env->tree == NULL)

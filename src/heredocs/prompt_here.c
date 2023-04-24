@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 21:31:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:22:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-int	prompt_here(char *ender, int fd, char *file_name)
+void	prompt_here(char *ender, int fd, char *file_name)
 {
 	char	*input;
 
@@ -43,10 +43,4 @@ int	prompt_here(char *ender, int fd, char *file_name)
 		write(fd, "\n", 1);
 	}
 	close(fd);
-	fd = open(file_name, O_RDONLY);
-	unlink(file_name);
-	printf("awddaw %d\n", fd);
-	if (!fd)
-		return (-1);
-	return (fd);
 }

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 20:26:19 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:19:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ bool	open_all_fds(t_instruction *instruction, char *input);
 int		do_here_docs(char *input);
 
 // prompt_here.c
-int		prompt_here(char *ender, int fd, char *file_name);
+void	prompt_here(char *ender, int fd, char *file_name);
 
 #endif

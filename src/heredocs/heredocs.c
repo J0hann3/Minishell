@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 21:32:42 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:37:35 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,21 @@ char	*get_random_name()
 	}
 }
 
-int	open_tmp_file(char **file_name)
+bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
 {
-	int		fd;
-
 	*file_name = get_random_name();
 	if (!*file_name)
-		return (-1); // error creating tmp file
-	fd = open(*file_name, O_CREAT | O_WRONLY, 0644);
-	if (fd < 0)
-		return (ft_write_error("heredocs", *file_name, strerror(errno)), -1);
-	return (fd);
+		return (false);
+	*fd_r = open(*file_name, O_CREAT | O_RDONLY, 0644);
+	*fd_w = open(*file_name, O_CREAT | O_WRONLY, 0644);
+	unlink(*file_name);
+	if (*fd_r < 0 || *fd_w < 0)
+	{
+		close(*fd_r);
+		close(*fd_w);
+		return (ft_write_error("heredocs", *file_name, strerror(errno)), false);
+	}
+	return (true);
 }
 
 
@@ -114,22 +118,16 @@ int	do_here_docs(char *input)
 {
 	char	*buffer;
 	char	*file_name;
-	int		fd;
+	int		fd_r;
+	int		fd_w;
+	char	buf[100] = {0};
 
 	buffer = get_here_ender(input);
 	if (!buffer)
 		return (-1);
-	int pid = fork();
-	if (pid == 0)
-	{
-		fd = open_tmp_file(&file_name);
-		if (fd == -1)
-			return (-1);
-		fd = prompt_here(buffer, fd, file_name);
-		exit(0);
-	}
-	waitpid(pid, NULL, 0);
-	
+	if (!open_tmp_file(&file_name, &fd_r, &fd_w))
+		return (-1);
+	prompt_here(buffer, fd_w, file_name);
 	//expand
-	return (fd);
+	return (fd_r);
 }
