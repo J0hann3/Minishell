@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/24 15:13:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 21:43:34 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	int				fildes[2];
 	static int		fd_tmp = 0;
 	
-	printf("PIPE\n");
 	if ((m_b == e_and && g_error != 0) || (m_b == e_or && g_error == 0))
 		return ;
 	if (m_b == e_pipe && fd_tmp == 0)
@@ -58,7 +57,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		if (pipe(fildes) != 0)
 			return (g_error = 1, (void)0);
 	g_error = 0;
-	printf("FORK\n");
 	pid = fork();
 	if (pid == -1)
 		return (g_error = 1, (void)0);
@@ -95,7 +93,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	if (m_b == e_pipe && m_n != e_pipe)
 	{
 		waitpid(pid, &stat, 0);
-		printf("WAIT END : %d\n", pid);
 		new_line_signals(env->act);
 		if (WIFEXITED(stat))
 		{
@@ -105,7 +102,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		while (pid > 0)
 		{
 			pid = waitpid(-1, &stat, 0);
-			printf("WAIT\n");
 		}
 		reset_signals(env->act);
 		fd_tmp = 0;

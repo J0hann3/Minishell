@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 13:46:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 21:47:46 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 	
-	g_error = 0;
 	env = init_env((const char **)envp);
 	prompt = "minishell$> ";
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
@@ -60,9 +59,10 @@ int	main(int argc, char *argv[], char *envp[])
 		free(input);
 	}
 	free_str(env->env);
-	ret_err = g_error;
 	free(env);
 	rl_clear_history();
 	write(2, "exit\n", 5);
-	return (ret_err);
+	return (g_error);
 }
+
+// unset OLDPWD PWD && env | grep PWD

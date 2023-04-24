@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/24 15:09:34 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 21:43:55 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,8 +213,9 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	int		pid;
 	int		stat;
 
-	g_error = 0;
-	if (inst == NULL || inst->command == NULL)
+	if (inst == NULL)
+		return (-1);
+	if (inst->command == NULL)
 		return (-1);
 	if (inst->command[0] == NULL)
 		return (free_str(inst->command), -1);
@@ -224,7 +225,6 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (reset_redirection(inst), free_str(inst->command), g_error);
-	printf("FORK EXEC\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -240,7 +240,6 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	if (!has_ign_sig)
 		add_error_signals(env->act);
 	waitpid(pid, &stat, 0);
-	printf("WAIT EXEC\n");
 	reset_signals(env->act);
 	reset_redirection(inst);
 	if (WIFEXITED(stat))
@@ -248,7 +247,6 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		if (WEXITSTATUS(stat) != 0) 
 			g_error = WEXITSTATUS(stat);
 	}
-	// printf("Error : %d	SIG : %d	nb_sig : %d\n",g_error, WTERMSIG(stat), WSTOPSIG(stat));
 	free(path);
 	free_str(inst->command);
 	return (g_error);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/21 17:27:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/24 21:31:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	char			*expanded_command;
 	t_instruction	*instruc;
 	size_t			i;
-	
+
+	g_error = 0;
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
-		return (NULL);
+		return ( printf("MALLOC\n"), NULL);
 	// heredocs
 	expanded_command = expand_dollars(input, command_size, env_info);
 	if(!(expanded_command && g_error != 1 && open_all_fds(instruc, expanded_command))) // changer error
