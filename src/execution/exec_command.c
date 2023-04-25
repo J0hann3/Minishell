@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/24 21:43:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/25 18:06:13 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		return (-1);
 	if (inst->command[0] == NULL)
 		return (free_str(inst->command), -1);
+	g_error = 0;
 	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (reset_redirection(inst), g_error);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 21:32:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/25 17:58:03 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ bool	is_ambigous_redirect(char *input, int index)
 }
 
 
-char	*expand(char *input, size_t *i, t_env_info *env_info)
+char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 {
 	char	*tmp;
 	int		env_index;
@@ -112,10 +112,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 	if (env_index == -1)
 	{
 		if (is_ambigous_redirect(input - 1, *i - size))
-		{
-			// printf("ambigous -------- \n");//ambigous
-			g_error = 1; // ambigous error to change
-		}
+			*is_ambigous = true; // ambigous error to change
 		return (ft_calloc(1, sizeof(char)));
 	}
 	tmp = env_info->env[env_index];
@@ -124,11 +121,11 @@ char	*expand(char *input, size_t *i, t_env_info *env_info)
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
 	if (is_ambigous_redirect(input - 1, *i - size) && (!*tmp || has_space(tmp)))
-		g_error = 1;
+		*is_ambigous = true;
 	return (tmp);
 }
 
-char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
 {
 	size_t	i;
 	int		begin_join;
@@ -149,7 +146,7 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info)
 			if (i > 0)
 				res = ft_strnjoin(res, input + begin_join, i - begin_join);
 			i++;
-			tmp = expand(input + i, &i, env_info);
+			tmp = expand(input + i, &i, env_info, is_ambigous);
 			if (!tmp)
 				return (free(res), NULL);
 			if (g_error == 4)

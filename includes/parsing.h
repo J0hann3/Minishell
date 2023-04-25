@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:16:26 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:58:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 // expand.c
-char	*expand_dollars(char *input, size_t len, t_env_info *env_info);
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
 
 //second_parsing.c
 t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info);

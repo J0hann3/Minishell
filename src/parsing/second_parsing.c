@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:32:21 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 18:03:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,17 @@ static void	free_instructions(t_instruction *instruc)
 t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info)
 {
 	char			*expanded_command;
+	bool			is_ambigous;
 	t_instruction	*instruc;
 	size_t			i;
 
-	g_error = 0;
+	is_ambigous = false;
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
-		return ( printf("MALLOC\n"), NULL);
-	// heredocs
-	expanded_command = expand_dollars(input, command_size, env_info);
-	if(!(expanded_command && g_error != 1 && open_all_fds(instruc, expanded_command))) // changer error
-		return (free(expanded_command), free_instructions(instruc), NULL);
+		return (printf("MALLOC\n"), NULL);
+	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
+	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command))) // changer error
+		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
 	// expand *
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	if (!instruc->command)
@@ -67,7 +67,6 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	i = 0;
 	while (instruc->command[i])
 		remove_quotes(instruc->command[i++]);
-	// print_instruc(instruc);
 	free(expanded_command);
 	return (instruc);
 }
