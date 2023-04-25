@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/16 15:18:59 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:17:04 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,12 @@ enum	e_meta_character
 	e_and
 };
 
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}	t_list;
-
 typedef struct	s_env_info
 {
 	int				error;
 	int				len_env;
+	int				len_here;
+	int				*fds_heredocs;
 	char			**env;
 	struct s_ast	*tree;
 }	t_env_info;
@@ -64,7 +60,6 @@ typedef struct s_ast
 	struct s_ast			*parent;
 	char					*command;
 	size_t					size;
-	struct s_list			*here_fds;
 	enum e_meta_character	meta;
 }	t_ast;
 

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 22:22:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:53:15 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	prompt_here(char *ender, int fd, char *file_name)
 			break ;
 		else if (!input)
 		{
-			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoi ;
+			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
 			break ;
 		}
 		write(fd, input, ft_strlen(input));

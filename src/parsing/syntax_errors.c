@@ -6,11 +6,15 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 20:59:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:08:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+
+//TODO : modifier les error_token et les enlever
+
 
 // syntax erreur
 
@@ -106,7 +110,7 @@ bool	is_quote_closed(char **input, char **error_token)
  * @return true 
  * @return false 
  */
-bool	is_redirection_ok(char **input, char **error_token)
+bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int size)
 {
 	char	*start;
 	bool	is_here_doc;
@@ -132,7 +136,11 @@ bool	is_redirection_ok(char **input, char **error_token)
 		return (*error_token = get_error_token((*input)), false); // enlever une ligne norme ici
 	(*input)--;
 	if (is_here_doc)
-		do_here_docs(start);
+	{
+		if (fd_heredocs[size] != -1)
+			close(fd_heredocs[size]);
+		fd_heredocs[size] = do_here_docs(start);
+	}
 	return (true);
 }
 
@@ -150,6 +158,7 @@ bool	is_redirection_ok(char **input, char **error_token)
  */
 bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 {
+	// TODO: &&&&& (&& & &&)
 	return (has_argument_left(start_ptr, *input, error_token)
 		&& has_argument_right(*input, error_token));
 }
@@ -163,7 +172,7 @@ bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
  * @return true 
  * @return false 
  */
-bool	has_closing_parenthesis(char **input, char **error_token)
+bool	has_closing_parenthesis(char **input, char **error_token, int *fds_heredoc, int size)
 {
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
@@ -180,13 +189,13 @@ bool	has_closing_parenthesis(char **input, char **error_token)
 	{
 		if (**input == ')')
 			return (true);
-		else if (**input == '(' && !has_closing_parenthesis(input, error_token))
+		else if (**input == '(' && !has_closing_parenthesis(input, error_token, fds_heredoc, size))
 			return (false);
 		else if ((**input == '"' || **input == '"')
 				&& !is_quote_closed(input, error_token))
 			return (false);
 		else if ((**input == '<' || **input == '>')
-				&& !is_redirection_ok(input, error_token))
+				&& !is_redirection_ok(input, error_token, fds_heredoc, size))
 			return (false);
 		(*input)++;
 	}
@@ -204,16 +213,16 @@ bool	has_closing_parenthesis(char **input, char **error_token)
  * @param error_token 
  * @return int 
  */
-int	check_syntax_at(char **input, char **error_token, char *start_ptr)
+int	check_syntax_at(char **input, char **error_token, char *start_ptr, int *fds_heredoc, int size)
 {
 	if (**input == '\'' || **input == '"')
 		return (is_quote_closed(input, error_token));
 	if (**input == '<' || **input == '>')
-		return (is_redirection_ok(input, error_token));
+		return (is_redirection_ok(input, error_token, fds_heredoc, size));
 	if (is_operator(*input))
-		return (is_operator_ok(input, error_token, start_ptr));
+		return (is_operator_ok(input, error_token, start_ptr) * 2);
 	if (**input == '(')
-		return (has_closing_parenthesis(input, error_token));
+		return (has_closing_parenthesis(input, error_token, fds_heredoc, size));
 	return (-1);
 }
 
@@ -226,22 +235,37 @@ int	check_syntax_at(char **input, char **error_token, char *start_ptr)
  * @param input 
  * @return int 
  */
-int	syntax_errors(char *input)
+int	syntax_errors(char *input, int **fds_heredoc, int *size)
 {
 	char	*error_token;
 	char	*start_ptr;
+	int		ret_val;
 
+	(*size) = 0;
+	(*fds_heredoc) = malloc(1 * sizeof(int));
+	if (!(*fds_heredoc))
+		return (2); // write error
+	(*fds_heredoc)[(*size)] = -1;
 	error_token = NULL;
 	start_ptr = input;
 	while (*input)
 	{
 		if (is_syntax_char(input))
 		{
-			if (check_syntax_at(&input, &error_token, start_ptr) < 1)
+			ret_val = check_syntax_at(&input, &error_token, start_ptr, (*fds_heredoc), *size);
+			if (ret_val < 1) //error syntax
 			{
 				ft_write_error(NULL, NULL, error_token);
 				free(error_token);
 				return (2); // write return message here with error_token
+			}
+			else if (ret_val == 2) //new operator for heredocs
+			{
+				(*size)++;
+				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
+				if (!(*fds_heredoc))
+					return (2); // write error
+				(*fds_heredoc)[(*size)] = -1;
 			}
 		}
 		input++;

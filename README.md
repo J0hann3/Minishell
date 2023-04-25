@@ -100,3 +100,7 @@ dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreu
 - dans '"' -> rien tant que pas trouve ", si EOF alors double erreur
 - dans '(' -> attend << ou " dans l'ordre, suit les regles des deux autres si besoin
 - regle de precedence gauche droite pour les erreurs d'operateur sans operant
+
+
+
+se mettre d'accord pour les erreurs de malloc

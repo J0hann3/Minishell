@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 22:13:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:17:10 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	char				*input;
 	int					ret_err;
+	int					size;
 	t_env_info			*env;
-	// t_list				*here_list;
 	struct sigaction	action;
 	struct sigaction	act_ign;
 
@@ -37,7 +37,9 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		ret_err = syntax_errors(input);
+		int *fds_heredoc = NULL;
+		size = 0;
+		ret_err = syntax_errors(input, &fds_heredoc, &size); //rajouter la taille size
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
@@ -51,7 +53,6 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		}
 		continue ;
-		action.sa_handler = SIG_DFL;
 		env->tree = create_tree(input);
 		if (env->tree == NULL)
 			break ;

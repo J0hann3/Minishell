@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 22:19:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:16:26 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ bool	is_and(const char *input);
 bool	is_single_meta(const char *c);
 bool	is_double_meta(const char *c);
 
-// syntax_errors
+// syntax_errors.c
+int		syntax_errors(char *input, int **fds_heredoc, int *size);
 bool	has_parenthesis_not_closed(const char *input);
 bool	quotes_not_closed(const char *input);
 bool	has_argument_right(char *op_ptr, char **error_token);
@@ -60,13 +61,6 @@ t_ast	*create_tree(char *input);
 void	remove_useless_parenthesis(char **input);
 bool	has_error_on_operators_and_parenthesis(const char *input);
 
-// chained_list.c
-t_list	*ft_lstnew(void *content);
-t_list	*ft_lstlast(t_list *lst);
-t_list	*ft_lstadd_back(t_list **lst, void *content);
-int		ft_lstsize(t_list *lst);
-
-int		syntax_errors(char *input);
 void	remove_multiple_wspaces(char *input);
 bool	has_error_for_meta(char *input, size_t i);
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
