@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/16 16:52:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,13 @@ static bool	has_error_op_par_right(const char *input)
 	return (false);
 }
 
+/**
+ * @brief Warning : can have non closing parenthesis at this point
+ * 
+ * @param input 
+ * @return true 
+ * @return false 
+ */
 bool	has_error_on_operators_and_parenthesis(const char *input)
 {
 	bool	has_op_left;
@@ -113,9 +120,15 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i);
 		else if (input[i] == '(' && !has_op_left)
-			return (true);
+		{
+			printf("pas d'op avant (\n");
+			return (true); //error on token before, can't be empty
+		}
 		else if (input[i] == ')' && has_error_op_par_right(input + i))
-			return (true);
+		{
+			printf("pas d'op apres )\n");
+			return (true); //error on token after '(' (not newline)
+		}
 		else if (is_and_or(input + i))
 			has_op_left = ++i;
 		else if (is_single_meta(input + i))
@@ -124,5 +137,5 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 			has_op_left = false;
 		i++;
 	}
-	return (false);
+	return (false); // no error
 }

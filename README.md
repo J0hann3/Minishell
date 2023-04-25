@@ -90,3 +90,17 @@ $? remplace par la valeur actuelle d'erreur
 fds : -2 par defaut, si rien n'a ete ouvert, ou tente
 	  -1 si une erreur pendant l'ouverture = jojo ne fais rien
 arrete a la premiere erreur d'ouverture pour >, >> et <
+
+
+// syntax erreur
+
+dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreurs
+
+- dans '>' -> parentheses impossible, sinon tout sauf <, renvoie la premiere erreur rencontree
+- dans '"' -> rien tant que pas trouve ", si EOF alors double erreur
+- dans '(' -> attend << ou " dans l'ordre, suit les regles des deux autres si besoin
+- regle de precedence gauche droite pour les erreurs d'operateur sans operant
+
+
+
+se mettre d'accord pour les erreurs de malloc

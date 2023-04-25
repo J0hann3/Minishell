@@ -3,34 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/24 21:47:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/25 17:32:18 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <dirent.h>
 
 int	g_error;
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char		*input;
-	int			ret_err;
-	t_env_info	*env;
-	const char *prompt;
+	char				*input;
+	int					ret_err;
+	int					size;
+	t_env_info			*env;
+	const char			*prompt;
 
 	(void)argc;
 	(void)argv;
-	
+	if (argc != 1)
+		return (1);
 	env = init_env((const char **)envp);
+	if (env == NULL)
+		return (1);
+	init_signals(env->act);
 	prompt = "minishell$> ";
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
 		prompt = "";
 	input = (char *)1;
-	if (env == NULL)
-		return (1);
 	ret_err = 0;
 	while (input != NULL)
 	{
@@ -38,12 +42,15 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		ret_err = syntax_errors(input);
+		int *fds_heredoc = NULL;
+		size = 0;
+		ret_err = syntax_errors(input, &fds_heredoc, &size); //rajouter la taille size
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
 			free(input);
-			return (ret_err);
+			continue ;
+			// return (ret_err); // leak on return, change to break env->error
 		}
 		else if (ret_err == 1)
 		{
