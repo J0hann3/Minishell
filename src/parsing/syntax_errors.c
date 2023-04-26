@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 18:59:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 22:37:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ bool	is_parenthesis(char c)
 
 static char *get_error_token(char *input)
 {
+	printf("cas : '%s'\n", input);
 	if (!*input)
 		return (ft_strdup("syntax error near unexpected token `newline'"));
 	if (*input == '&' && *(input + 1) == '&')
@@ -117,10 +118,12 @@ bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int s
 	char	*start;
 	bool	is_here_doc;
 
-	(*input)++;
 	is_here_doc = false;
-	if (**input == '<')
+	if (**input != *(*input + 1) && is_redirection(*(*input + 1)))
+		return (false);
+	if (**input == '<' && *(*input + 1) == '<')
 		is_here_doc = true;						//heredocs is created if command = ><test
+	(*input)++;
 	if (**input == '>' || **input == '<')
 		(*input)++;
 	while (is_wspace((**input)))
@@ -184,8 +187,8 @@ int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc,
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
 
-	(*input)++;
 	start_ptr = (*input);
+	(*input)++;
 	while (is_wspace((**input)))
 		(*input)++;
 	if (**input == ')')
@@ -263,6 +266,7 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 	int		ret_val;
 
 	(*size) = 0;
+	remove_multiple_wspaces(input);
 	(*fds_heredoc) = malloc(1 * sizeof(int));
 	if (!(*fds_heredoc))
 		return (2); // write error

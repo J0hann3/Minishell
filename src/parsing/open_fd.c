@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 19:14:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 22:25:10 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*get_file_name(char *input)
 	while (input[i] && !(is_wspace(input[i]) && !is_in_quote)
 		&& input[i] != '<' && input[i] != '>')
 	{
-		if ((input[i] == '\"' || input[i] == '\'') && !is_in_quote)
+		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
 		{
 			quote = input[i++];
 			is_in_quote = true;
@@ -41,7 +41,7 @@ char	*get_file_name(char *input)
 			cpy[j++] = input[i++];
 	}
 	cpy[j] = 0;
-	return (ft_strndup(input, i));
+	return (ft_strndup(input, j));
 }
 
 void	replace_name(char **input, size_t size, int offset_op)
@@ -92,16 +92,17 @@ int	heredoc_fd(char *input)
 	char	*file_name;
 	bool	has_space;
 
+	input++;
+	input++;
 	has_space = false;
-	while (is_wspace(*++input))
+	while (is_wspace(*input) && input++)
 		has_space = true;
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
-	replace_name(&input, ft_strlen(file_name), has_space);
-	fd = open(file_name, O_RDONLY);
+	replace_name(&input, ft_strlen(file_name), 1 + has_space);
 	free(file_name);
-	return (fd);
+	return (fd =1, fd);
 }
 
 int	open_fd(char *input)
@@ -154,12 +155,13 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 		{
 			if (instruc->infile > -1)
 				close(instruc->infile);
-			instruc->infile = read_fd(input + i);
+			instruc->infile = heredoc_fd(input + i);
 			if (instruc->infile == -1)
 			{
 				perror("Error");
 				return (false);
 			}
+			instruc->infile = fd_heredocs;
 		}
 		else if (input[i] == '>')
 		{
