@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/21 17:27:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 14:10:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_env_info	*init_env(const char **env)
 		len++;
 	}
 	init_signals(new->act);
+	new->fds_heredocs = NULL;
+	new->len_heredocs = 0;
 	new->len_env = len;
 	g_error = 0;
 	new->tree = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:32:18 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/26 15:56:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	char				*input;
 	int					ret_err;
-	int					size;
 	t_env_info			*env;
 	const char			*prompt;
 
@@ -42,9 +41,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		int *fds_heredoc = NULL;
-		size = 0;
-		ret_err = syntax_errors(input, &fds_heredoc, &size); //rajouter la taille size
+		ret_err = syntax_errors(input, &env->fds_heredocs, &env->len_heredocs);
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
@@ -57,13 +54,17 @@ int	main(int argc, char *argv[], char *envp[])
 			free(input);
 			continue ;
 		}
-		env->tree = create_tree(input);
+		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
 		if (env->tree == NULL)
 			break ;
+		continue ;
 		explore_tree(env->tree, env, e_empty_new);
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
+		free(env->fds_heredocs);
+		env->fds_heredocs = NULL;
+		env->len_heredocs = 0;
 	}
 	free_str(env->env);
 	free(env);
@@ -72,4 +73,6 @@ int	main(int argc, char *argv[], char *envp[])
 	return (g_error);
 }
 
-// unset OLDPWD PWD && env | grep PWD
+// a&& b & (a | c )		Danger
+// a| (b&&)
+// (      &&)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:58:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/26 14:42:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ bool	is_parenthesis(char c);
 t_ast	*create_node(const char *command);
 
 // ast.c
-t_ast	*create_tree(char *input);
+t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd);
 
 // parsing_parenthesis.c
 void	remove_useless_parenthesis(char **input);

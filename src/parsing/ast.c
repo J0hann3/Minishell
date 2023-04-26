@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:16:52 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/26 15:50:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ void	print_tree(t_ast *tree, int depth, int max_depth)
 	{
 		write(1, "[", 1);
 		write(1, tree->command, tree->size);
+		// write(1, &(char){tree->fd_heredocs + '0'}, 1);
 		write(1, "]\n", 2);
 	}
 	else
@@ -151,11 +152,41 @@ void	print_tree(t_ast *tree, int depth, int max_depth)
 		print_tree(tree->right, depth, max_depth);
 }
 
-t_ast	*create_tree(char *input)
+void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
+{
+	if (!tree)
+		return ;
+	if (tree->left)
+		add_heredocs(tree->left, fd_heredocs, fd_size, size_max);
+	if (tree->command)
+	{
+		if (*fd_size > size_max)
+			return (printf("ERROR fd heredocs\n"), (void)0);
+		tree->fd_heredocs = fd_heredocs[*fd_size];
+		// printf("command: '%s'	fd_herdoc[%d] = '%d'	size max : %d \n", tree->command, *fd_size, tree->fd_heredocs, size_max);
+		(*fd_size)++;
+	}
+	else
+		tree->fd_heredocs = -2;
+	if (tree->right)
+		add_heredocs(tree->right, fd_heredocs, fd_size, size_max);
+}
+
+
+t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 {
 	t_ast	*root;
+	int		i;
 
+	i = 0;
 	root = create_sub_tree(&input, NULL);
+	while(i <= len_fd)
+	{
+		printf("fd[%d] = '%d'\n", i, fd_heredocs[i]);
+		i++;
+	}
+	i = 0;
+	// add_heredocs(root, fd_heredocs, &i, len_fd);
 	print_tree(root, 0, get_height(root));
 	return (root);
 }

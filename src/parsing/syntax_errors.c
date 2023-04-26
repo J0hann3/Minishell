@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:08:45 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/26 16:09:00 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 // - dans '"' -> rien tant que pas trouve ", si EOF alors double erreur
 // - dans '(' -> attend << ou " dans l'ordre, suit les regles des deux autres si besoin
 // - regle de precedence gauche droite pour les erreurs d'operateur sans operant
+
+
 bool	is_syntax_char(char *string)
 {
 	return (
@@ -118,7 +120,7 @@ bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int s
 	(*input)++;
 	is_here_doc = false;
 	if (**input == '<')
-		is_here_doc = true;
+		is_here_doc = true;						//heredocs is created if command = ><test
 	if (**input == '>' || **input == '<')
 		(*input)++;
 	while (is_wspace((**input)))
@@ -159,8 +161,12 @@ bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int s
 bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 {
 	// TODO: &&&&& (&& & &&)
-	return (has_argument_left(start_ptr, *input, error_token)
+	int	boolean;
+	boolean = (has_argument_left(start_ptr, *input, error_token)
 		&& has_argument_right(*input, error_token));
+	if (is_and_or(*input))
+		(*input)++;
+	return (boolean);					//Jojo changes this
 }
 
 /**
@@ -172,12 +178,14 @@ bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
  * @return true 
  * @return false 
  */
-bool	has_closing_parenthesis(char **input, char **error_token, int *fds_heredoc, int size)
+int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc, int *size)
 {
+	char	*start_ptr;
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
 
 	(*input)++;
+	start_ptr = (*input);
 	while (is_wspace((**input)))
 		(*input)++;
 	if (**input == ')')
@@ -191,12 +199,26 @@ bool	has_closing_parenthesis(char **input, char **error_token, int *fds_heredoc,
 			return (true);
 		else if (**input == '(' && !has_closing_parenthesis(input, error_token, fds_heredoc, size))
 			return (false);
-		else if ((**input == '"' || **input == '"')
+		else if ((**input == '\'' || **input == '"')
 				&& !is_quote_closed(input, error_token))
 			return (false);
 		else if ((**input == '<' || **input == '>')
-				&& !is_redirection_ok(input, error_token, fds_heredoc, size))
+				&& !is_redirection_ok(input, error_token, *fds_heredoc, *size))
 			return (false);
+		else if (is_operator(*input))		//Jojo add this case
+		{
+			if (!is_operator_ok(input, error_token, start_ptr))
+				return (false);
+			else
+			{
+				printf("NEW CASE '%c'\n", **input);
+				(*size)++;
+				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
+				if (!(*fds_heredoc))
+					return (2); // write error
+				(*fds_heredoc)[(*size)] = -1;
+			}
+		}
 		(*input)++;
 	}
 	*error_token = ft_strdup(error_parenth);
@@ -213,12 +235,12 @@ bool	has_closing_parenthesis(char **input, char **error_token, int *fds_heredoc,
  * @param error_token 
  * @return int 
  */
-int	check_syntax_at(char **input, char **error_token, char *start_ptr, int *fds_heredoc, int size)
+int	check_syntax_at(char **input, char **error_token, char *start_ptr, int **fds_heredoc, int *size)
 {
 	if (**input == '\'' || **input == '"')
 		return (is_quote_closed(input, error_token));
 	if (**input == '<' || **input == '>')
-		return (is_redirection_ok(input, error_token, fds_heredoc, size));
+		return (is_redirection_ok(input, error_token, *fds_heredoc, *size));
 	if (is_operator(*input))
 		return (is_operator_ok(input, error_token, start_ptr) * 2);
 	if (**input == '(')
@@ -245,6 +267,7 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 	(*fds_heredoc) = malloc(1 * sizeof(int));
 	if (!(*fds_heredoc))
 		return (2); // write error
+	printf("NEW CASE\n");
 	(*fds_heredoc)[(*size)] = -1;
 	error_token = NULL;
 	start_ptr = input;
@@ -252,7 +275,7 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 	{
 		if (is_syntax_char(input))
 		{
-			ret_val = check_syntax_at(&input, &error_token, start_ptr, (*fds_heredoc), *size);
+			ret_val = check_syntax_at(&input, &error_token, start_ptr, fds_heredoc, size);
 			if (ret_val < 1) //error syntax
 			{
 				ft_write_error(NULL, NULL, error_token);
@@ -261,6 +284,7 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 			}
 			else if (ret_val == 2) //new operator for heredocs
 			{
+				printf("NEW CASE '%c'\n", *input);
 				(*size)++;
 				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
 				if (!(*fds_heredoc))
