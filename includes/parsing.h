@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 14:42:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 19:09:25 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
 
 //second_parsing.c
-t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info);
+t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info, int fd_heredocs);
 
 // open_fd.c
-bool	open_all_fds(t_instruction *instruction, char *input);
+bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 
 //heredocs.c
 int		do_here_docs(char *input);

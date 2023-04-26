@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 15:56:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 19:07:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int	main(int argc, char *argv[], char *envp[])
 		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
 		if (env->tree == NULL)
 			break ;
-		continue ;
 		explore_tree(env->tree, env, e_empty_new);
 		free_tree(&(env->tree));
 		env->tree = NULL;

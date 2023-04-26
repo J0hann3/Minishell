@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/26 14:43:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 19:07:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			close(fildes[0]);
 			close(fildes[1]);
 		}
-		arg = second_parsing(tree->command, tree->size, env);
+		arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
 		exec(arg, env, 1);
 		free(arg);
 		free_env(env);
@@ -132,8 +132,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	else if (meta_before == e_empty || meta_before == e_empty_new)
 	{
-		arg = second_parsing(tree->command, tree->size, env);
-		// printf("Error : %d	inst: %p\n", g_error, arg);
+		arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
 		exec(arg, env, 0);
 		free(arg);
 		return (meta_next);
@@ -142,7 +141,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (g_error == 0)
 		{
-			arg = second_parsing(tree->command, tree->size, env);
+			arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
 			exec(arg, env, 0);
 			free(arg);
 			return (meta_next);
@@ -152,7 +151,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (g_error != 0)
 		{
-			arg = second_parsing(tree->command, tree->size, env);
+			arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
 			exec(arg, env, 0);
 			free(arg);
 			return (meta_next);

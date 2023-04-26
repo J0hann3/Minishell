@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/12 15:56:09 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 19:14:28 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,24 @@ int	read_fd(char *input)
 	return (fd);
 }
 
+int	heredoc_fd(char *input)
+{
+	int		fd;
+	char	*file_name;
+	bool	has_space;
+
+	has_space = false;
+	while (is_wspace(*++input))
+		has_space = true;
+	file_name = get_file_name(input);
+	if (!file_name)
+		return (-1);
+	replace_name(&input, ft_strlen(file_name), has_space);
+	fd = open(file_name, O_RDONLY);
+	free(file_name);
+	return (fd);
+}
+
 int	open_fd(char *input)
 {
 	int		fd;
@@ -110,7 +128,7 @@ int	open_fd(char *input)
 }
 
 
-bool	open_all_fds(t_instruction *instruc, char *input)
+bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 {
 	size_t	i;
 
@@ -122,6 +140,17 @@ bool	open_all_fds(t_instruction *instruc, char *input)
 		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i) + 1;
 		else if (input[i] == '<' && input[i + 1] != '<')
+		{
+			if (instruc->infile > -1)
+				close(instruc->infile);
+			instruc->infile = read_fd(input + i);
+			if (instruc->infile == -1)
+			{
+				perror("Error");
+				return (false);
+			}
+		}
+		else if (input[i] == '<' && input[i + 1] == '<')		//heredoc
 		{
 			if (instruc->infile > -1)
 				close(instruc->infile);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 15:50:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 19:00:07 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ void	print_tree(t_ast *tree, int depth, int max_depth)
 	{
 		write(1, "[", 1);
 		write(1, tree->command, tree->size);
-		// write(1, &(char){tree->fd_heredocs + '0'}, 1);
 		write(1, "]\n", 2);
 	}
 	else
@@ -163,7 +162,6 @@ void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 		if (*fd_size > size_max)
 			return (printf("ERROR fd heredocs\n"), (void)0);
 		tree->fd_heredocs = fd_heredocs[*fd_size];
-		// printf("command: '%s'	fd_herdoc[%d] = '%d'	size max : %d \n", tree->command, *fd_size, tree->fd_heredocs, size_max);
 		(*fd_size)++;
 	}
 	else
@@ -186,7 +184,7 @@ t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 		i++;
 	}
 	i = 0;
-	// add_heredocs(root, fd_heredocs, &i, len_fd);
+	add_heredocs(root, fd_heredocs, &i, len_fd);
 	print_tree(root, 0, get_height(root));
 	return (root);
 }

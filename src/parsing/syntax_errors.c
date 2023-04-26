@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 16:09:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/26 18:59:10 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,6 @@ int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc,
 				return (false);
 			else
 			{
-				printf("NEW CASE '%c'\n", **input);
 				(*size)++;
 				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
 				if (!(*fds_heredoc))
@@ -267,7 +266,6 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 	(*fds_heredoc) = malloc(1 * sizeof(int));
 	if (!(*fds_heredoc))
 		return (2); // write error
-	printf("NEW CASE\n");
 	(*fds_heredoc)[(*size)] = -1;
 	error_token = NULL;
 	start_ptr = input;
@@ -284,7 +282,6 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 			}
 			else if (ret_val == 2) //new operator for heredocs
 			{
-				printf("NEW CASE '%c'\n", *input);
 				(*size)++;
 				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
 				if (!(*fds_heredoc))
