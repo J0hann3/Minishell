@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/26 19:07:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 00:14:23 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_befor
 			if (g_error != 0)
 				explore_tree(tree->right, env, meta_before);
 		}
+		else
+			explore_tree(tree->right, env, meta_before);
 	}
 	else if (tree->command != NULL)
 		meta_before = skip_or_exec_command(tree, env, meta_before);

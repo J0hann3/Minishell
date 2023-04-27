@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_here.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 15:53:15 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/27 01:22:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,47 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-void	prompt_here(char *ender, int fd, char *file_name)
+void	prompt_here(char *ender, int fd, char *file_name, t_env_info *env)
 {
 	char	*input;
+	int		pid;
+	int		status;
 
 	// open tmp file anyway
-	printf(": %s\n", file_name);
+	// printf(": %s\n", file_name);
 	// if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO)) // not interactive
+	// signaux
 	input = (char *)1;
-	while (input)
+	pid = fork();
+	if (pid == 0)
 	{
-		input = readline("> ");
-		if (eq(ender, input))
-			break ;
-		else if (!input)
+		heredocs_signal(env->act);
+		while (input)
 		{
-			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
-			break ;
+			input = readline("> ");
+			if (eq(ender, input))
+				break ;
+			else if (!input)
+			{
+				ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
+				break ;
+			}
+			write(fd, input, ft_strlen(input));
+			write(fd, "\n", 1);
 		}
-		write(fd, input, ft_strlen(input));
-		write(fd, "\n", 1);
+		close(fd);
+		exit(EXIT_SUCCESS);
 	}
-	close(fd);
+	else
+	{
+		heredocs_error_signal(env->act);
+		waitpid(pid, &status, 0);
+		reset_signals(env->act);
+		if (WIFEXITED(status))
+		{
+			if (WEXITSTATUS(status) != 0) 
+				g_error = WEXITSTATUS(status);
+		}
+		close(fd);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 22:20:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:03:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input)
 			break ;
 		add_history(input);
-		ret_err = syntax_errors(input, &env->fds_heredocs, &env->len_heredocs);
+		ret_err = syntax_errors(input, env);
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);

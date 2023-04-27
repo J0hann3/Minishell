@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 19:02:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:27:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ void	crtl_c_interactive(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+}
+
+void	error(int sig)
+{
+	write(1, "\n", 1);
+	g_error = 128 + sig;
 }
 
 void	error_new_line(int sig)
@@ -80,6 +86,26 @@ void	new_line_signals(struct sigaction act[2])
 	sigaction(SIGINT, &act[0], NULL);
 	// CTRL-/
 	act[1].sa_handler = new_line;
+	sigaction(SIGQUIT, &(act[1]), NULL);
+}
+
+void	heredocs_signal(struct sigaction act[2])
+{
+	// CTRL-C
+	act[0].sa_handler = SIG_DFL;
+	sigaction(SIGINT, &act[0], NULL);
+	// CTRL-/
+	act[1].sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &(act[1]), NULL);
+}
+
+void	heredocs_error_signal(struct sigaction act[2])
+{
+	// CTRL-C
+	act[0].sa_handler = crtl_c_interactive;
+	sigaction(SIGINT, &act[0], NULL);
+	// CTRL-/
+	act[1].sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &(act[1]), NULL);
 }
 

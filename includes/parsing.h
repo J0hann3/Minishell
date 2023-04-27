@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 19:09:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:03:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	is_single_meta(const char *c);
 bool	is_double_meta(const char *c);
 
 // syntax_errors.c
-int		syntax_errors(char *input, int **fds_heredoc, int *size);
+int		syntax_errors(char *input, t_env_info *env);
 bool	has_parenthesis_not_closed(const char *input);
 bool	quotes_not_closed(const char *input);
 bool	has_argument_right(char *op_ptr, char **error_token);
@@ -76,9 +76,9 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 
 //heredocs.c
-int		do_here_docs(char *input);
+int	do_here_docs(char *input, t_env_info *env_info);
 
 // prompt_here.c
-void	prompt_here(char *ender, int fd, char *file_name);
+void	prompt_here(char *ender, int fd, char *file_name, t_env_info *env_info);
 
 #endif

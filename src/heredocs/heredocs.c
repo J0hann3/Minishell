@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 16:38:55 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/27 00:54:54 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
 }
 
 
-int	do_here_docs(char *input)
+int	do_here_docs(char *input, t_env_info *env_info)
 {
 	char	*buffer;
 	char	*file_name;
@@ -125,6 +125,6 @@ int	do_here_docs(char *input)
 		return (-1);
 	if (!open_tmp_file(&file_name, &fd_r, &fd_w))
 		return (-1);
-	prompt_here(buffer, fd_w, file_name);
+	prompt_here(buffer, fd_w, file_name, env_info);
 	return (fd_r);
 }

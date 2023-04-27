@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 19:00:07 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:19:49 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 	if (tree->command)
 	{
 		if (*fd_size > size_max)
-			return (printf("ERROR fd heredocs\n"), (void)0);
+			return ((void)printf("ERROR fd heredocs\n"));
 		tree->fd_heredocs = fd_heredocs[*fd_size];
 		(*fd_size)++;
 	}
@@ -178,13 +178,13 @@ t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 
 	i = 0;
 	root = create_sub_tree(&input, NULL);
-	while(i <= len_fd)
-	{
-		printf("fd[%d] = '%d'\n", i, fd_heredocs[i]);
-		i++;
-	}
-	i = 0;
+	// while(i <= len_fd)
+	// {
+	// 	printf("fd[%d] = '%d'\n", i, fd_heredocs[i]);
+	// 	i++;
+	// }
+	// i = 0;
 	add_heredocs(root, fd_heredocs, &i, len_fd);
-	print_tree(root, 0, get_height(root));
+	// print_tree(root, 0, get_height(root));
 	return (root);
 }

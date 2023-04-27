@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 22:25:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 00:13:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,8 @@ int	read_fd(char *input)
 	return (fd);
 }
 
-int	heredoc_fd(char *input)
+bool	heredoc_fd(char *input)
 {
-	int		fd;
 	char	*file_name;
 	bool	has_space;
 
@@ -99,10 +98,10 @@ int	heredoc_fd(char *input)
 		has_space = true;
 	file_name = get_file_name(input);
 	if (!file_name)
-		return (-1);
+		return (false);
 	replace_name(&input, ft_strlen(file_name), 1 + has_space);
 	free(file_name);
-	return (fd =1, fd);
+	return (true);
 }
 
 int	open_fd(char *input)
@@ -151,17 +150,18 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 				return (false);
 			}
 		}
-		else if (input[i] == '<' && input[i + 1] == '<')		//heredoc
+		else if (input[i] == '<' && input[i + 1] == '<')
 		{
 			if (instruc->infile > -1)
 				close(instruc->infile);
-			instruc->infile = heredoc_fd(input + i);
-			if (instruc->infile == -1)
+			heredoc_fd(input + i);
+			if (!heredoc_fd(input + i))
 			{
 				perror("Error");
 				return (false);
 			}
-			instruc->infile = fd_heredocs;
+			if (fd_heredocs != -1)
+				instruc->infile = fd_heredocs;
 		}
 		else if (input[i] == '>')
 		{

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:27:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 17:47:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:16:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,7 @@ void	ign_signals(struct sigaction act[2]);
 void	add_error_signals(struct sigaction act[2]);
 void	none_interactive(struct sigaction act[2]);
 void	reset_signals(struct sigaction act[2]);
+void	heredocs_signal(struct sigaction act[2]);
+void	heredocs_error_signal(struct sigaction act[2]);
 
 #endif

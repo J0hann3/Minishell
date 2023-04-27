@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/26 22:37:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 01:03:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ bool	is_quote_closed(char **input, char **error_token)
  * @return true 
  * @return false 
  */
-bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int size)
+bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
 {
 	char	*start;
 	bool	is_here_doc;
@@ -142,9 +142,9 @@ bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int s
 	(*input)--;
 	if (is_here_doc)
 	{
-		if (fd_heredocs[size] != -1)
-			close(fd_heredocs[size]);
-		fd_heredocs[size] = do_here_docs(start);
+		if (env->fds_heredocs[env->len_heredocs] != -1)
+			close(env->fds_heredocs[env->len_heredocs]);
+		env->fds_heredocs[env->len_heredocs] = do_here_docs(start, env);
 	}
 	return (true);
 }
@@ -163,7 +163,6 @@ bool	is_redirection_ok(char **input, char **error_token, int *fd_heredocs, int s
  */
 bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 {
-	// TODO: &&&&& (&& & &&)
 	int	boolean;
 	boolean = (has_argument_left(start_ptr, *input, error_token)
 		&& has_argument_right(*input, error_token));
@@ -172,22 +171,49 @@ bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 	return (boolean);					//Jojo changes this
 }
 
+bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
+{
+	char *tmp;
+	if (par_start == start_ptr)
+		return (true);
+	par_start--;
+	while (par_start != start_ptr && is_wspace(*par_start))
+		par_start--;
+	if (*par_start == '(')
+		return (true);
+	tmp = par_start;
+	if (*par_start == '|')
+		while (par_start != start_ptr && *par_start == '|')
+			par_start--;
+	else
+		while (par_start != start_ptr && *par_start == '&')
+			par_start--;
+	if (tmp - par_start == 2 && *(par_start + 1) == '&')
+		return (true);
+	if (tmp - par_start == 1 && *(par_start + 1) == '|')
+		return (true);
+	if (tmp - par_start == 2 && *(par_start + 1) == '|')
+		return (true);
+	return (false);
+}
+
 /**
  * @brief Checks if the given parenthesis is closed, forward input to the
  * closing parenthesis, and set error_token if closing parenthesis does not exist
+ * Will check if the parenthesis has a left 
  * 
  * @param input 
  * @param error_token 
  * @return true 
  * @return false 
  */
-int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc, int *size)
+bool	has_closing_parenthesis(char **input, char **error_token, t_env_info *env, char *start_ptr)
 {
-	char	*start_ptr;
+	char	*par_start;
 	const char *error_parenth = "unexpected EOF while looking for matching \
 `('\nminishell: syntax error: unexpected end of file";
 
-	start_ptr = (*input);
+	par_start = (*input);
 	(*input)++;
 	while (is_wspace((**input)))
 		(*input)++;
@@ -196,29 +222,31 @@ int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc,
 		*error_token = ft_strdup("syntax error near unexpected token `)'");
 		return (false);
 	}
+	if (!is_parenthesis_left_ok(par_start, start_ptr))
+		return (false);
 	while (**input)
 	{
 		if (**input == ')')
 			return (true);
-		else if (**input == '(' && !has_closing_parenthesis(input, error_token, fds_heredoc, size))
+		else if (**input == '(' && !has_closing_parenthesis(input, error_token, env, start_ptr))
 			return (false);
 		else if ((**input == '\'' || **input == '"')
 				&& !is_quote_closed(input, error_token))
 			return (false);
 		else if ((**input == '<' || **input == '>')
-				&& !is_redirection_ok(input, error_token, *fds_heredoc, *size))
+				&& !is_redirection_ok(input, error_token, env))
 			return (false);
 		else if (is_operator(*input))		//Jojo add this case
 		{
-			if (!is_operator_ok(input, error_token, start_ptr))
+			if (!is_operator_ok(input, error_token, par_start))
 				return (false);
 			else
 			{
-				(*size)++;
-				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
-				if (!(*fds_heredoc))
-					return (2); // write error
-				(*fds_heredoc)[(*size)] = -1;
+				env->len_heredocs++;
+				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
+				if (!env->fds_heredocs)
+					return (false); // write error
+				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}
 		(*input)++;
@@ -237,16 +265,16 @@ int	has_closing_parenthesis(char **input, char **error_token, int **fds_heredoc,
  * @param error_token 
  * @return int 
  */
-int	check_syntax_at(char **input, char **error_token, char *start_ptr, int **fds_heredoc, int *size)
+int	check_syntax_at(char **input, char **error_token, char *start_ptr, t_env_info *env)
 {
 	if (**input == '\'' || **input == '"')
 		return (is_quote_closed(input, error_token));
 	if (**input == '<' || **input == '>')
-		return (is_redirection_ok(input, error_token, *fds_heredoc, *size));
+		return (is_redirection_ok(input, error_token, env));
 	if (is_operator(*input))
 		return (is_operator_ok(input, error_token, start_ptr) * 2);
 	if (**input == '(')
-		return (has_closing_parenthesis(input, error_token, fds_heredoc, size));
+		return (has_closing_parenthesis(input, error_token, env, start_ptr));
 	return (-1);
 }
 
@@ -259,25 +287,25 @@ int	check_syntax_at(char **input, char **error_token, char *start_ptr, int **fds
  * @param input 
  * @return int 
  */
-int	syntax_errors(char *input, int **fds_heredoc, int *size)
+int	syntax_errors(char *input, t_env_info *env)
 {
 	char	*error_token;
 	char	*start_ptr;
 	int		ret_val;
 
-	(*size) = 0;
+	env->len_heredocs = 0;
 	remove_multiple_wspaces(input);
-	(*fds_heredoc) = malloc(1 * sizeof(int));
-	if (!(*fds_heredoc))
+	env->fds_heredocs = malloc(1 * sizeof(int));
+	if (!env->fds_heredocs)
 		return (2); // write error
-	(*fds_heredoc)[(*size)] = -1;
+	env->fds_heredocs[env->len_heredocs] = -1;
 	error_token = NULL;
 	start_ptr = input;
 	while (*input)
 	{
 		if (is_syntax_char(input))
 		{
-			ret_val = check_syntax_at(&input, &error_token, start_ptr, fds_heredoc, size);
+			ret_val = check_syntax_at(&input, &error_token, start_ptr, env);
 			if (ret_val < 1) //error syntax
 			{
 				ft_write_error(NULL, NULL, error_token);
@@ -286,11 +314,11 @@ int	syntax_errors(char *input, int **fds_heredoc, int *size)
 			}
 			else if (ret_val == 2) //new operator for heredocs
 			{
-				(*size)++;
-				(*fds_heredoc) = ft_realloc((*fds_heredoc), (*size) * sizeof(int), ((*size) + 1) * sizeof(int));
-				if (!(*fds_heredoc))
+				env->len_heredocs++;
+				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
+				if (!env->fds_heredocs)
 					return (2); // write error
-				(*fds_heredoc)[(*size)] = -1;
+				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}
 		input++;
