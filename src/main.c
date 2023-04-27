@@ -6,12 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 01:03:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 03:13:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include <dirent.h>
+#include <termios.h>
 
 int	g_error;
 
@@ -21,7 +22,9 @@ int	main(int argc, char *argv[], char *envp[])
 	int					ret_err;
 	t_env_info			*env;
 	const char			*prompt;
+	struct termios		termios;
 
+	tcgetattr(STDIN_FILENO, &termios);
 	(void)argc;
 	(void)argv;
 	if (argc != 1)
@@ -37,6 +40,7 @@ int	main(int argc, char *argv[], char *envp[])
 	ret_err = 0;
 	while (input != NULL)
 	{
+		tcsetattr(STDIN_FILENO, TCSANOW, &termios);
 		input = readline(prompt);
 		if (!input)
 			break ;
