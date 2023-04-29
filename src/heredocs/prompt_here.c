@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 15:39:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 22:22:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ void	prompt_here(char *ender, int fd, t_env_info *env)
 {
 	char	*input;
 	int		pid;
-	int		status;
+	int		stat;
 
 	// open tmp file anyway
 	// printf(": %s\n", file_name);
-	// if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO)) // not interactive
-	// signaux
+	if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO))
+		return ((void)(close(fd))); // not interactive
 	input = (char *)1;
 	pid = fork();
 	if (pid == 0)
 	{
-		heredocs_signal(env->act);
+		add_error_signals(env->act);
 		while (input)
 		{
 			input = readline("> ");
@@ -50,18 +50,17 @@ void	prompt_here(char *ender, int fd, t_env_info *env)
 			write(fd, "\n", 1);
 		}
 		close(fd);
-		exit(EXIT_SUCCESS);
+		exit(g_error);
 	}
 	else
 	{
-		heredocs_error_signal(env->act);
-		waitpid(pid, &status, 0);
+		ign_signals(env->act);
+		waitpid(pid, &stat, 0);
 		reset_signals(env->act);
-		if (WIFEXITED(status))
-		{
-			if (WEXITSTATUS(status) != 0) 
-				g_error = WEXITSTATUS(status);
-		}
+		if (WIFSIGNALED(stat))
+			g_error = 128 + WTERMSIG(stat);
+		else
+			g_error = WEXITSTATUS(stat);
 		close(fd);
 	}
 }

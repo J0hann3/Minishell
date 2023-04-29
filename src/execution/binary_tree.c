@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/27 00:14:23 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 22:10:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,25 +80,23 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 		free_env(env);
 		exit(g_error);
 	}
+	ign_signals(env->act);
 	if (fd_tmp != 0)
 		close(fd_tmp);
 	if (m_n == e_pipe)
 	{
-		ign_signals(env->act);
 		close(fildes[1]);
 		fd_tmp = fildes[0];
 	}
-	else
-		add_error_signals(env->act);
+	// else
+	// 	add_error_signals(env->act);
 	if (m_b == e_pipe && m_n != e_pipe)
 	{
 		waitpid(pid, &stat, 0);
-		new_line_signals(env->act);
-		if (WIFEXITED(stat))
-		{
-			if (WEXITSTATUS(stat) != 0) 
-				g_error = WEXITSTATUS(stat);
-		}
+		if (WIFSIGNALED(stat))
+			g_error = 128 + WTERMSIG(stat);
+		else
+			g_error = WEXITSTATUS(stat);
 		while (pid > 0)
 		{
 			pid = waitpid(-1, &stat, 0);

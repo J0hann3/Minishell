@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/29 17:30:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 22:10:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,21 +213,13 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	int		pid;
 	int		stat;
 
-	// printf("command\n");
 	if (inst == NULL)
 		return (-1);
-	// printf("command 0\n");
 	if (inst->command == NULL)
 		return (-1);
-	// printf("command 1\n");
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
 		return (free_str(inst->command), -1);
-	// int i = 0;
-	// while(inst->command[i] != NULL)
-	// {
-	// 	printf("inst[%d] = '%s'\n", i, inst->command[i]);
-	// 	i++;
-	// }
+	// printf("command : '%s'\n", inst->command[0]);
 	g_error = 0;
 	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
@@ -247,16 +239,14 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), g_error);
 	}
-	if (!has_ign_sig)
-		add_error_signals(env->act);
+	ign_signals(env->act);
 	waitpid(pid, &stat, 0);
 	reset_signals(env->act);
 	reset_redirection(inst);
-	if (WIFEXITED(stat))
-	{
-		if (WEXITSTATUS(stat) != 0) 
-			g_error = WEXITSTATUS(stat);
-	}
+	if (WIFSIGNALED(stat))
+		return (g_error = 128 + WTERMSIG(stat), g_error);
+	else
+		return (g_error = WEXITSTATUS(stat), g_error);
 	free(path);
 	free_str(inst->command);
 	return (g_error);

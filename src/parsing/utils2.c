@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 14:13:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 17:46:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	remove_multiple_wspaces(char *input)
 			*dest++ = *(input - 1) + ((' ' - '\t') * (*(input - 1) == '\t'));
 	}
 	*dest = 0;
-	while ((*dest == ' ' || !*dest) && dest != start)
+	while ((*dest == ' ' || *dest == 0) && dest != start)
 		*(dest--) = 0;
 }
 
