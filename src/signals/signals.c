@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 01:27:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 15:37:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	heredocs_signal(struct sigaction act[2])
 void	heredocs_error_signal(struct sigaction act[2])
 {
 	// CTRL-C
-	act[0].sa_handler = crtl_c_interactive;
+	act[0].sa_handler = new_line;
 	sigaction(SIGINT, &act[0], NULL);
 	// CTRL-/
 	act[1].sa_handler = SIG_IGN;

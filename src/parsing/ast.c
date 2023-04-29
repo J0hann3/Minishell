@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 01:19:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 15:43:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,12 +178,6 @@ t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 
 	i = 0;
 	root = create_sub_tree(&input, NULL);
-	// while(i <= len_fd)
-	// {
-	// 	printf("fd[%d] = '%d'\n", i, fd_heredocs[i]);
-	// 	i++;
-	// }
-	// i = 0;
 	add_heredocs(root, fd_heredocs, &i, len_fd);
 	// print_tree(root, 0, get_height(root));
 	return (root);
