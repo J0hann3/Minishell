@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 04:03:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 15:15:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,44 @@ int	main(int argc, char *argv[], char *envp[])
 		input = readline(prompt);
 		if (!input)
 			break ;
+		if (input[0] == '\0')
+		{
+			free(input);
+			continue ;
+		}
 		add_history(input);
 		ret_err = syntax_errors(input, env);
 		if (ret_err == 2)
 		{
 			printf("ERROR:	%d\n", ret_err);
 			free(input);
+			free(env->fds_heredocs);
+			env->fds_heredocs = NULL;
+			env->len_heredocs = 0;
 			continue ;
 			// return (ret_err); // leak on return, change to break env->error
 		}
 		else if (ret_err == 1)
 		{
 			free(input);
+			free(env->fds_heredocs);
+			env->fds_heredocs = NULL;
+			env->len_heredocs = 0;
 			continue ;
 		}
 		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
+		free(env->fds_heredocs);
+		env->fds_heredocs = NULL;
+		env->len_heredocs = 0;
 		if (env->tree == NULL)
+		{
+			free(input);	
 			break ;
+		}
 		explore_tree(env->tree, env, e_empty_new);
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
-		free(env->fds_heredocs);
-		env->fds_heredocs = NULL;
-		env->len_heredocs = 0;
 	}
 	free_str(env->env);
 	free(env);
@@ -77,7 +91,3 @@ int	main(int argc, char *argv[], char *envp[])
 	write(2, "exit\n", 5);
 	return (g_error);
 }
-
-// a&& b & (a | c )		Danger
-// a| (b&&)
-// (      &&)
