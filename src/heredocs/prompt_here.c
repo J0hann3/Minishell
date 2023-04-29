@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_here.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 15:39:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 23:51:51 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,29 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-void	prompt_here(char *ender, int fd, t_env_info *env)
+void	child(char *ender, int fd, t_env_info *env, char *input)
+{
+	heredocs_signal(env->act);
+	while (input)
+	{
+		input = readline("> ");
+		if (eq(ender, input))
+			break ;
+		else if (!input)
+		{
+			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
+			break ;
+		}
+		write(fd, input, ft_strlen(input));
+		write(fd, "\n", 1);
+	}
+	close(fd);
+	free_env(env);
+	free(ender);
+	exit(EXIT_SUCCESS);
+}
+
+void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 {
 	char	*input;
 	int		pid;
@@ -29,31 +51,19 @@ void	prompt_here(char *ender, int fd, t_env_info *env)
 
 	// open tmp file anyway
 	// printf(": %s\n", file_name);
-	// if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO)) // not interactive
+	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO)) // not interactive
+		return ((void)close(fd_w));
 	// signaux
 	input = (char *)1;
 	pid = fork();
 	if (pid == 0)
 	{
-		heredocs_signal(env->act);
-		while (input)
-		{
-			input = readline("> ");
-			if (eq(ender, input))
-				break ;
-			else if (!input)
-			{
-				ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
-				break ;
-			}
-			write(fd, input, ft_strlen(input));
-			write(fd, "\n", 1);
-		}
-		close(fd);
-		exit(EXIT_SUCCESS);
+		close(fd_r);
+		child(ender, fd_w, env, input);
 	}
 	else
 	{
+		printf("PID: %d\n", pid);
 		heredocs_error_signal(env->act);
 		waitpid(pid, &status, 0);
 		reset_signals(env->act);
@@ -62,6 +72,6 @@ void	prompt_here(char *ender, int fd, t_env_info *env)
 			if (WEXITSTATUS(status) != 0) 
 				g_error = WEXITSTATUS(status);
 		}
-		close(fd);
+		close(fd_w);
 	}
 }

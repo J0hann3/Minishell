@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 13:59:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 23:43:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,11 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 
 //heredocs.c
-int	do_here_docs(char *input, t_env_info *env_info);
+char	*get_random_name();
+int		do_here_docs(char *input, t_env_info *env_info);
+bool	expand_heredocs(int *fd_in);
 
 // prompt_here.c
-void	prompt_here(char *ender, int fd, t_env_info *env_info);
+void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env);
 
 #endif

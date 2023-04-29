@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 15:15:11 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 22:21:18 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	main(int argc, char *argv[], char *envp[])
 			env->fds_heredocs = NULL;
 			env->len_heredocs = 0;
 			continue ;
-			// return (ret_err); // leak on return, change to break env->error
 		}
 		else if (ret_err == 1)
 		{

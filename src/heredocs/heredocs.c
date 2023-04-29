@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 14:24:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 23:50:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,48 +86,49 @@ char	*get_next_number(char *previous, int nbr)
 
 char	*get_random_name()
 {
-	char	*tmp;
+	char	*file_name;
 	int		exist;
 	int		nbr;
 
 	nbr = 1;
-	tmp = ft_strdup("./.heredoc_0");
-	if (!tmp)
+	file_name = ft_strdup("./.heredoc_0");
+	if (!file_name)
 		return (NULL);
 	exist = access("/tmp", F_OK);
 	if (exist != 0)
-		return (ft_write_error("heredocs", "tmp", "No such file or directory"), NULL);
+		return (free(file_name), ft_write_error("heredocs", "tmp",
+			"No such file or directory"), NULL);
 	exist = 1;
 	while (true)
 	{
-		exist = access(tmp, F_OK);
+		exist = access(file_name, F_OK);
 		if (exist == 0)
-		{
-			tmp = get_next_number(tmp, nbr);
-			if (!tmp)
-				return (NULL);
-		}
+			file_name = get_next_number(file_name, nbr);
 		else
-			return (tmp);
-		tmp = get_next_number(tmp, nbr);
+			return (file_name);
+		if (!file_name)
+				return (NULL);
 		nbr++;
 	}
 }
 
-bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
+bool	open_tmp_file(int *fd_r, int *fd_w)
 {
-	*file_name = get_random_name();
-	if (!*file_name)
+	char	*file_name;
+	file_name = get_random_name();
+	if (!file_name)
 		return (false);
-	*fd_r = open(*file_name, O_CREAT | O_RDONLY, 0644);
-	*fd_w = open(*file_name, O_CREAT | O_WRONLY, 0644);
-	unlink(*file_name);
+	*fd_r = open(file_name, O_CREAT | O_RDONLY, 0644);
+	*fd_w = open(file_name, O_CREAT | O_WRONLY, 0644);
+	unlink(file_name);
 	if (*fd_r < 0 || *fd_w < 0)
 	{
 		close(*fd_r);
 		close(*fd_w);
-		return (ft_write_error("heredocs", *file_name, strerror(errno)), false);
+		return (ft_write_error("heredocs", file_name, strerror(errno)),
+			free(file_name), false);
 	}
+	free(file_name);
 	return (true);
 }
 
@@ -135,15 +136,14 @@ bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
 int	do_here_docs(char *input, t_env_info *env_info)
 {
 	char	*buffer;
-	char	*file_name;
 	int		fd_r;
 	int		fd_w;
 
 	buffer = get_here_ender(input);
 	if (!buffer)
 		return (-1);
-	if (!open_tmp_file(&file_name, &fd_r, &fd_w))
+	if (!open_tmp_file(&fd_r, &fd_w))
 		return (-1);
-	prompt_here(buffer, fd_w, env_info);
+	prompt_here(buffer, fd_w, fd_r, env_info);
 	return (fd_r);
 }

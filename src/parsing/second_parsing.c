@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 17:27:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 23:41:44 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
 		return (printf("MALLOC\n"), NULL);
-	// expand heredocs
+	expand_heredocs(&fd_heredocs);
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
 	// printf("command before: '%s'\n", expanded_command);
 	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command, fd_heredocs))) // changer error
