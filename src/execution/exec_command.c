@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/27 01:20:58 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 17:30:55 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,13 +213,21 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	int		pid;
 	int		stat;
 
+	// printf("command\n");
 	if (inst == NULL)
 		return (-1);
+	// printf("command 0\n");
 	if (inst->command == NULL)
 		return (-1);
+	// printf("command 1\n");
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
 		return (free_str(inst->command), -1);
-	// printf("command : '%s'\n", inst->command[0]);
+	// int i = 0;
+	// while(inst->command[i] != NULL)
+	// {
+	// 	printf("inst[%d] = '%s'\n", i, inst->command[i]);
+	// 	i++;
+	// }
 	g_error = 0;
 	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)

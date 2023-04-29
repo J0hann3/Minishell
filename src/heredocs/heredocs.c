@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 00:54:54 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 14:24:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,34 @@
 
 char	*get_here_ender(char *input)
 {
+	size_t	i;
+	size_t	j;
 	char	*start;
-	char	*ender;
+	char	quote;
+	bool	is_in_quote;
 
 	start = input;
-	while (*input && !is_wspace(*input) && !is_operator(input)
-			&& !is_parenthesis(*input) && !is_redirection(*input))
-		input++;
-	ender = ft_strndup(start, input - start);
-	return (ender);
+	is_in_quote = false;
+	i = 0;
+	j = 0;
+	while (input[i] && !(is_wspace(input[i]) && !is_in_quote)
+		&& !is_operator(input) && !is_parenthesis(*input)
+		&& !is_redirection(*input))
+	{
+		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
+		{
+			quote = input[i++];
+			is_in_quote = true;
+		}
+		else if (is_in_quote && input[i] == quote)
+		{
+			is_in_quote = false;
+			i++;
+		}
+		else
+			start[j++] = input[i++];
+	}
+	return (ft_strndup(input, j));
 }
 
 static char	*ft_strjoin_nbr(char *str, int nbr)
@@ -125,6 +144,6 @@ int	do_here_docs(char *input, t_env_info *env_info)
 		return (-1);
 	if (!open_tmp_file(&file_name, &fd_r, &fd_w))
 		return (-1);
-	prompt_here(buffer, fd_w, file_name, env_info);
+	prompt_here(buffer, fd_w, env_info);
 	return (fd_r);
 }

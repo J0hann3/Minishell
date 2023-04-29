@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 01:03:08 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 14:04:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,12 +294,12 @@ int	syntax_errors(char *input, t_env_info *env)
 	int		ret_val;
 
 	env->len_heredocs = 0;
-	remove_multiple_wspaces(input);
 	env->fds_heredocs = malloc(1 * sizeof(int));
 	if (!env->fds_heredocs)
 		return (2); // write error
 	env->fds_heredocs[env->len_heredocs] = -1;
 	error_token = NULL;
+	remove_multiple_wspaces(input);
 	start_ptr = input;
 	while (*input)
 	{

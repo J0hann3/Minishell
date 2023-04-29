@@ -106,3 +106,8 @@ dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreu
 se mettre d'accord pour les erreurs de malloc
 
 erreur parsing
+erreur ambiguous redirect
+		><test		-> needto write an error
+
+cat <<te"st		->seg fault
+don't add in history if ligne empty
