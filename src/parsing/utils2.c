@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/22 20:21:18 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/04/29 14:13:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	remove_multiple_wspaces(char *input)
 		{
 			space = *input;
 			*dest++ = *input++;
-			while (*input != (char)space)
+			while (*input && *input != (char)space)
 				*dest++ = *input++;
 		}
 		space = ((space + 1) * (*input++ == ' ' || *(input - 1) == '\t'));

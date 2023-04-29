@@ -6,13 +6,15 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 03:13:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/27 04:03:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include <dirent.h>
 #include <termios.h>
+#include <curses.h>
+#include <term.h>
 
 int	g_error;
 

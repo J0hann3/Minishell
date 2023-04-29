@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/27 01:22:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/04/29 13:59:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-void	prompt_here(char *ender, int fd, char *file_name, t_env_info *env)
+void	prompt_here(char *ender, int fd, t_env_info *env)
 {
 	char	*input;
 	int		pid;
