@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 14:24:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 17:21:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,19 +131,17 @@ bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
 	return (true);
 }
 
-
-int	do_here_docs(char *input, t_env_info *env_info)
+// need to close fd if error
+int	do_here_docs(char *input, t_env_info *env_info, int		*fd_r)
 {
 	char	*buffer;
 	char	*file_name;
-	int		fd_r;
 	int		fd_w;
 
 	buffer = get_here_ender(input);
 	if (!buffer)
 		return (-1);
-	if (!open_tmp_file(&file_name, &fd_r, &fd_w))
+	if (!open_tmp_file(&file_name, fd_r, &fd_w))
 		return (-1);
-	prompt_here(buffer, fd_w, env_info);
-	return (fd_r);
+	return (prompt_here(buffer, fd_w, env_info));
 }

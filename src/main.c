@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 19:01:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 16:36:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,17 @@ int	main(int argc, char *argv[], char *envp[])
 			free(env->fds_heredocs);
 			env->fds_heredocs = NULL;
 			env->len_heredocs = 0;
+			g_error = ret_err;
 			continue ;
 			// return (ret_err); // leak on return, change to break env->error
 		}
-		else if (ret_err == 1)
+		else if (ret_err == 1 || ret_err == 130)
 		{
 			free(input);
 			free(env->fds_heredocs);
 			env->fds_heredocs = NULL;
 			env->len_heredocs = 0;
+			g_error = ret_err;
 			continue ;
 		}
 		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);

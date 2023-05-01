@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 14:04:58 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 17:19:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
 {
 	char	*start;
 	bool	is_here_doc;
+	int		fd_heredoc;
+	int		error;
 
 	is_here_doc = false;
 	if (**input != *(*input + 1) && is_redirection(*(*input + 1)))
@@ -144,7 +146,12 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
 	{
 		if (env->fds_heredocs[env->len_heredocs] != -1)
 			close(env->fds_heredocs[env->len_heredocs]);
-		env->fds_heredocs[env->len_heredocs] = do_here_docs(start, env);
+		error = do_here_docs(start, env, &fd_heredoc);
+		if (error == 130)
+			return (env->fds_heredocs[0] = -2, false);
+		else if (error != 0)
+			return (false);
+		env->fds_heredocs[env->len_heredocs] = fd_heredoc;
 	}
 	return (true);
 }
@@ -163,7 +170,7 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
  */
 bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
 {
-	int	boolean;
+	bool	boolean;
 	boolean = (has_argument_left(start_ptr, *input, error_token)
 		&& has_argument_right(*input, error_token));
 	if (is_and_or(*input))
@@ -308,6 +315,8 @@ int	syntax_errors(char *input, t_env_info *env)
 			ret_val = check_syntax_at(&input, &error_token, start_ptr, env);
 			if (ret_val < 1) //error syntax
 			{
+				if (env->fds_heredocs[0] == -2)
+					return (130);
 				ft_write_error(NULL, NULL, error_token);
 				free(error_token);
 				return (2); // write return message here with error_token

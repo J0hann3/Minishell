@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 22:19:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 16:26:31 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,21 @@ void	crtl_c_interactive(int sig)
 
 void	error_new_line(int sig)
 {
+	(void)sig;
 	g_error = 130;
 	// if (sig == SIGQUIT)
 	// 	write(STDERR_FILENO, "Quit (core dumped)", 18);			// reset redirection before print
 	write(STDERR_FILENO, "\n", 1);
-	close(STDIN_FILENO);
+	// close(STDIN_FILENO);
 	// rl_replace_line("", 0);
+	exit(130);
 }
 
 void	new_line(int sig)
 {
 	// if (sig == SIGQUIT)
 	// 	return ;
+	(void)sig;
 	write(1, "4\n", 2);
 }
 
