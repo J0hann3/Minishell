@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 19:07:38 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 21:30:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ static void	redirection(t_instruction *inst)
 		inst->s_infile = dup(STDIN_FILENO);
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
-			printf("'%s'	'%s'	'%d'\n", "coucou1", inst->command[0], inst->infile);
 			close(inst->infile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
@@ -175,7 +174,6 @@ static void	redirection(t_instruction *inst)
 		inst->s_outfile = dup(STDOUT_FILENO);
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
-			printf("'%s'\n", "coucou2");
 			close(inst->outfile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
@@ -190,7 +188,6 @@ static void	reset_redirection(t_instruction *inst)
 	{
 		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
 		{
-			printf("'%s'\n", "coucou3");
 			g_error = 1;
 			close(inst->s_infile);
 			ft_write_error(NULL, NULL, strerror(errno));
@@ -201,7 +198,6 @@ static void	reset_redirection(t_instruction *inst)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
 		{
-			printf("'%s'\n", "coucou4");
 			g_error = 1;
 			close(inst->s_outfile);
 			ft_write_error(NULL, NULL, strerror(errno));
@@ -217,21 +213,12 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	int		pid;
 	int		stat;
 
-	// printf("command\n");
 	if (inst == NULL)
 		return (-1);
-	// printf("command 0\n");
 	if (inst->command == NULL)
 		return (-1);
-	// printf("command 1\n");
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
 		return (free_str(inst->command), -1);
-	// int i = 0;
-	// while(inst->command[i] != NULL)
-	// {
-	// 	printf("inst[%d] = '%s'\n", i, inst->command[i]);
-	// 	i++;
-	// }
 	g_error = 0;
 	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/29 15:13:34 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:29:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,6 @@ static int	delete_previous_dir(char *str, int index)
 		letter_suppr++;
 		index--;
 	}
-	// printf("dot-dot : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 
@@ -161,7 +160,6 @@ static int	delete_dot_slash(char *str, int index)
 		letter_suppr++;
 		index--;
 	}
-	// printf("dot : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 
@@ -181,7 +179,6 @@ static int	trim_slash(char *str, int i)
 		else
 			break ;
 	}
-	// printf("slash : %d\n", letter_suppr);
 	return (letter_suppr);
 }
 

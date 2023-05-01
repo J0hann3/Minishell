@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 22:21:18 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 21:29:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	main(int argc, char *argv[], char *envp[])
 		ret_err = syntax_errors(input, env);
 		if (ret_err == 2)
 		{
-			printf("ERROR:	%d\n", ret_err);
 			free(input);
 			free(env->fds_heredocs);
 			env->fds_heredocs = NULL;

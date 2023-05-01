@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 18:20:08 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 21:30:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ char	*get_warning_message(char *ender)
 
 void	child(char *ender, int fd, t_env_info *env, char *input)
 {
-	printf("PID CHILD : %d\n", getpid());
 	heredocs_signal(env->act);
 	while (input)
 	{
@@ -52,8 +51,6 @@ void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	int		pid;
 	int		status;
 
-	// open tmp file anyway
-	// printf(": %s\n", file_name);
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO)) // not interactive
 		return ((void)close(fd_w));
 	// signaux
@@ -66,7 +63,6 @@ void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	}
 	else
 	{
-		printf("PID: %d\n", pid);
 		heredocs_error_signal(env->act);
 		waitpid(pid, &status, 0);
 		reset_signals(env->act);
