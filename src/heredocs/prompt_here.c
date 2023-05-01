@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:03:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:24:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,52 +21,6 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-// int	prompt_here(char *ender, int fd, t_env_info *env)
-// {
-// 	char	*input;
-// 	int		pid;
-// 	int		stat;
-
-// 	// open tmp file anyway
-// 	// printf(": %s\n", file_name);
-// 	if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO))
-// 		return (free(ender), close(fd), 2); // not interactive
-// 	input = (char *)1;
-// 	pid = fork();
-// 	if (pid == -1)
-// 		return (free(ender), close(fd), 2);
-// 	if (pid == 0)
-// 	{
-// 		add_error_signals(env->act);
-// 		while (input)
-// 		{
-// 			input = readline("> ");
-// 			if (eq(ender, input))
-// 				break ;
-// 			else if (!input)
-// 			{
-// 				ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
-// 				break ;
-// 			}
-// 			write(fd, input, ft_strlen(input));
-// 			write(fd, "\n", 1);
-// 		}
-// 		close(fd);
-// 		exit(0);
-// 	}
-// 	else
-// 	{
-// 		ign_signals(env->act);
-// 		waitpid(pid, &stat, 0);
-// 		reset_signals(env->act);
-// 		if (WIFSIGNALED(stat))
-// 			stat = 128 + WTERMSIG(stat);
-// 		else
-// 			stat = WEXITSTATUS(stat);
-// 		close(fd);
-// 	}
-// 	return (free(ender), stat);
-// }
 void	child(char *ender, int fd, t_env_info *env, char *input)
 {
 	add_error_signals(env->act);
@@ -77,7 +31,7 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 			break ;
 		else if (!input)
 		{
-			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
+			ft_write_error("warning", NULL, get_warning_message(ender)); // leakkkkkkk
 			break ;
 		}
 		write(fd, input, ft_strlen(input));
@@ -99,13 +53,13 @@ int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO)) // not interactive
 		return (close(fd_w), 0);
-	// signaux
 	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (free(ender), close(fd_r), close(fd_r), 2);
+		return (free(ender), close(fd_r), close(fd_w), 2);
 	if (pid == 0)
 	{
+		add_error_signals(env->act);
 		close(fd_r);
 		child(ender, fd_w, env, input);
 	}

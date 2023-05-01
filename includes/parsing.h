@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:10:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:13:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ int	do_here_docs(char *input, t_env_info *env_info, int *fd_r);
 
 // prompt_here.c
 char	*get_random_name();
-int		do_here_docs(char *input, t_env_info *env_info);
 bool	expand_heredocs(int *fd_in, t_env_info *env_info);
-void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env);
+int		prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env);
 
 #endif
