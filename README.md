@@ -113,3 +113,5 @@ cat <<te"st		->seg fault
 don't add in history if ligne empty
 echo <<hey $?
 non interactive : readline writes a prompt
+
+cat <<fin&& <<fin -> probleme ?

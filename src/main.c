@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 16:36:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:54:54 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,12 @@ int	main(int argc, char *argv[], char *envp[])
 		ret_err = syntax_errors(input, env);
 		if (ret_err == 2)
 		{
-			printf("ERROR:	%d\n", ret_err);
 			free(input);
 			free(env->fds_heredocs);
 			env->fds_heredocs = NULL;
 			env->len_heredocs = 0;
 			g_error = ret_err;
 			continue ;
-			// return (ret_err); // leak on return, change to break env->error
 		}
 		else if (ret_err == 1 || ret_err == 130)
 		{

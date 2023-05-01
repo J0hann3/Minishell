@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 17:27:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:31:12 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,16 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	is_ambigous = false;
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
-		return (printf("MALLOC\n"), NULL);
-	// expand heredocs
+		return (printf("MALLOC\n"), NULL); //
+	if(!expand_heredocs(&fd_heredocs, env_info))
+		return (free_instructions(instruc), g_error = 1, NULL);
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
-	// printf("command before: '%s'\n", expanded_command);
-	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command, fd_heredocs))) // changer error
+	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command, fd_heredocs)))
 		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
 	// expand *
-	// printf("command after: '%s'\n", expanded_command);
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	if (!instruc->command)
-		return (NULL);
+		return (NULL); 
 	i = 0;
 	while (instruc->command[i])
 		remove_quotes(instruc->command[i++]);

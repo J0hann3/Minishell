@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_fd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 17:30:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:30:58 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	replace_name(char **input, size_t size, int offset_op)
 	size_t	i;
 	int		j;
 
-	// printf("input : '%s'\n", *input);
 	i = 0;
 	while (i++ < (size_t)offset_op)
 		(*input)--;
@@ -66,7 +65,6 @@ void	replace_name(char **input, size_t size, int offset_op)
 	}
 	tmp[j] = 0;
 	*input = tmp;
-	// printf("tmp : '%s'\n", tmp);
 }
 
 int	read_fd(char *input)
@@ -83,10 +81,8 @@ int	read_fd(char *input)
 	if (!file_name)
 		return (-1);
 	file_name[size] = 0;
-	// printf("command before read : '%s'	[%ld]\n", input, ft_strlen(file_name));
 	replace_name(&input, ft_strlen(file_name), has_space);
 	fd = open(file_name, O_RDONLY);
-	// printf("command after read : '%s'\n", input);
 	free(file_name);
 	return (fd);
 }
@@ -106,9 +102,7 @@ bool	heredoc_fd(char *input)
 	if (!file_name)
 		return (false);
 	file_name[size] = 0;
-	// printf("command before heredoc : '%s'	[%ld]\n", input, ft_strlen(file_name));
 	replace_name(&input, ft_strlen(file_name), 1 + has_space);
-	// printf("command after heredoc : '%s'\n", input);
 	free(file_name);
 	return (true);
 }
@@ -132,10 +126,8 @@ int	open_fd(char *input)
 	if (!file_name)
 		return (-1);
 	file_name[size] = 0;
-	// printf("command before open : '%s'	[%ld]	%d\n", input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
 	replace_name(&input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
 	fd = open(file_name, open_mode, 0666);
-	// printf("command after open : '%s'\n", input);
 	free(file_name);
 	return (fd);
 }
@@ -150,7 +142,6 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 	instruc->outfile = -2;
 	while (input[i])
 	{
-		// printf("'%s'\n", input);
 		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i) + 1;
 		else if (input[i] == '<' && input[i + 1] != '<')
@@ -166,10 +157,11 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 		}
 		else if (input[i] == '<' && input[i + 1] == '<')
 		{
-			if (instruc->infile > -1)
+			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
 			if (!heredoc_fd(input + i))
 			{
+				close(fd_heredocs);
 				perror("Error");
 				return (false);
 			}

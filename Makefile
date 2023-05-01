@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
+#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/29 14:58:15 by jvigny           ###   ########.fr        #
+#    Updated: 2023/04/29 23:52:19 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,10 @@ SRC_PARSING = syntax_errors.c \
 
 HEREDOCS = heredocs/
 SRC_HEREDOCS = heredocs.c \
-			prompt_here.c
+			prompt_here.c \
+			expand_heredocs.c \
+			get_next_line.c \
+			get_next_line_utils.c \
 
 SIGNALS = signals/
 SRC_SIGNALS = signals.c
@@ -93,7 +96,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
+	valgrind --leak-check=full --track-fds=all --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)

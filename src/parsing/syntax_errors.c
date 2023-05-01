@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:19:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:54:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ bool	is_parenthesis(char c)
 
 static char *get_error_token(char *input)
 {
-	printf("cas : '%s'\n", input);
 	if (!*input)
 		return (ft_strdup("syntax error near unexpected token `newline'"));
 	if (*input == '&' && *(input + 1) == '&')

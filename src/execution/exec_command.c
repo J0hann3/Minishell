@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 21:48:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:54:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ static char	*find_path_command(char *str, t_env_info *env)
  */
 void	redirection(t_instruction *inst)
 {
-	if (inst->infile != -2)
+	if (inst->infile >= 0)
 	{
 		inst->s_infile = dup(STDIN_FILENO);
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
@@ -181,7 +181,7 @@ void	redirection(t_instruction *inst)
 		}
 		close(inst->infile);
 	}
-	if (inst->outfile != -2)
+	if (inst->outfile >= 0)
 	{
 		inst->s_outfile = dup(STDOUT_FILENO);
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
@@ -218,7 +218,7 @@ void	redirection_fork(t_instruction *inst)
 
 void	reset_redirection(t_instruction *inst)
 {
-	if (inst->infile != -2)
+	if (inst->infile >= 0)
 	{
 		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
 		{
@@ -228,7 +228,7 @@ void	reset_redirection(t_instruction *inst)
 		}
 		close(inst->s_infile);
 	}
-	if (inst->outfile != -2)
+	if (inst->outfile >= 0)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
 		{
@@ -253,7 +253,6 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		return (-1);
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
 		return (free_str(inst->command), -1);
-	// printf("command : '%s'\n", inst->command[0]);
 	g_error = 0;
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (g_error);

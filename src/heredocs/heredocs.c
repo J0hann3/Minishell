@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:48:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:09:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*get_next_number(char *previous, int nbr)
 	while (*previous != '_')
 		previous++;
 	if (ft_strlen(previous) > 55)
-		return (NULL);
+		return (free(start), NULL);
 	previous[1] = 0;
 	previous = ft_strjoin_nbr(start, nbr);
 	free(start);
@@ -86,57 +86,57 @@ char	*get_next_number(char *previous, int nbr)
 
 char	*get_random_name()
 {
-	char	*tmp;
+	char	*file_name;
 	int		exist;
 	int		nbr;
 
 	nbr = 1;
-	tmp = ft_strdup("./.heredoc_0");
-	if (!tmp)
+	file_name = ft_strdup("./.heredoc_0");
+	if (!file_name)
 		return (NULL);
 	exist = access("/tmp", F_OK);
 	if (exist != 0)
-		return (ft_write_error("heredocs", "tmp", "No such file or directory"), NULL);
+		return (free(file_name), ft_write_error("heredocs", "tmp",
+			"No such file or directory"), NULL);
 	exist = 1;
 	while (true)
 	{
-		exist = access(tmp, F_OK);
+		exist = access(file_name, F_OK);
 		if (exist == 0)
-		{
-			tmp = get_next_number(tmp, nbr);
-			if (!tmp)
-				return (NULL);
-		}
+			file_name = get_next_number(file_name, nbr);
 		else
-			return (tmp);
-		tmp = get_next_number(tmp, nbr);
+			return (file_name);
+		if (!file_name)
+				return (NULL);
 		nbr++;
 	}
 }
 
-bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
+bool	open_tmp_file(int *fd_r, int *fd_w)
 {
-	*file_name = get_random_name();
-	if (!*file_name)
+	char	*file_name;
+
+	file_name = get_random_name();
+	if (!file_name)
 		return (false);
-	*fd_r = open(*file_name, O_CREAT | O_RDONLY, 0644);
-	*fd_w = open(*file_name, O_CREAT | O_WRONLY, 0644);
-	unlink(*file_name);
+	*fd_r = open(file_name, O_CREAT | O_RDONLY, 0644);
+	*fd_w = open(file_name, O_CREAT | O_WRONLY, 0644);
+	unlink(file_name);
 	if (*fd_r < 0 || *fd_w < 0)
 	{
 		close(*fd_r);
 		close(*fd_w);
-		return (ft_write_error("heredocs", *file_name, strerror(errno)), free(*file_name), false);
+		return (ft_write_error("heredocs", file_name, strerror(errno)),
+			free(file_name), false);
 	}
-	free(*file_name);
+	free(file_name);
 	return (true);
 }
 
 // need to close fd if error
-int	do_here_docs(char *input, t_env_info *env_info, int		*fd_r)
+int	do_here_docs(char *input, t_env_info *env_info, int *fd_r)
 {
 	char	*buffer;
-	char	*file_name;
 	int		fd_w;
 	int		error;
 
@@ -145,9 +145,10 @@ int	do_here_docs(char *input, t_env_info *env_info, int		*fd_r)
 	buffer = get_here_ender(input);
 	if (!buffer)
 		return (-1);
-	if (!open_tmp_file(&file_name, fd_r, &fd_w))
+	if (!open_tmp_file(fd_r, &fd_w))
 		return (free(buffer), -1);
-	error = prompt_here(buffer, fd_w, env_info);
+	error = prompt_here(buffer, fd_w, *fd_r, env_info);
+	free(buffer);
 	if (error != 0)
 		return (close(*fd_r), error);
 	return (error);
