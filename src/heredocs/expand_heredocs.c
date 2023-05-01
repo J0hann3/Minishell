@@ -6,21 +6,88 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 22:33:29 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:52:17 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/get_next_line.h"
 
-bool	fill_new_fd(int dst_fd, int src_fd)
+static char	*expand(char *input, size_t *i, t_env_info *env_info)
+{
+	char	*tmp;
+	int		env_index;
+	size_t	j;
+	size_t	size;
+
+	if (*input == '?')
+	{
+		(*i)++;
+		return (ft_itoa(g_error));
+	}
+	size = get_size_of_var(input);
+	*i += size;
+	tmp = ft_strndup(input, size);
+	if (!tmp)
+		return (NULL);
+	env_index = ft_getenv(env_info->env, tmp);
+	free(tmp);
+	if (env_index == -1)
+		return (ft_calloc(1, sizeof(char)));
+	tmp = env_info->env[env_index];
+	j = 0;
+	while (tmp[j] && tmp[j] != '=')
+		j++;
+	tmp = ft_strdup(tmp + j + 1);
+	return (tmp);
+}
+
+char	*expand_here(char *input, t_env_info *env_info)
+{
+	size_t	i;
+	int		begin_join;
+	char	*tmp;
+	char	*res;
+
+	res = ft_calloc(1, sizeof(char));
+	if (!res)
+		return (free(input), NULL);
+	i = 0;
+	begin_join = 0;
+	while (input[i])
+	{
+		if (input[i] == '$' && input[i + 1] != '$' && is_expandable(input + i + 1))
+		{
+			if (i > 0)
+				res = ft_strnjoin(res, input + begin_join, i - begin_join);
+			i++;
+			tmp = expand(input + i, &i, env_info);
+			if (!tmp)
+				return (free(res), free(input), NULL);
+			begin_join = i;
+			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
+			free(tmp);
+		}
+		else
+			i++;
+	}
+	if (begin_join != (int)i)
+		res = ft_strnjoin(res, input + begin_join, i - begin_join);
+	free(input);
+	return (res);
+}
+
+
+static bool	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 {
 	char	*line;
 
-	line = (char *)1;
-	while(line)
+	while(true)
 	{
 		line = get_next_line(src_fd);
+		if (!line)
+			break ;
+		line = expand_here(line, env_info);
 		if (!line)
 			break ;
 		write(dst_fd, line, ft_strlen(line));
@@ -32,7 +99,7 @@ bool	fill_new_fd(int dst_fd, int src_fd)
 	return (true);
 }
 
-bool	expand_heredocs(int *fd_in)
+bool	expand_heredocs(int *fd_in, t_env_info *env_info)
 {
 	int		new_fd_r;
 	int		new_fd_w;
@@ -50,10 +117,14 @@ bool	expand_heredocs(int *fd_in)
 	{
 		close(new_fd_r);
 		close(new_fd_w);
-		return (ft_write_error("heredocs", file_name, strerror(errno)), false);
+		return (ft_write_error("heredocs", file_name, strerror(errno)), free(file_name), false);
 	}
-	if(!fill_new_fd(new_fd_w, *fd_in))
+	free(file_name);
+	if(!fill_new_fd(new_fd_w, *fd_in, env_info))
+	{
+		close(new_fd_r);
 		return (false);
+	}
 	*fd_in = new_fd_r;
 	return (true);
 }

@@ -111,3 +111,5 @@ erreur ambiguous redirect
 
 cat <<te"st		->seg fault
 don't add in history if ligne empty
+
+cat <<fin&& <<fin -> probleme ?

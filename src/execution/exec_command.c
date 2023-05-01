@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/29 17:30:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 19:07:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,22 +158,24 @@ static char	*find_path_command(char *str, t_env_info *env)
  */
 static void	redirection(t_instruction *inst)
 {
-	if (inst->infile != -2)
+	if (inst->infile >= 0)
 	{
 		inst->s_infile = dup(STDIN_FILENO);
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
+			printf("'%s'	'%s'	'%d'\n", "coucou1", inst->command[0], inst->infile);
 			close(inst->infile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->infile);
 	}
-	if (inst->outfile != -2)
+	if (inst->outfile >= 0)
 	{
 		inst->s_outfile = dup(STDOUT_FILENO);
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
+			printf("'%s'\n", "coucou2");
 			close(inst->outfile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
@@ -184,20 +186,22 @@ static void	redirection(t_instruction *inst)
 
 static void	reset_redirection(t_instruction *inst)
 {
-	if (inst->infile != -2)
+	if (inst->infile >= 0)
 	{
 		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
 		{
+			printf("'%s'\n", "coucou3");
 			g_error = 1;
 			close(inst->s_infile);
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->s_infile);
 	}
-	if (inst->outfile != -2)
+	if (inst->outfile >= 0)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
 		{
+			printf("'%s'\n", "coucou4");
 			g_error = 1;
 			close(inst->s_outfile);
 			ft_write_error(NULL, NULL, strerror(errno));

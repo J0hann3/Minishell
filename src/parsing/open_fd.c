@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_fd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 17:30:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 19:22:16 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,11 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 		}
 		else if (input[i] == '<' && input[i + 1] == '<')
 		{
-			if (instruc->infile > -1)
+			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
 			if (!heredoc_fd(input + i))
 			{
+				close(fd_heredocs);
 				perror("Error");
 				return (false);
 			}

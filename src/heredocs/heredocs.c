@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 23:50:52 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:16:01 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*get_next_number(char *previous, int nbr)
 	while (*previous != '_')
 		previous++;
 	if (ft_strlen(previous) > 55)
-		return (NULL);
+		return (free(start), NULL);
 	previous[1] = 0;
 	previous = ft_strjoin_nbr(start, nbr);
 	free(start);
@@ -115,6 +115,7 @@ char	*get_random_name()
 bool	open_tmp_file(int *fd_r, int *fd_w)
 {
 	char	*file_name;
+
 	file_name = get_random_name();
 	if (!file_name)
 		return (false);
@@ -143,7 +144,8 @@ int	do_here_docs(char *input, t_env_info *env_info)
 	if (!buffer)
 		return (-1);
 	if (!open_tmp_file(&fd_r, &fd_w))
-		return (-1);
+		return (free(buffer), -1);
 	prompt_here(buffer, fd_w, fd_r, env_info);
+	free(buffer);
 	return (fd_r);
 }

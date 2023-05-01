@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 23:51:51 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:20:08 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*get_warning_message(char *ender)
 
 void	child(char *ender, int fd, t_env_info *env, char *input)
 {
+	printf("PID CHILD : %d\n", getpid());
 	heredocs_signal(env->act);
 	while (input)
 	{
@@ -35,8 +36,10 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 			break ;
 		}
 		write(fd, input, ft_strlen(input));
+		free(input);
 		write(fd, "\n", 1);
 	}
+	free(input);
 	close(fd);
 	free_env(env);
 	free(ender);

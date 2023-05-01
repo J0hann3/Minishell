@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 23:43:05 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 17:42:32 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,9 @@ bool	has_error_for_meta(char *input, size_t i);
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 
-// expand.c
+// expand_dollar.c
+size_t	get_size_of_var(const char *str);
+bool	is_expandable(const char *input);
 char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
 
 //second_parsing.c
@@ -78,7 +80,7 @@ bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 //heredocs.c
 char	*get_random_name();
 int		do_here_docs(char *input, t_env_info *env_info);
-bool	expand_heredocs(int *fd_in);
+bool	expand_heredocs(int *fd_in, t_env_info *env_info);
 
 // prompt_here.c
 void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env);

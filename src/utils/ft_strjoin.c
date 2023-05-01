@@ -6,14 +6,14 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 17:36:32 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 /**
- * @brief join 2 strings and FREE first arg
+ * @brief join 2 strings
  * 
  * @param s1 
  * @param s2 
@@ -77,5 +77,32 @@ char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 		len++;
 	}
 	res[j] = 0;
+	return (res);
+}
+
+char	*ft_strnjoin(char *s1, char const *s2, size_t size)
+{
+	char	*res;
+	size_t	len;
+	size_t	j;
+
+	if (!s1)
+		len = size;
+	else
+		len = ft_strlen(s1) + size;
+	j = 0;
+	res = malloc(sizeof(char) * len + 1);
+	if (res == 0)
+		return (NULL);
+	while (s1 && s1[j])
+	{
+		res[j] = s1[j];
+		j++;
+	}
+	len = 0;
+	while (len < size)
+		res[j++] = s2[len++];
+	res[j] = 0;
+	free(s1);
 	return (res);
 }

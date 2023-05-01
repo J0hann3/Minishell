@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 16:41:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 17:37:11 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_write_error(char *command, char *argument, char *message);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3);
+char	*ft_strnjoin(char *s1, char const *s2, size_t size);
 int		ft_strcmp(const char *s1, const char *s2);
 void	free_tree(t_ast **tree);
 void	free_env(t_env_info *env);

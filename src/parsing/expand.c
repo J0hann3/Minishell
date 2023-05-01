@@ -6,47 +6,20 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/25 17:58:03 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 17:36:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static bool	is_expandable(const char *input)
+bool	is_expandable(const char *input)
 {
 	return (is_alpha(*input) || *input == '_' || *input == '?');
 }
 
-char	*ft_strnjoin(char *s1, char const *s2, size_t size)
+size_t	get_size_of_var(const char *str)
 {
-	char	*res;
-	size_t	len;
-	size_t	j;
-
-	if (!s1)
-		len = size;
-	else
-		len = ft_strlen(s1) + size;
-	j = 0;
-	res = malloc(sizeof(char) * len + 1);
-	if (res == 0)
-		return (NULL);
-	while (s1 && s1[j])
-	{
-		res[j] = s1[j];
-		j++;
-	}
-	len = 0;
-	while (len < size)
-		res[j++] = s2[len++];
-	res[j] = 0;
-	free(s1);
-	return (res);
-}
-
-static int	get_size_of_var(const char *str)
-{
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -88,7 +61,17 @@ bool	is_ambigous_redirect(char *input, int index)
 	return (false);
 }
 
-
+/**
+ * @brief Returns the expanded $ variable, first input character is the very next
+ * character after $
+ * Forward the i index by the size of the variable
+ * 
+ * @param input 
+ * @param i 
+ * @param env_info 
+ * @param is_ambigous 
+ * @return char* 
+ */
 char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 {
 	char	*tmp;
@@ -108,7 +91,6 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 		return (NULL);
 	env_index = ft_getenv(env_info->env, tmp);
 	free(tmp);
-	
 	if (env_index == -1)
 	{
 		if (is_ambigous_redirect(input - 1, *i - size))
@@ -149,8 +131,6 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 			tmp = expand(input + i, &i, env_info, is_ambigous);
 			if (!tmp)
 				return (free(res), NULL);
-			if (g_error == 4)
-				return (free(tmp), res);				//error on ambigous to change
 			begin_join = i;
 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
 			free(tmp);
