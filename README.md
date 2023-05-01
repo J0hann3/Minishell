@@ -102,8 +102,7 @@ dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreu
 - regle de precedence gauche droite pour les erreurs d'operateur sans operant
 
 
-
-se mettre d'accord pour les erreurs de malloc
+ERREUR DE MALLOC : <FUNCTIONNALITE> ": memory exausted"
 
 erreur parsing
 erreur ambiguous redirect

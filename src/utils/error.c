@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 16:04:42 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:02:25 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@
  * @param argument char *: Name of argument that create error or NULL
  * @param message char *: Messages of error or NULL
  */
-void	ft_write_error(char *command, char *argument, char *message)
+void	ft_write_error(const char *command,
+			const char *argument, const char *message)
 {
 	char	*str;
 	char	*tmp;
 
 	str = ft_strdup("minishell: ");
-	// write(2, "minishell: ", 11);
+	if (!str)
+		return ;
 	if (command != NULL)
 	{
 		tmp = str;
@@ -50,4 +52,10 @@ void	ft_write_error(char *command, char *argument, char *message)
 	free(tmp);
 	write(2, str, ft_strlen(str));
 	free(str);
+}
+
+void	write_memory_exhausted(const char *context)
+{
+	write(2, context, ft_strlen(context));
+	write(2, ": memory exausted\n", 19);
 }
