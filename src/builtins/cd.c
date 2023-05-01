@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/29 15:13:34 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:41:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,14 +296,14 @@ static char	*clean_path(char *str, int len_path)
  * @param env 
  * @return int sucess ->0 else 1
  */
-int	ft_cd(char **arg, t_env_info	*env)
+void	ft_cd(char **arg, t_env_info	*env)
 {
 	char	*path;
 	int		len_path;
 	int		len;
 
 	if (check_arg(arg) == 0)
-		return (1);
+		return (g_error = 1, (void)0);
 	if (arg[1][0] != '/')
 		path = find_absolute_path(arg[1]);
 	else
@@ -313,20 +313,19 @@ int	ft_cd(char **arg, t_env_info	*env)
 	{
 		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free_str(arg), 1);
+		return(free_str(arg), (void)0);
 	}
 	if (chdir(path) == -1)
 	{
 		g_error = 1;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free_str(arg), free(path), 1);
+		return(free_str(arg), free(path), (void)0);
 	}
 	len_path = canonical_form(path);
 	len_path = add_first_slash(path, len_path, len);
 	path = clean_path(path, len_path);		//protection need
 	update_env(env, path);
 	free_str(arg);
-	return (0);
 }
 
 

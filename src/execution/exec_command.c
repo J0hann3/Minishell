@@ -6,28 +6,40 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 15:58:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:48:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+static void	ft_builtins(void(function)(char **, t_env_info *), t_instruction *arg, t_env_info *env)
+{
+	redirection(arg);
+	function(arg->command, env);
+	reset_redirection(arg);
+}
+
 static int	is_builtins(t_instruction *arg, t_env_info *env)
 {
 	if (ft_strcmp(arg->command[0], "echo") == 0)
-		return (ft_echo(arg->command, (const t_env_info *)env), 1);
+		return (ft_builtins(&ft_echo, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "cd") == 0)
-		return (ft_cd(arg->command, env), 1);
+		return (ft_builtins(&ft_cd, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "pwd") == 0)
-		return (ft_pwd(arg->command, env), 1);
+		return (ft_builtins(&ft_pwd, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "export") == 0)
-		return (ft_export(arg->command, env), 1);
+		return (ft_builtins(&ft_export, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "unset") == 0)
-		return (ft_unset(arg->command, env), 1);
+		return (ft_builtins(&ft_unset, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "env") == 0)
-		return (ft_env(arg->command, env), 1);
+		return (ft_builtins(&ft_env, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "exit") == 0)
-		return (ft_exit(arg, env), 1);
+	{
+		redirection(arg);
+		ft_exit(arg, env);			// double free detected
+		reset_redirection(arg);
+		return (1);
+	}
 	return (0);
 }
 
@@ -156,7 +168,7 @@ static char	*find_path_command(char *str, t_env_info *env)
  * @param inst 
  * @param env 
  */
-static void	redirection(t_instruction *inst)
+void	redirection(t_instruction *inst)
 {
 	if (inst->infile != -2)
 	{
@@ -182,7 +194,29 @@ static void	redirection(t_instruction *inst)
 	}
 }
 
-static void	reset_redirection(t_instruction *inst)
+void	redirection_fork(t_instruction *inst)
+{
+	if (inst->infile != -2)
+	{
+		if (dup2(inst->infile, STDIN_FILENO) == -1)
+		{
+			g_error = 1;
+			ft_write_error(NULL, NULL, strerror(errno));
+		}
+		close(inst->infile);
+	}
+	if (inst->outfile != -2)
+	{
+		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
+		{
+			g_error = 1;
+			ft_write_error(NULL, NULL, strerror(errno));
+		}
+		close(inst->outfile);
+	}
+}
+
+void	reset_redirection(t_instruction *inst)
 {
 	if (inst->infile != -2)
 	{
@@ -221,20 +255,20 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		return (free_str(inst->command), -1);
 	// printf("command : '%s'\n", inst->command[0]);
 	g_error = 0;
-	redirection(inst);
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
-		return (reset_redirection(inst), g_error);
+		return (g_error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return (reset_redirection(inst), free_str(inst->command), g_error);
+		return (free_str(inst->command), g_error);
 	pid = fork();
 	if (pid == -1)
 	{
 		g_error = 1;
-		return (reset_redirection(inst), free(path), free_str(inst->command), g_error);
+		return (free(path), free_str(inst->command), g_error);
 	}
 	if (pid == 0)
 	{
+		redirection_fork(inst);
 		none_interactive(env->act);
 		execve(path, inst->command, env->env);
 		return (free(path), free_str(inst->command), g_error);
@@ -242,7 +276,6 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 	ign_signals(env->act);
 	waitpid(pid, &stat, 0);
 	reset_signals(env->act);
-	reset_redirection(inst);
 	if (WIFSIGNALED(stat))
 		return (g_error = 128 + WTERMSIG(stat), g_error);
 	else

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/24 21:32:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 21:43:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ static void	free_arg(char **arg, int len)
 	free(arg);
 }
 
-t_env_info	*ft_export(char **arg, t_env_info	*env)
+void	ft_export(char **arg, t_env_info	*env)
 {
 	int		len_env;
 	int		len_arg;
@@ -217,21 +217,21 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	len_arg = trim_invalid_varible(arg);
 	len_arg = modifie_var(arg, env->env, len_arg);
 	if (len_arg < 0)
-		return (free_arg(arg, len_arg), NULL);
+		return (free_arg(arg, len_arg), (void)0);
 	if (len_arg == 0)
-		return (free_arg(arg, len_arg), env);
+		return (free_arg(arg, len_arg), (void)0);
 	len_env = ft_len(env->env);
 	if (env->len_env > len_env + len_arg)
 	{
 		add_new_variable(arg, env->env, len_arg, len_env);
 		env->len_env = len_arg + len_env;
-		return (env);
+		return ;
 	}
 	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));
 	if (new == NULL)
 	{
 		g_error = 2;
-		return (free_arg(arg, len_arg), NULL);
+		return (free_arg(arg, len_arg), (void)0);
 	}
 	env->len_env = len_env + len_arg;
 	ft_copy(new, env->env);
@@ -240,7 +240,6 @@ t_env_info	*ft_export(char **arg, t_env_info	*env)
 	env->env = new;
 	free(arg[0]);
 	free(arg);
-	return (env);
 }
 
 /**

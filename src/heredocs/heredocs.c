@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:21:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 17:48:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,9 @@ bool	open_tmp_file(char **file_name, int *fd_r, int *fd_w)
 	{
 		close(*fd_r);
 		close(*fd_w);
-		return (ft_write_error("heredocs", *file_name, strerror(errno)), false);
+		return (ft_write_error("heredocs", *file_name, strerror(errno)), free(*file_name), false);
 	}
+	free(*file_name);
 	return (true);
 }
 
@@ -137,11 +138,17 @@ int	do_here_docs(char *input, t_env_info *env_info, int		*fd_r)
 	char	*buffer;
 	char	*file_name;
 	int		fd_w;
+	int		error;
 
+	// fd_w = -1;
+	// *fd_r = -1;
 	buffer = get_here_ender(input);
 	if (!buffer)
 		return (-1);
 	if (!open_tmp_file(&file_name, fd_r, &fd_w))
-		return (-1);
-	return (prompt_here(buffer, fd_w, env_info));
+		return (free(buffer), -1);
+	error = prompt_here(buffer, fd_w, env_info);
+	if (error != 0)
+		return (close(*fd_r), error);
+	return (error);
 }

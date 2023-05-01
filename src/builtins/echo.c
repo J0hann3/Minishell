@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 21:30:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	is_option(const char *str)
+static int	is_option(char *str)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ static int	is_option(const char *str)
 	return (1);
 }
 
-void	ft_echo(char **arg, const t_env_info	*env)
+void	ft_echo(char **arg, t_env_info	*env)
 {
 	int	i;
 	int	option;

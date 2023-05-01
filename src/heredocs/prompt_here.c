@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:10:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 17:51:25 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	prompt_here(char *ender, int fd, t_env_info *env)
 	// open tmp file anyway
 	// printf(": %s\n", file_name);
 	if (!isatty(STDIN_FILENO) && !isatty(STDERR_FILENO))
-		return (close(fd), 2); // not interactive
+		return (free(ender), close(fd), 2); // not interactive
 	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (2);
+		return (free(ender), close(fd), 2);
 	if (pid == 0)
 	{
 		add_error_signals(env->act);
@@ -52,7 +52,7 @@ int	prompt_here(char *ender, int fd, t_env_info *env)
 			write(fd, "\n", 1);
 		}
 		close(fd);
-		exit(g_error);
+		exit(0);
 	}
 	else
 	{
@@ -65,5 +65,5 @@ int	prompt_here(char *ender, int fd, t_env_info *env)
 			stat = WEXITSTATUS(stat);
 		close(fd);
 	}
-	return (stat);
+	return (free(ender), stat);
 }
