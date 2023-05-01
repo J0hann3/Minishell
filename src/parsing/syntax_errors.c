@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 21:54:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:30:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
 		if (error == 130)
 			return (env->fds_heredocs[0] = -2, false);
 		else if (error != 0)
-			return (false);
+			return (env->fds_heredocs[0] = -1, false);
 		env->fds_heredocs[env->len_heredocs] = fd_heredoc;
 	}
 	return (true);

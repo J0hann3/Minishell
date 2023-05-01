@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/29 23:41:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:38:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,20 @@ int	ft_getenv(char **env, char *str)
 		++i;
 	}
 	return (-1);
+}
+
+void	close_fd(t_env_info *env)
+{
+	size_t	i;
+
+	i = 0;
+	while (i <= env->len_heredocs)
+	{
+		if (env->fds_heredocs[i] != -1)
+			close(env->fds_heredocs[i]);
+		i++;
+	}
+	free(env->fds_heredocs);
+	env->fds_heredocs = NULL;
+	env->len_heredocs = 0;
 }

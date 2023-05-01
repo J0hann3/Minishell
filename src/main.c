@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 21:54:54 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/01 22:36:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,14 @@ int	main(int argc, char *argv[], char *envp[])
 		if (ret_err == 2)
 		{
 			free(input);
-			free(env->fds_heredocs);
-			env->fds_heredocs = NULL;
-			env->len_heredocs = 0;
+			close_fd(env);
 			g_error = ret_err;
 			continue ;
 		}
 		else if (ret_err == 1 || ret_err == 130)
 		{
 			free(input);
-			free(env->fds_heredocs);
-			env->fds_heredocs = NULL;
-			env->len_heredocs = 0;
+			close_fd(env);
 			g_error = ret_err;
 			continue ;
 		}
