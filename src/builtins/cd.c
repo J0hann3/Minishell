@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 21:54:05 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 19:06:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 		++len;
 	res = malloc(sizeof(char) * len + 1);
 	if (res == NULL)
-		return (0);
+		return (NULL);
 	j = -1;
 	while (s1[++j])
 		res[j] = s1[j];
@@ -61,7 +61,7 @@ char *find_absolute_path(char *str)
 	return (path);
 }
 
-static void	update_env(t_env_info	*env, char *str)		//don't know if need to create OLDPWD
+static void	update_env(t_env_info	*env, char *str)
 {
 	int		i_pwd;
 	int		i_old_pwd;
@@ -77,16 +77,16 @@ static void	update_env(t_env_info	*env, char *str)		//don't know if need to crea
 			res = ft_strjoin("OLD", env->env[i_pwd]);		//check malloc
 			free(env->env[i_pwd]);
 			if (res == NULL)
-				return (free(str), g_error = 1, (void)0);
+				return (ft_write_error("cd", str, strerror(errno)), free(str), g_error = 1, (void)0);
 			free(env->env[i_old_pwd]);
 			env->env[i_old_pwd] = res;
 		}
 		else
 			free(env->env[i_pwd]);
 		env->env[i_pwd] = ft_strjoin("PWD=", str);
-		free(str);
 		if (env->env[i_pwd] == NULL)
-			return (g_error = 1, (void)0);
+			return (env->env[i_pwd] = str, ft_write_error("cd", str, strerror(errno)), g_error = 1, (void)0);
+		free(str);
 		return ;
 	}
 	else
@@ -110,7 +110,6 @@ static int	check_arg(char **arg)
 		return (free_str(arg), 0);
 	if (arg[2] != NULL)
 	{
-		g_error = 1;
 		ft_write_error("cd", NULL, "too many arguments");
 		return (free_str(arg), 0);
 	}
@@ -305,13 +304,13 @@ void	ft_cd(char **arg, t_env_info	*env)
 		path = find_absolute_path(arg[1]);
 	else
 		path = ft_strdup(arg[1]);
-	len = ft_strlen(path);
 	if (path == NULL)
 	{
 		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
 		return(free_str(arg), (void)0);
 	}
+	len = ft_strlen(path);
 	if (chdir(path) == -1)
 	{
 		g_error = 1;
@@ -320,7 +319,13 @@ void	ft_cd(char **arg, t_env_info	*env)
 	}
 	len_path = canonical_form(path);
 	len_path = add_first_slash(path, len_path, len);
-	path = clean_path(path, len_path);		//protection need
+	path = clean_path(path, len_path);
+	if (path == NULL)
+	{
+		g_error = 2;
+		ft_write_error("cd", arg[1], strerror(errno));
+		return(free_str(arg));
+	}
 	update_env(env, path);
 	free_str(arg);
 }

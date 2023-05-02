@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:29:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:57:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ size_t	ft_strlen(const char *s);
 bool	eq(char	*s1, char *s2);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
-char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
 void	ft_bzero(void *s, size_t n);
 

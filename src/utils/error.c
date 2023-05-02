@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 17:30:59 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:43:49 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,44 @@ void	ft_write_error(const char *command,
 	tmp = str;
 	str = ft_strjoin(str, "\n");
 	if (!str)
-		mem_exh("error print");
+		return (free(tmp), ft_write_error_2(command, argument, message));
 	free(tmp);
 	write(2, str, ft_strlen(str));
 	free(str);
 }
 
+void	ft_write_error_2(const char *command,
+			const char *argument, const char *message)
+{
+	char	*str;
+	char	*tmp;
+
+	write(2, "minishell", 9);
+	if (command != NULL)
+	{
+		write(2, ": ", 2);
+		write(2, command, ft_strlen(command));
+	}
+	if (argument != NULL)
+	{
+		write(2, ": ", 2);
+		write(2, argument, ft_strlen(argument));
+	}
+	if (message != NULL)
+	{
+		write(2, ": ", 2);
+		write(2, message, ft_strlen(message));
+	}
+}
+
 void	mem_exh(const char *context)
 {
 	write(2, "minishell: ", 11);
-	write(2, context, ft_strlen(context));
-	write(2, ": memory exausted\n", 19);
+	if (context)
+	{
+		write(2, context, ft_strlen(context));
+		write(2, ": memory exausted\n", 19);
+	}
+	else
+		write(2, "memory exausted\n", 17);
 }

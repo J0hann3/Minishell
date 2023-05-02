@@ -106,7 +106,7 @@ ERREUR DE MALLOC : <FUNCTIONNALITE> ": memory exausted"
 
 erreur parsing
 erreur ambiguous redirect
-		><test		-> needto write an error
+><test		-> needto write an error
 
 cat <<te"st		->seg fault
 don't add in history if ligne empty
