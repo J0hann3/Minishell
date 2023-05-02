@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 22:02:25 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 17:30:59 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,16 @@ void	ft_write_error(const char *command,
 	}
 	tmp = str;
 	str = ft_strjoin(str, "\n");
+	if (!str)
+		mem_exh("error print");
 	free(tmp);
 	write(2, str, ft_strlen(str));
 	free(str);
 }
 
-void	write_memory_exhausted(const char *context)
+void	mem_exh(const char *context)
 {
+	write(2, "minishell: ", 11);
 	write(2, context, ft_strlen(context));
 	write(2, ": memory exausted\n", 19);
 }

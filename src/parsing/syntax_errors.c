@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:40:09 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 16:37:40 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,7 @@ bool	has_closing_parenthesis(char **input, t_env_info *env, char *start_ptr)
 				env->len_heredocs++;
 				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
 				if (!env->fds_heredocs)
-					return (write_memory_exhausted("heredocs"), false);
+					return (mem_exh("heredocs"), false);
 				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}
@@ -311,7 +311,7 @@ int	syntax_errors(char *input, t_env_info *env)
 	env->len_heredocs = 0;
 	env->fds_heredocs = malloc(1 * sizeof(int));
 	if (!env->fds_heredocs)
-		return (2); // write error
+		return (mem_exh("heredocs"), 2);
 	env->fds_heredocs[env->len_heredocs] = -1;
 	remove_multiple_wspaces(input);
 	start_ptr = input;
@@ -320,14 +320,14 @@ int	syntax_errors(char *input, t_env_info *env)
 		if (is_syntax_char(input))
 		{
 			ret_val = check_syntax_at(&input, start_ptr, env);
-			if (ret_val < 1) //error syntax
+			if (ret_val < 1)
 				return (2);
-			else if (ret_val == 2) //new operator for heredocs
+			else if (ret_val == 2)
 			{
 				env->len_heredocs++;
 				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
 				if (!env->fds_heredocs)
-					return (write_memory_exhausted("heredocs"), 2);
+					return (mem_exh("heredocs"), 2);
 				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}

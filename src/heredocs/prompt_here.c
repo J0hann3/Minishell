@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 21:30:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 17:33:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*get_warning_message(char *ender)
 
 	res = ft_strjoin3("here-document delimited by end-of-file (wanted `",
 			ender, "')");
+	if (!res)
+		mem_exh("heredocs");
 	return (res);
 }
 
@@ -31,7 +33,8 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 			break ;
 		else if (!input)
 		{
-			ft_write_error("warning", NULL, get_warning_message(ender)); // rajouter ligne si besoin ;
+			input = get_warning_message(ender);
+			ft_write_error("warning", NULL, input); // rajouter num ligne si besoin/envie a l'aide
 			break ;
 		}
 		write(fd, input, ft_strlen(input));
@@ -51,9 +54,8 @@ void	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	int		pid;
 	int		status;
 
-	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO)) // not interactive
+	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
 		return ((void)close(fd_w));
-	// signaux
 	input = (char *)1;
 	pid = fork();
 	if (pid == 0)

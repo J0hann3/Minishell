@@ -6,14 +6,14 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 17:36:32 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 16:25:32 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 /**
- * @brief join 2 strings
+ * @brief join 2 strings, no free
  * 
  * @param s1 
  * @param s2 
@@ -46,6 +46,14 @@ char	*ft_strjoin(char *s1, char const *s2)
 	return (res);
 }
 
+/**
+ * @brief join 3 string, no free
+ * 
+ * @param s1 
+ * @param s2 
+ * @param s3 
+ * @return char* null-terminated
+ */
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 {
 	char	*res;
@@ -80,6 +88,14 @@ char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 	return (res);
 }
 
+/**
+ * @brief join a non null-terminated string, free s1
+ * 
+ * @param s1 
+ * @param s2 
+ * @param size 
+ * @return char* null-terminated
+ */
 char	*ft_strnjoin(char *s1, char const *s2, size_t size)
 {
 	char	*res;

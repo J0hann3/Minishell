@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:36:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 18:14:48 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,36 @@ bool	has_space(const char *string)
 	return (false);
 }
 
-bool	is_ambigous_redirect(char *input, int index)
+static void	print_ambigous_redirect(char *input_redir)
+{
+	char	*tmp;
+
+	while (*input_redir != '$')
+		input_redir++;
+	input_redir++;
+	tmp = ft_strndup(input_redir, get_size_of_var(input_redir));
+	if (!tmp)
+		return (mem_exh("expand dollar"));
+	ft_write_error(NULL, tmp, "ambigous redirect");
+	free(tmp);
+}
+
+bool	is_ambig_redir(char *input, int index)
 {
 	int	i;
 
 	i = 1;
 	while (i < index)
 	{
-		if (*(input - i) == '<' || *(input - i) == '>')
+		if (*(input - i) == '>')
+			return (print_ambigous_redirect(input), true);
+		if (*(input - i) == '<')
+		{
+			if (i + 1 <= index - 1 && *(input - i - 1) == '<')
+				return (false);
+			print_ambigous_redirect(input);
 			return (true);
+		}
 		else if (is_wspace(*(input - i)))
 			i++;
 		else
@@ -93,8 +114,8 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	free(tmp);
 	if (env_index == -1)
 	{
-		if (is_ambigous_redirect(input - 1, *i - size))
-			*is_ambigous = true; // ambigous error to change
+		if (is_ambig_redir(input - 1, *i - size))
+			*is_ambigous = true;
 		return (ft_calloc(1, sizeof(char)));
 	}
 	tmp = env_info->env[env_index];
@@ -102,7 +123,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	while (tmp[j] && tmp[j] != '=')
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
-	if (is_ambigous_redirect(input - 1, *i - size) && (!*tmp || has_space(tmp)))
+	if (tmp && is_ambig_redir(input - 1, *i - size) && (!*tmp || has_space(tmp)))
 		*is_ambigous = true;
 	return (tmp);
 }
@@ -116,7 +137,7 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 
 	res = ft_calloc(1, sizeof(char));
 	if (!res)
-		return (NULL);
+		return (mem_exh("dollar expand"), NULL);
 	i = 0;
 	begin_join = 0;
 	while (i < len)
@@ -130,7 +151,9 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 			i++;
 			tmp = expand(input + i, &i, env_info, is_ambigous);
 			if (!tmp)
-				return (free(res), NULL);
+				return (free(res), mem_exh("dollar expand"), NULL);
+			if (*is_ambigous)
+				return (free(tmp), free(res), NULL);
 			begin_join = i;
 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
 			free(tmp);
@@ -140,5 +163,8 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 	}
 	if (begin_join != (int)i)
 		res = ft_strnjoin(res, input + begin_join, i - begin_join);
+	if (!res)
+		mem_exh("dollar expand");
+	printf("res : '%s'\n", res);
 	return (res);
 }
