@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 19:10:31 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 14:56:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 		if (*fd_size > size_max)
 			return ((void)printf("ERROR fd heredocs\n"));
 		tree->fd_heredocs = fd_heredocs[*fd_size];
+		fd_heredocs[*fd_size] = -1;
 		(*fd_size)++;
 	}
 	else

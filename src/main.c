@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:36:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 15:52:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,15 @@ int	main(int argc, char *argv[], char *envp[])
 		prompt = "";
 	input = (char *)1;
 	ret_err = 0;
-	while (input != NULL)
+	while (true)
 	{
 		tcsetattr(STDIN_FILENO, TCSANOW, &termios);
 		input = readline(prompt);
 		if (!input)
+		{
+			printf("dfh\n");
 			break ;
+		}
 		if (input[0] == '\0')
 		{
 			free(input);
@@ -56,23 +59,22 @@ int	main(int argc, char *argv[], char *envp[])
 		if (ret_err == 2)
 		{
 			free(input);
-			close_fd(env);
+			close_fd_heredocs(env);
 			g_error = ret_err;
 			continue ;
 		}
 		else if (ret_err == 1 || ret_err == 130)
 		{
 			free(input);
-			close_fd(env);
+			close_fd_heredocs(env);
 			g_error = ret_err;
 			continue ;
 		}
 		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
-		free(env->fds_heredocs);
-		env->fds_heredocs = NULL;
-		env->len_heredocs = 0;
+		close_fd_heredocs(env);
 		if (env->tree == NULL)
 		{
+			printf("dsdfghjkl;fh\n");
 			free(input);	
 			break ;
 		}
@@ -80,9 +82,9 @@ int	main(int argc, char *argv[], char *envp[])
 		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
+		input = NULL;
 	}
-	free_str(env->env);
-	free(env);
+	free_env(env);
 	rl_clear_history();
 	write(2, "exit\n", 5);
 	return (g_error);

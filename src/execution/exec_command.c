@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 21:54:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 15:49:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,28 +175,28 @@ void	redirection(t_instruction *inst)
 		inst->s_infile = dup(STDIN_FILENO);
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
-			close(inst->infile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->infile);
+		inst->infile = -2;
 	}
 	if (inst->outfile >= 0)
 	{
 		inst->s_outfile = dup(STDOUT_FILENO);
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
-			close(inst->outfile);
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->outfile);
+		inst->outfile = -2;
 	}
 }
 
 void	redirection_fork(t_instruction *inst)
 {
-	if (inst->infile != -2)
+	if (inst->infile >= 0)
 	{
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
@@ -204,8 +204,9 @@ void	redirection_fork(t_instruction *inst)
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->infile);
+		inst->infile = -2;
 	}
-	if (inst->outfile != -2)
+	if (inst->outfile >= 0)
 	{
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
@@ -213,6 +214,7 @@ void	redirection_fork(t_instruction *inst)
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->outfile);
+		inst->outfile = -2;
 	}
 }
 
@@ -223,47 +225,46 @@ void	reset_redirection(t_instruction *inst)
 		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
 		{
 			g_error = 1;
-			close(inst->s_infile);
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->s_infile);
+		inst->s_infile = -2;
 	}
 	if (inst->outfile >= 0)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
 		{
 			g_error = 1;
-			close(inst->s_outfile);
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
 		close(inst->s_outfile);
+		inst->s_outfile = -2;
 	}
 }
 
 
-int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
+int	exec(t_instruction *inst, t_env_info *env)
 {
 	char	*path;
 	int		pid;
 	int		stat;
 
-	if (inst == NULL)
-		return (-1);
-	if (inst->command == NULL)
-		return (-1);
+	// printf("infd  : %d	outfd : %d\n", inst->infile, inst->outfile);
+	if (inst == NULL || inst->command == NULL)
+		return (printf("return\n"), -1);
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
-		return (free_str(inst->command), -1);
+		return (close_fd(inst), free_str(inst->command), -1);
 	g_error = 0;
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (g_error);
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
-		return (free_str(inst->command), g_error);
+		return (close_fd(inst), free_str(inst->command), g_error);
 	pid = fork();
 	if (pid == -1)
 	{
 		g_error = 1;
-		return (free(path), free_str(inst->command), g_error);
+		return (close_fd(inst), free(path), free_str(inst->command), g_error);
 	}
 	if (pid == 0)
 	{
@@ -273,6 +274,7 @@ int	exec(t_instruction *inst, t_env_info *env, int has_ign_sig)
 		return (free(path), free_str(inst->command), g_error);
 	}
 	ign_signals(env->act);
+	close_fd(inst);
 	waitpid(pid, &stat, 0);
 	reset_signals(env->act);
 	if (WIFSIGNALED(stat))

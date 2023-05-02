@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 22:38:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 15:26:34 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,14 @@ void	free_str(char **str)
 
 void	free_env(t_env_info *env)
 {
-	free_str(env->env);
-	free_tree(&(env->tree));
-	free(env->fds_heredocs);
-	free(env);
+	if (env != NULL)
+	{
+		free_str(env->env);
+		free_tree(&(env->tree));
+		free(env->fds_heredocs);
+		free(env);
+	}
+	env = NULL;
 }
 
 int	is_alpha(char c)
@@ -87,18 +91,26 @@ int	ft_getenv(char **env, char *str)
 	return (-1);
 }
 
-void	close_fd(t_env_info *env)
+void	close_fd_heredocs(t_env_info *env)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (i <= env->len_heredocs)
 	{
-		if (env->fds_heredocs[i] != -1)
+		if (env->fds_heredocs[i] >= 0)
 			close(env->fds_heredocs[i]);
 		i++;
 	}
 	free(env->fds_heredocs);
 	env->fds_heredocs = NULL;
 	env->len_heredocs = 0;
+}
+
+void	close_fd(t_instruction *inst)
+{
+	if (inst->infile >= 0)
+		close(inst->infile);
+	if (inst->outfile >= 0)
+		close(inst->outfile);
 }

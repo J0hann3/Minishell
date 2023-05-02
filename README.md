@@ -115,3 +115,5 @@ echo <<hey $?
 non interactive : readline writes a prompt
 
 cat <<fin&& <<fin -> probleme ?
+
+cat <, hey			-> seg fault

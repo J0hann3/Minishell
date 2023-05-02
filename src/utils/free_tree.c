@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 22:13:12 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/12 16:43:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 15:15:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	free_tree(t_ast **tree)
 {
 	t_ast	*tmp;
+
 	if (tree == NULL || *tree == NULL)
 		return ;
 	tmp = *tree;

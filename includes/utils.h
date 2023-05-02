@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 17:37:11 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:07:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@ char	*ft_strnjoin(char *s1, char const *s2, size_t size);
 int		ft_strcmp(const char *s1, const char *s2);
 void	free_tree(t_ast **tree);
 void	free_env(t_env_info *env);
+void	close_fd_heredocs(t_env_info *env);
+void	close_fd(t_instruction *inst);
 
 #endif
