@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 17:03:10 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 17:34:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,10 @@ int	open_fd(char *input)
 bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 {
 	size_t	i;
+	bool	is_use_heredoc;
 
 	i = 0;
+	is_use_heredoc = false;
 	while (input[i])
 	{
 		if (input[i] == '\"' || input[i] == '\'')
@@ -149,6 +151,8 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 			instruc->infile = read_fd(input + i);
 			if (instruc->infile == -1)
 			{
+				if (fd_heredocs != -1 && is_use_heredoc == false)
+					close(fd_heredocs);
 				perror("Error");
 				return (false);
 			}
@@ -159,12 +163,13 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 				close(instruc->infile);
 			if (!heredoc_fd(input + i))
 			{
-				// close(fd_heredocs);
+				if (fd_heredocs != -1 && is_use_heredoc == false)
+					close(fd_heredocs);
 				perror("Error");
 				return (false);
 			}
 			if (fd_heredocs != -1)
-				instruc->infile = fd_heredocs;
+				(instruc->infile = fd_heredocs, is_use_heredoc = true);
 		}
 		else if (input[i] == '>')
 		{
@@ -173,6 +178,8 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 			instruc->outfile = open_fd(input + i);
 			if (instruc->outfile == -1)
 			{
+				if (fd_heredocs != -1 && is_use_heredoc == false)
+					close(fd_heredocs);
 				perror("Error");
 				return (false);
 			}
