@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/29 17:46:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 19:22:09 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,4 +187,12 @@ void	ft_bzero(void *s, size_t n)
 	i = 0;
 	while (i < n)
 		((char *)s)[i++] = 0;
+}
+
+char	*string_insert(const char *string, const char *to_insert, size_t index)
+{
+	
+
+
+	return (NULL);
 }

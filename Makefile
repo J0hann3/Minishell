@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/29 23:52:19 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/02 19:06:08 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ CFLAGS = -g -Wall -Wextra #-fsanitize=address -Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
-HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h signals.h
+HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h \
+				signals.h wildcard.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
@@ -68,6 +69,9 @@ SRC_HEREDOCS = heredocs.c \
 
 SIGNALS = signals/
 SRC_SIGNALS = signals.c
+
+WILDCARD = wildcard/
+SRC_WILDCARD = wildcard.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
@@ -75,6 +79,7 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
 			$(addprefix $(HEREDOCS), $(SRC_HEREDOCS)) \
+			$(addprefix $(WILDCARD), $(SRC_WILDCARD)) \
 			main.c
 
 SRC_DIR = ./src/
@@ -112,6 +117,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(UTILS)
 	mkdir -p $(OBJ_DIR)$(SIGNALS)
 	mkdir -p $(OBJ_DIR)$(HEREDOCS)
+	mkdir -p $(OBJ_DIR)$(WILDCARD)
 
 clean:
 	rm -rf $(OBJ_DIR)

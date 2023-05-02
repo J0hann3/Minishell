@@ -118,3 +118,5 @@ cat <<fin&& <<fin -> probleme ?
 g      && (dfghj) ghj		->need to write error
 
 refaire expand $ ambigous redirection
+
+change expandname file to expand_dollar
