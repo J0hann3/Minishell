@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 16:24:59 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:28:56 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*get_warning_message(char *ender)
 
 	res = ft_strjoin3("here-document delimited by end-of-file (wanted `",
 			ender, "')");
+	if (!res)
+		mem_exh("heredocs");
 	return (res);
 }
 
@@ -31,7 +33,8 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 			break ;
 		else if (!input)
 		{
-			ft_write_error("warning", NULL, get_warning_message(ender)); // leakkkkkkk
+			input = get_warning_message(ender);
+			ft_write_error("warning", NULL, input); // rajouter num ligne si besoin/envie a l'aide
 			break ;
 		}
 		write(fd, input, ft_strlen(input));

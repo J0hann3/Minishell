@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 17:27:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:27:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	is_ambigous = false;
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
-		return (printf("MALLOC\n"), NULL);
+		return (mem_exh("token creation"), NULL);
 	instruc->infile = -2;
 	instruc->outfile = -2;
 	instruc->s_infile = -2;
@@ -62,13 +62,13 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	if(!expand_heredocs(&fd_heredocs, env_info))
 		return (free_instructions(instruc), g_error = 1, NULL);
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
-	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command, fd_heredocs)))
+	if (!expanded_command || is_ambigous || !open_all_fds(instruc, expanded_command, fd_heredocs))
 		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
 	// expand *
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	free(expanded_command);
 	if (!instruc->command)
-		return (free_instructions(instruc), g_error = 1, NULL); 
+		return (free_instructions(instruc), g_error = 1, mem_exh("token creation"), NULL); 
 	i = 0;
 	while (instruc->command[i])
 		remove_quotes(instruc->command[i++]);

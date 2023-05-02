@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 17:18:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:27:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,13 @@ static char *get_error_token(char *input)
 
 /**
  * @brief Checks if the given quote is closed, forward input to the
- * closing quote, and set error_token if closing quote does not exist
+ * closing quote, and write error if closing quote does not exist
  * 
  * @param input 
- * @param error_token 
  * @return true 
  * @return false 
  */
-bool	is_quote_closed(char **input, char **error_token)
+bool	is_quote_closed(char **input)
 {
 	char		quote;
 	const char	*error_quote = "unexpected EOF while looking for matching \
@@ -95,24 +94,23 @@ bool	is_quote_closed(char **input, char **error_token)
 			return (true);
 		(*input)++;
 	}
-	*error_token = ft_strdup(error_quote);
+	ft_write_error(NULL, NULL, (char *)error_quote);
 	return (false);
 }
 
 /**
  * @brief Check if the redirection has a valid argument
  * Forward input at the last charcater of the argument.
- * If no valid argument, set error_token to the redirection.
+ * If no valid argument, write errorof the redirection.
  * This function call heredoc open if encounterd.
  * This function can call : 
  * 		is_quote_closed
  * 		do_here_docs
  * @param input 
- * @param error_token 
  * @return true 
  * @return false 
  */
-bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
+bool	is_redirection_ok(char **input, t_env_info *env)
 {
 	char	*start;
 	bool	is_here_doc;
@@ -134,12 +132,12 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
 			&& !is_parenthesis(**input) && !is_redirection(**input))
 	{
 		if ((**input == '\'' || **input == '"')
-			&& !is_quote_closed(input, error_token))
+			&& !is_quote_closed(input))
 				return (false);
 		(*input)++;
 	}
 	if ((*input) == start)
-		return (*error_token = get_error_token((*input)), false); // enlever une ligne norme ici
+		return (ft_write_error(NULL, NULL, get_error_token(*input)), false);
 	(*input)--;
 	if (is_here_doc)
 	{
@@ -167,27 +165,44 @@ bool	is_redirection_ok(char **input, char **error_token, t_env_info *env)
  * @brief A operator considered ok is an operator with valid arguments
  * before (left) and after (right) itself.
  * Forward input to after the right argument.
- * Set error_token if the arguments are not both valid are not valid.
+ * Write error if the arguments are not both valid are not valid.
  * This function can call and return value of : 
  * 		is_quote_closed
  * @param input 
- * @param error_token 
  * @return true 
  * @return false 
  */
-bool	is_operator_ok(char **input, char **error_token, char *start_ptr)
+bool	is_operator_ok(char **input, char *start_ptr)
 {
 	bool	boolean;
-	boolean = (has_argument_left(start_ptr, *input, error_token)
-		&& has_argument_right(*input, error_token));
+
+	boolean = (has_argument_left(start_ptr, *input)
+		&& has_argument_right(*input));
 	if (is_and_or(*input))
 		(*input)++;
-	return (boolean);					//Jojo changes this
+	return (boolean);
+}
+
+static const char *get_par_error(char *par_start) //TODO
+{
+	size_t	i;
+
+	printf("ar_start : %c\n", *par_start);
+	par_start++;
+	i = 0;
+	while (par_start[i] && !is_meta_character(par_start[i])
+			&& !is_wspace(par_start[i]))
+	{
+		i++;
+	}
+	par_start[i] = 0;
+	return (par_start);
 }
 
 bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 {
 	char *tmp;
+
 	if (par_start == start_ptr)
 		return (true);
 	par_start--;
@@ -208,20 +223,20 @@ bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 		return (true);
 	if (tmp - par_start == 2 && *(par_start + 1) == '|')
 		return (true);
-	return (false);
+	tmp = ft_strjoin3("syntax error near unexpected token `", get_par_error(par_start), "'");
+	return (ft_write_error(NULL, NULL, tmp), free(tmp), false);
 }
 
 /**
  * @brief Checks if the given parenthesis is closed, forward input to the
- * closing parenthesis, and set error_token if closing parenthesis does not exist
+ * closing parenthesis, and write error if closing parenthesis does not exist
  * Will check if the parenthesis has a left 
  * 
  * @param input 
- * @param error_token 
  * @return true 
  * @return false 
  */
-bool	has_closing_parenthesis(char **input, char **error_token, t_env_info *env, char *start_ptr)
+bool	has_closing_parenthesis(char **input, t_env_info *env, char *start_ptr)
 {
 	char	*par_start;
 	const char *error_parenth = "unexpected EOF while looking for matching \
@@ -233,7 +248,7 @@ bool	has_closing_parenthesis(char **input, char **error_token, t_env_info *env, 
 		(*input)++;
 	if (**input == ')')
 	{
-		*error_token = ft_strdup("syntax error near unexpected token `)'");
+		ft_write_error(NULL, NULL, "syntax error near unexpected token `)'"); //write error
 		return (false);
 	}
 	if (!is_parenthesis_left_ok(par_start, start_ptr))
@@ -242,53 +257,54 @@ bool	has_closing_parenthesis(char **input, char **error_token, t_env_info *env, 
 	{
 		if (**input == ')')
 			return (true);
-		else if (**input == '(' && !has_closing_parenthesis(input, error_token, env, start_ptr))
+		else if (**input == '(' && !has_closing_parenthesis(input, env, start_ptr))
 			return (false);
 		else if ((**input == '\'' || **input == '"')
-				&& !is_quote_closed(input, error_token))
+				&& !is_quote_closed(input))
 			return (false);
 		else if ((**input == '<' || **input == '>')
-				&& !is_redirection_ok(input, error_token, env))
+				&& !is_redirection_ok(input, env))
 			return (false);
-		else if (is_operator(*input))		//Jojo add this case
+		else if (is_operator(*input))
 		{
-			if (!is_operator_ok(input, error_token, par_start))
+			if (!is_operator_ok(input, par_start))
 				return (false);
 			else
 			{
 				env->len_heredocs++;
 				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
 				if (!env->fds_heredocs)
-					return (false); // write error
+					return (mem_exh("heredocs"), false);
 				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}
 		(*input)++;
 	}
-	*error_token = ft_strdup(error_parenth);
+	ft_write_error(NULL, NULL, (char *)error_parenth);
 	return (false);
 }
 
 /**
  * @brief
  * return -1 on unexpected error
- * return 0 if syntax error and set the error_token to the syntax error chars
+ * return 0 if syntax error and the write the error at the syntax error chars
  * return 1 if the syntax is ok
  * 
  * @param input 
- * @param error_token 
  * @return int 
  */
-int	check_syntax_at(char **input, char **error_token, char *start_ptr, t_env_info *env)
+int	check_syntax_at(char **input, char *start_ptr, t_env_info *env)
 {
 	if (**input == '\'' || **input == '"')
-		return (is_quote_closed(input, error_token));
+		return (is_quote_closed(input));
 	if (**input == '<' || **input == '>')
-		return (is_redirection_ok(input, error_token, env));
+		return (is_redirection_ok(input, env));
 	if (is_operator(*input))
-		return (is_operator_ok(input, error_token, start_ptr) * 2);
+		return (is_operator_ok(input, start_ptr) * 2);
 	if (**input == '(')
-		return (has_closing_parenthesis(input, error_token, env, start_ptr));
+		return (has_closing_parenthesis(input, env, start_ptr));
+	if (**input == ')')
+		return (ft_write_error(NULL, NULL, "syntax error near unexpected token `)'"), false);
 	return (-1);
 }
 
@@ -298,34 +314,31 @@ int	check_syntax_at(char **input, char **error_token, char *start_ptr, t_env_inf
  * 0 if the input is accepted
  * 1 if the input is empty
  * 2 if the input has a syntax error
+ * 
  * @param input 
  * @return int 
  */
 int	syntax_errors(char *input, t_env_info *env)
 {
-	char	*error_token;
 	char	*start_ptr;
 	int		ret_val;
 
 	env->len_heredocs = 0;
 	env->fds_heredocs = malloc(1 * sizeof(int));
 	if (!env->fds_heredocs)
-		return (2); // write error
+		return (mem_exh("heredocs"), 2);
 	env->fds_heredocs[env->len_heredocs] = -1;
-	error_token = NULL;
 	remove_multiple_wspaces(input);
 	start_ptr = input;
 	while (*input)
 	{
 		if (is_syntax_char(input))
 		{
-			ret_val = check_syntax_at(&input, &error_token, start_ptr, env);
+			ret_val = check_syntax_at(&input, start_ptr, env);
 			if (ret_val < 1) //error syntax
 			{
 				if (env->fds_heredocs[0] == -2)
 					return (130);
-				ft_write_error(NULL, NULL, error_token);
-				free(error_token);
 				return (2); // write return message here with error_token
 			}
 			else if (ret_val == 2) //new operator for heredocs
@@ -333,7 +346,7 @@ int	syntax_errors(char *input, t_env_info *env)
 				env->len_heredocs++;
 				env->fds_heredocs = ft_realloc(env->fds_heredocs, env->len_heredocs * sizeof(int), (env->len_heredocs + 1) * sizeof(int));
 				if (!env->fds_heredocs)
-					return (2); // write error
+					return (mem_exh("heredocs"), 2);
 				env->fds_heredocs[env->len_heredocs] = -1;
 			}
 		}
@@ -378,8 +391,7 @@ bool	has_parenthesis_not_closed(const char *input)
 	return (depth != 0);
 }
 
-bool	has_argument_left(const char *start_input, char *op_ptr, 
-						char **error_token)
+bool	has_argument_left(const char *start_input, char *op_ptr)
 {
 	char	*tmp;
 
@@ -388,26 +400,25 @@ bool	has_argument_left(const char *start_input, char *op_ptr,
 	{
 		tmp--;
 		if (*tmp == '(')
-			return (*error_token = get_error_token(op_ptr), false);
+			return (ft_write_error(NULL, NULL, get_error_token(op_ptr)), false);
 		if (tmp != start_input && is_operator(tmp - 1))
-			return (*error_token = get_error_token(op_ptr), false);
+			return (ft_write_error(NULL, NULL, get_error_token(op_ptr)), false);
 		else if (!is_wspace(*tmp))
 			return (true);
 	}
-	*error_token = get_error_token(tmp);
+	ft_write_error(NULL, NULL, get_error_token(tmp));
 	return (false);
 }
 
 /**
  * @brief Get the right argument of the operator.
- * Set error_token if the argument is not valid.
+ * Write error if the argument is not valid.
  * 
  * @param op_ptr 
- * @param error_token 
  * @return true 
  * @return false 
  */
-bool	has_argument_right(char *op_ptr, char **error_token)
+bool	has_argument_right(char *op_ptr)
 {
 	char	*op_cpy;
 
@@ -418,11 +429,11 @@ bool	has_argument_right(char *op_ptr, char **error_token)
 	while (*op_ptr)
 	{
 		if (*op_ptr == ')')
-			return (*error_token = get_error_token(op_cpy), false);
+			return (ft_write_error(NULL, NULL, get_error_token(op_cpy)), false);
 		else if (!is_wspace(*op_ptr))
 			return (true);
 		op_ptr++;
 	}
-	*error_token = get_error_token(op_cpy);
+	ft_write_error(NULL, NULL, get_error_token(op_cpy));
 	return (false);
 }

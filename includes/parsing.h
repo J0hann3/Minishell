@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:13:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:29:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,8 @@ bool	is_double_meta(const char *c);
 int		syntax_errors(char *input, t_env_info *env);
 bool	has_parenthesis_not_closed(const char *input);
 bool	quotes_not_closed(const char *input);
-bool	has_argument_right(char *op_ptr, char **error_token);
-bool	has_argument_left(const char *start_input, char *op_ptr,
-					char **error_token);
+bool	has_argument_right(char *op_ptr);
+bool	has_argument_left(const char *start_input, char *op_ptr);
 bool	is_redirection(char c);
 bool	is_parenthesis(char c);
 

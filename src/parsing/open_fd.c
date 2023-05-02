@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 17:34:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:28:09 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ char	*get_file_name(char *input, size_t *size)
 		else
 			cpy[(*size)++] = input[i++];
 	}
-	// cpy[(*size)] = 0;
 	return (ft_strndup(input, (*size)));
 }
 
@@ -79,7 +78,7 @@ int	read_fd(char *input)
 		has_space = true;
 	file_name = get_file_name(input, &size);
 	if (!file_name)
-		return (-1);
+		return (mem_exh("open file descriptor"), -1);
 	file_name[size] = 0;
 	replace_name(&input, ft_strlen(file_name), has_space);
 	fd = open(file_name, O_RDONLY);
