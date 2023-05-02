@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 15:52:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 17:08:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ int	main(int argc, char *argv[], char *envp[])
 		tcsetattr(STDIN_FILENO, TCSANOW, &termios);
 		input = readline(prompt);
 		if (!input)
-		{
-			printf("dfh\n");
 			break ;
-		}
 		if (input[0] == '\0')
 		{
 			free(input);
@@ -74,7 +71,6 @@ int	main(int argc, char *argv[], char *envp[])
 		close_fd_heredocs(env);
 		if (env->tree == NULL)
 		{
-			printf("dsdfghjkl;fh\n");
 			free(input);	
 			break ;
 		}

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 15:45:44 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 16:59:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ static void	free_instructions(t_instruction *instruc)
 		close(instruc->infile);
 	if (instruc->outfile >= 0)
 		close(instruc->outfile);
-	if (instruc->outerror >= 0)
-		close(instruc->outerror);
 	if (instruc->command)
 	{
 		i = 0;
@@ -56,12 +54,16 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	is_ambigous = false;
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
-		return (printf("MALLOC\n"), NULL); //
+		return (printf("MALLOC\n"), NULL);
+	instruc->infile = -2;
+	instruc->outfile = -2;
+	instruc->s_infile = -2;
+	instruc->s_outfile = -2;
 	if(!expand_heredocs(&fd_heredocs, env_info))
 		return (free_instructions(instruc), g_error = 1, NULL);
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
-	if(!expanded_command || is_ambigous || !open_all_fds(instruc, expanded_command, fd_heredocs))
-		return (printf("hey\n"),free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
+	if(!(expanded_command && !is_ambigous && open_all_fds(instruc, expanded_command, fd_heredocs)))
+		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
 	// expand *
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	free(expanded_command);

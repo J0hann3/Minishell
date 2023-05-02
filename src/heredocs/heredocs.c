@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:18:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 16:22:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,5 +146,6 @@ int	do_here_docs(char *input, t_env_info *env_info, int *fd_r)
 	if (!open_tmp_file(fd_r, &fd_w))
 		return (free(buffer), -1);
 	error = prompt_here(buffer, fd_w, *fd_r, env_info);
+	free(buffer);
 	return (error);
 }

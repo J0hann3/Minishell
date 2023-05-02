@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 22:24:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 16:24:59 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (free(ender), close(fd_r), close(fd_w), 2);
+		return (2);
 	if (pid == 0)
 	{
-		add_error_signals(env->act);
 		close(fd_r);
 		child(ender, fd_w, env, input);
 	}
@@ -74,5 +73,5 @@ int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 			stat = WEXITSTATUS(stat);
 		close(fd_w);
 	}
-	return (free(ender), stat);
+	return (stat);
 }

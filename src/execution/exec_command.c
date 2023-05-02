@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 15:49:24 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 17:10:55 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,9 +249,8 @@ int	exec(t_instruction *inst, t_env_info *env)
 	int		pid;
 	int		stat;
 
-	// printf("infd  : %d	outfd : %d\n", inst->infile, inst->outfile);
 	if (inst == NULL || inst->command == NULL)
-		return (printf("return\n"), -1);
+		return (-1);
 	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
 		return (close_fd(inst), free_str(inst->command), -1);
 	g_error = 0;
@@ -276,11 +275,12 @@ int	exec(t_instruction *inst, t_env_info *env)
 	ign_signals(env->act);
 	close_fd(inst);
 	waitpid(pid, &stat, 0);
+	printf("continue\n");
 	reset_signals(env->act);
 	if (WIFSIGNALED(stat))
-		return (g_error = 128 + WTERMSIG(stat), g_error);
+		g_error = 128 + WTERMSIG(stat);
 	else
-		return (g_error = WEXITSTATUS(stat), g_error);
+		g_error = WEXITSTATUS(stat);
 	free(path);
 	free_str(inst->command);
 	return (g_error);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 15:26:34 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 17:00:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,14 @@ void	close_fd_heredocs(t_env_info *env)
 
 void	close_fd(t_instruction *inst)
 {
+	if (inst == NULL)
+		return ;
 	if (inst->infile >= 0)
 		close(inst->infile);
 	if (inst->outfile >= 0)
 		close(inst->outfile);
+	if (inst->s_infile >= 0)
+		close(inst->s_infile);
+	if (inst->s_outfile >= 0)
+		close(inst->s_outfile);
 }
