@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:14:48 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/02 18:30:51 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,5 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 		res = ft_strnjoin(res, input + begin_join, i - begin_join);
 	if (!res)
 		mem_exh("dollar expand");
-	printf("res : '%s'\n", res);
 	return (res);
 }

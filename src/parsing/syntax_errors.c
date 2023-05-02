@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:27:11 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:30:56 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,6 @@ static const char *get_par_error(char *par_start) //TODO
 {
 	size_t	i;
 
-	printf("ar_start : %c\n", *par_start);
 	par_start++;
 	i = 0;
 	while (par_start[i] && !is_meta_character(par_start[i])

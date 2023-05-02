@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 17:10:55 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 18:30:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 	ign_signals(env->act);
 	close_fd(inst);
 	waitpid(pid, &stat, 0);
-	printf("continue\n");
 	reset_signals(env->act);
 	if (WIFSIGNALED(stat))
 		g_error = 128 + WTERMSIG(stat);
