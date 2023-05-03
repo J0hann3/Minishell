@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 18:29:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 15:58:37 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	mem_exh(const char *context);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char *s1, char const *s2);
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3);
+char	*ft_strjoin_slash(char *s1, char *s2, int add_slash);
 char	*ft_strnjoin(char *s1, char const *s2, size_t size);
 int		ft_strcmp(const char *s1, const char *s2);
 void	free_tree(t_ast **tree);

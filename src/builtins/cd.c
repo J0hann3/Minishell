@@ -6,60 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 11:23:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:03:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
-{
-	char	*res;
-	size_t	len;
-	size_t	j;
-
-	len = ft_strlen(s1) + ft_strlen(s2);
-	if (add_slash == 1)
-		++len;
-	res = malloc(sizeof(char) * len + 1);
-	if (res == NULL)
-		return (NULL);
-	j = -1;
-	while (s1[++j])
-		res[j] = s1[j];
-	if (add_slash == 1)
-	{
-		res[j] = '/';
-		++j;
-	}
-	len = -1;
-	while (s2[++len])
-	{
-		res[j] = s2[len];
-		j++;
-	}
-	res[j] = 0;
-	return (res);
-}
-
-char *find_absolute_path(char *str)
-{
-	char	*pwd;
-	char	*path;
-	int		len;
-	int		add_slash;
-
-	add_slash = 0;
-	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
-		return (NULL);
-	len = ft_strlen(pwd);
-	if (len != 0 && pwd[len - 1] != '/')
-		add_slash = 1;
-	path = ft_strjoin_slash(pwd, str, add_slash);
-	free(pwd);
-	return (path);
-}
+int	canonical_form(char *str);
 
 static void	update_env(t_env_info	*env, char *str)
 {
@@ -114,115 +67,6 @@ static int	check_arg(char **arg)
 		return (free_str(arg), 0);
 	}
 	return (1);
-}
-
-//clean path of pwd
-
-static int	delete_previous_dir(char *str, int index)
-{
-	int	letter_suppr;
-	int	i;
-	int	nb_slash;
-
-	nb_slash = 0;
-	letter_suppr = 0;
-	i = index;
-	while (index >= 0)
-	{
-		while (index > 0 && str[index] == '\0')
-			index--;
-		if (index > 0 && i != index && str[index] == '/')
-			nb_slash++;
-		if (nb_slash == 2 || index <= 0)
-			break ;
-		str[index] = '\0';
-		letter_suppr++;
-		index--;
-	}
-	return (letter_suppr);
-}
-
-static int	delete_dot_slash(char *str, int index)
-{
-	int	letter_suppr;
-	int	i;
-
-	letter_suppr = 0;
-	i = index;
-	while (index >= 0)
-	{
-		while (index > 0 && str[index] == '\0')
-			index--;
-		if (index <= 0 || (i != index && str[index] == '/'))
-			break ;
-		str[index] = '\0';
-		letter_suppr++;
-		index--;
-	}
-	return (letter_suppr);
-}
-
-static int	trim_slash(char *str, int i)
-{
-	int	letter_suppr;
-
-	letter_suppr = 0;
-	while (i >= 0)
-	{
-		if (str[i] == '/')
-		{
-			str[i] = '\0';
-			letter_suppr++;
-			i--;
-		}
-		else
-			break ;
-	}
-	return (letter_suppr);
-}
-
-int	canonical_form(char *str)
-{
-	int		i;
-	int		letter_suppr;
-	int		nb_dot;
-	int		nb_slash;
-
-	i = 0;
-	letter_suppr = 0;
-	while (str[i] != '\0')
-	{
-		nb_dot = 0;
-		while (str[i] == '.')
-		{
-			++nb_dot;
-			++i;
-		}
-		nb_slash = 0;
-		while (str[i] != '\0' && str[i] == '/' && str[i + 1] == '/')
-		{
-			++nb_slash;
-			++i;
-		}
-		if (nb_slash >= 1)
-			letter_suppr += trim_slash(str, i - 1);
-		if (str[i] == '/' || str[i] == '\0')
-		{
-			if (str[i] == '\0')
-				i = i - 1;
-			if (nb_dot == 2)
-				letter_suppr += delete_previous_dir(str, i);
-			else if (nb_dot == 1)
-				letter_suppr += delete_dot_slash(str, i);
-			if (str[i + 1] == '\0')
-			{
-				++i;
-				break ;
-			}
-		}
-		++i;
-	}
-	return (i - letter_suppr);
 }
 
 static int	add_first_slash(char *str, int len_path, int real_len)
@@ -329,5 +173,3 @@ void	ft_cd(char **arg, t_env_info	*env)
 	update_env(env, path);
 	free_str(arg);
 }
-
-

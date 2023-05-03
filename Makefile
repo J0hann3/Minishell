@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
+#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/04/29 23:52:19 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/03 16:17:42 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,15 +23,20 @@ HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
 SRC_EXECUTION =	exec_command.c \
-				binary_tree.c
+				binary_tree.c \
+				redirection.c \
+				pipe.c \
+				path.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
 				env.c \
 				export.c \
+				export2.c \
 				exit.c \
 				pwd.c \
 				unset.c \
+				canonic_path.c \
 				cd.c
 
 UTILS = utils/
