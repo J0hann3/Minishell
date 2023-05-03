@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 11:58:14 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 15:54:47 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static char	*explore_path(char *name, char *env_path)
 	i = 0;
 	var_path = ft_split(env_path, ':');
 	if (var_path == NULL)
-		return (NULL);
+		return (NULL);		//now write command not found
 	trim_name_var(var_path);
 	while (var_path[i] != NULL)
 	{
@@ -185,6 +185,8 @@ void	redirection(t_instruction *inst)
 			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
+			close(inst->s_infile);
+			inst->s_infile = -2;
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}
@@ -198,6 +200,8 @@ void	redirection(t_instruction *inst)
 			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
+			g_errclose(inst->s_outfile);
+			inst->s_outfile = -2;
 			g_error = 1;
 			ft_write_error(NULL, NULL, strerror(errno));
 		}

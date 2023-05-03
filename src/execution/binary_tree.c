@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 11:28:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 15:43:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	g_error = 0;
 	pid = fork();
 	if (pid == -1)
-		return (ft_write_error("pipe", NULL, strerror(errno)), g_error = 1, (void)0);
+		return (close(fildes[0]), close(fildes[1]), ft_write_error("pipe", NULL, strerror(errno)), g_error = 1, (void)0);
 	if (pid == 0)
 	{
 		none_interactive(env->act);
@@ -68,7 +68,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			if (dup2(fd_tmp, STDIN_FILENO) == -1)
 			{
 				free_env(env);
-				(g_error = 1, close(fd_tmp), ft_write_error("pipe", NULL, strerror(errno)));
+				(g_error = 1, close(fd_tmp), ft_write_error("pipe", NULL, strerror(errno)));		//attention close fd == sigpipe else leaks fd
 				exit(EXIT_FAILURE);
 			}
 			close(fd_tmp);
