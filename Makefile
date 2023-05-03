@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/03 16:17:42 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/03 16:24:09 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,8 @@ SRC_HEREDOCS = heredocs.c \
 			get_next_line_utils.c \
 
 SIGNALS = signals/
-SRC_SIGNALS = signals.c
+SRC_SIGNALS = signals.c \
+			sig_handler.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \

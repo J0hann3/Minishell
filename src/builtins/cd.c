@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:03:32 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:32:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static void	update_env(t_env_info	*env, char *str)
 			res = ft_strjoin("OLD", env->env[i_pwd]);
 			free(env->env[i_pwd]);
 			if (res == NULL)
-				return (ft_write_error("cd", str, strerror(errno)), free(str), g_error = 1, (void)0);
+				return (ft_write_error("cd", str, strerror(errno)), free(str),
+					g_error = 1, (void)0);
 			free(env->env[i_old_pwd]);
 			env->env[i_old_pwd] = res;
 		}
@@ -38,7 +39,8 @@ static void	update_env(t_env_info	*env, char *str)
 			free(env->env[i_pwd]);
 		env->env[i_pwd] = ft_strjoin("PWD=", str);
 		if (env->env[i_pwd] == NULL)
-			return (env->env[i_pwd] = str, ft_write_error("cd", str, strerror(errno)), g_error = 1, (void)0);
+			return (ft_write_error("cd", str, strerror(errno)), g_error = 1,
+				env->env[i_pwd] = str, (void)0);
 		free(str);
 		return ;
 	}
@@ -73,7 +75,7 @@ static int	add_first_slash(char *str, int len_path, int real_len)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
 	j = 0;
 	while (j < len_path)
@@ -152,14 +154,14 @@ void	ft_cd(char **arg, t_env_info	*env)
 	{
 		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free_str(arg), (void)0);
+		return (free_str(arg));
 	}
 	len = ft_strlen(path);
 	if (chdir(path) == -1)
 	{
 		g_error = 1;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free_str(arg), free(path), (void)0);
+		return (free_str(arg), free(path));
 	}
 	len_path = canonical_form(path);
 	len_path = add_first_slash(path, len_path, len);
@@ -168,7 +170,7 @@ void	ft_cd(char **arg, t_env_info	*env)
 	{
 		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return(free_str(arg));
+		return (free_str(arg));
 	}
 	update_env(env, path);
 	free_str(arg);

@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:18:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:39:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char *find_absolute_path(char *str)
+char	*find_absolute_path(char *str)
 {
 	char	*pwd;
 	char	*path;
@@ -60,7 +60,7 @@ static void	trim_name_var(char **str)
 			i++;
 			tmp = ft_strdup((char *)(str[0] + i));
 			if (tmp == NULL)
-				return (g_error = 2, ft_write_error(NULL, NULL, strerror((errno))));
+				return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)));
 			free(str[0]);
 			str[0] = tmp;
 			return ;
@@ -96,7 +96,7 @@ static char	*explore_path(char *name, char *env_path)
 		{
 			fd = open(path, O_DIRECTORY);
 			if (fd != -1)
-				return(close(fd), free_str(var_path), close(fd), NULL);
+				return (close(fd), free_str(var_path), close(fd), NULL);
 			return (free_str(var_path), path);
 		}
 		free(path);
@@ -119,21 +119,23 @@ char	*find_path_command(char *str, t_env_info *env)
 		else
 			path = ft_strdup(str);
 		if (path == NULL)
-			return (g_error = 2, ft_write_error(NULL, NULL, strerror((errno))), NULL);
+			return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)),
+				NULL);
 		if (access(path, F_OK) == 0)
 		{
 			if (access(path, X_OK) == 0)
 			{
 				fd = open(path, O_DIRECTORY);
 				if (fd != -1)
-					return(close(fd), g_error = 127, ft_write_error(NULL, str, "Is a directory"), NULL);
+					return (close(fd), g_error = 127,
+						ft_write_error(NULL, str, "Is a directory"), NULL);
 				return (path);
 			}
 			else
 			{
 				g_error = 126;
 				ft_write_error(NULL, str, strerror(errno));
-				return(free(path), NULL);
+				return (free(path), NULL);
 			}
 		}
 		g_error = 127;
@@ -155,4 +157,3 @@ char	*find_path_command(char *str, t_env_info *env)
 	}
 	return (path);
 }
-

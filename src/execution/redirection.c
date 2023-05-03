@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:12:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:13:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:36:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	redirection(t_instruction *inst)
 	{
 		inst->s_infile = dup(STDIN_FILENO);
 		if (inst->s_infile == -1)
-			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
+			return (g_error = 1, ft_write_error("file", NULL, strerror(errno)));
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
 			close(inst->s_infile);
@@ -41,7 +41,7 @@ void	redirection(t_instruction *inst)
 	{
 		inst->s_outfile = dup(STDOUT_FILENO);
 		if (inst->s_outfile == -1)
-			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
+			return (g_error = 1, ft_write_error("file", NULL, strerror(errno)));
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
 			close(inst->s_outfile);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:17:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:42:20 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static enum e_meta_character	find_next_meta(t_ast *node)
 {
 	enum e_meta_character	tmp;
-	
+
 	while (node != NULL)
 	{
 		if (node->parent != NULL && node->parent->meta != e_empty)
@@ -38,10 +38,11 @@ static enum e_meta_character	find_next_meta(t_ast *node)
  * @param stat error value of the last command executed
  * @return enum e_meta_character : meta character for the next command
  */
-static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, enum e_meta_character meta_before)
+static enum e_meta_character	skip_or_exec_command(t_ast *tree,
+		t_env_info *env, enum e_meta_character meta_before)
 {
 	enum e_meta_character	meta_next;
-	t_instruction 			*arg;
+	t_instruction			*arg;
 
 	meta_next = find_next_meta(tree);
 	if (g_error == 130 && meta_before != e_empty_new)
@@ -62,7 +63,8 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (g_error == 0)
 		{
-			arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
+			arg = second_parsing(tree->command, tree->size, env,
+					tree->fd_heredocs);
 			exec(arg, env);
 			free(arg);
 			return (meta_next);
@@ -72,7 +74,8 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	{
 		if (g_error != 0)
 		{
-			arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
+			arg = second_parsing(tree->command, tree->size, env,
+					tree->fd_heredocs);
 			exec(arg, env);
 			free(arg);
 			return (meta_next);
@@ -80,6 +83,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
 	}
 	return (meta_before);
 }
+
 /**
  * @brief explore the tree to exec command if needed or skip branch or command
  * 
@@ -88,12 +92,13 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree, t_env_info *env, 
  * @param meta_before meta character before command to exec
  * @param stat error value of the last command executed
  */
-void	explore_tree(t_ast *tree, t_env_info *env, enum e_meta_character meta_before)
+void	explore_tree(t_ast *tree, t_env_info *env,
+		enum e_meta_character meta_before)
 {
 	enum e_meta_character	tmp;
 
 	if (tree == NULL)
-		return;
+		return ;
 	if (g_error == 130 && meta_before != e_empty_new)
 		return ;
 	if (tree->meta != e_empty)

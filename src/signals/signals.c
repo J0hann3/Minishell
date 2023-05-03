@@ -6,28 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/03 15:45:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:23:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	crtl_c_interactive(int sig)		//for main process in interactive mode
-{
-	(void)sig;
-	g_error = 130;
-	write(STDERR_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	error_new_line(int sig)		//for heredoc in child
-{
-	(void)sig;
-	write(STDERR_FILENO, "\n", 1);
-	exit(sig + 128);
-}
+void	crtl_c_interactive(int sig);
+void	error_new_line(int sig);
 
 void	init_signals(struct sigaction act[2])
 {	

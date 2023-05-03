@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:17:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:46:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,27 @@
  * @param stat 	error value of the last command executed
  * @return void
  */
-void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_meta_character m_n)
+void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
+		enum e_meta_character m_n)
 {
 	t_instruction	*arg;
 	int				stat;
 	int				pid;
 	int				fildes[2];
 	static int		fd_tmp = 0;
-	
+
 	if ((m_b == e_and && g_error != 0) || (m_b == e_or && g_error == 0))
 		return ;
 	if (m_b == e_pipe && fd_tmp == 0)
 		return ;
-	if (m_n == e_pipe )
+	if (m_n == e_pipe)
 		if (pipe(fildes) != 0)
-			return (ft_write_error("pipe", NULL, strerror(errno)), g_error = 1, (void)0);
+			return (g_error = 1, ft_write_error("pipe", NULL, strerror(errno)));
 	g_error = 0;
 	pid = fork();
 	if (pid == -1)
-		return (close(fildes[0]), close(fildes[1]), ft_write_error("pipe", NULL, strerror(errno)), g_error = 1, (void)0);
+		return (g_error = 1, close(fildes[0]), close(fildes[1]),
+			ft_write_error("pipe", NULL, strerror(errno)));
 	if (pid == 0)
 	{
 		none_interactive(env->act);
@@ -51,7 +53,9 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			if (dup2(fd_tmp, STDIN_FILENO) == -1)
 			{
 				free_env(env);
-				(g_error = 1, close(fd_tmp), ft_write_error("pipe", NULL, strerror(errno)));		//attention close fd == sigpipe else leaks fd
+				g_error = 1;
+				close(fd_tmp);
+				ft_write_error("pipe", NULL, strerror(errno));		//attention close fd == sigpipe else leaks fd
 				exit(EXIT_FAILURE);
 			}
 			close(fd_tmp);
@@ -61,7 +65,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 			if (dup2(fildes[1], STDOUT_FILENO) == -1)
 			{
 				free_env(env);
-				(g_error = 1, close(fildes[0]), close(fildes[1]), ft_write_error("pipe", NULL, strerror(errno)));
+				(g_error = 1, close(fildes[0]), close(fildes[1]));
+				ft_write_error("pipe", NULL, strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 			close(fildes[0]);

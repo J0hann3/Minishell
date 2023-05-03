@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:06:50 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:10:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:47:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static int	is_valid_name(char *str)
 	equal = 0;
 	while (str[i])
 	{
-		if (is_alpha(str[i]) || str[i] == '_' || str[i] == '=' || is_digit(str[i]))
+		if (is_alpha(str[i]) || str[i] == '_' || str[i] == '='
+			|| is_digit(str[i]))
 		{
 			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
 			{

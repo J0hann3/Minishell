@@ -6,14 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:10:51 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:34:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	trim_invalid_varible(char **arg);
-int	modifie_var(char **arg, char **env, int len_arg);
+int		trim_invalid_varible(char **arg);
+int		modifie_var(char **arg, char **env, int len_arg);
 void	add_new_variable(char **arg, char **env, int len_arg, int len_env);
 
 int	ft_len(char **str)
