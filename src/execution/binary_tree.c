@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 19:25:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:16:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,28 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	g_error = 0;
 	pid = fork();
 	if (pid == -1)
-		return (ft_write_error("fork", NULL, strerror(errno)), g_error = 1, (void)0);
+		return (ft_write_error("pipe", NULL, strerror(errno)), g_error = 1, (void)0);
 	if (pid == 0)
 	{
 		none_interactive(env->act);
 		if (fd_tmp != 0)
 		{
 			if (dup2(fd_tmp, STDIN_FILENO) == -1)
-				ft_write_error("pipe", NULL, strerror(errno));
+			{
+				free_env(env);
+				(g_error = 1, close(fd_tmp), ft_write_error("pipe", NULL, strerror(errno)));
+				exit(EXIT_FAILURE);
+			}
 			close(fd_tmp);
 		}
 		if (m_n == e_pipe)
 		{
-			dup2(fildes[1], STDOUT_FILENO);
+			if (dup2(fildes[1], STDOUT_FILENO) == -1)
+			{
+				free_env(env);
+				(g_error = 1, close(fildes[0]), close(fildes[1]), ft_write_error("pipe", NULL, strerror(errno)));
+				exit(EXIT_FAILURE);
+			}
 			close(fildes[0]);
 			close(fildes[1]);
 		}
@@ -91,7 +100,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b, enum e_
 	}
 	if (m_b == e_pipe && m_n != e_pipe)
 	{
-		waitpid(pid, &stat, 0);
+		if (waitpid(pid, &stat, 0) == -1)
+			(g_error = 1, ft_write_error("pipe", NULL, strerror(errno)));
 		if (WIFSIGNALED(stat))
 			g_error = 128 + WTERMSIG(stat);
 		else

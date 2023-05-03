@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:14:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 19:23:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:03:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ft_pwd(char **arg, t_env_info	*env)
 {
 	char	*str;
-	char	*tmp;
 
 	(void)arg;
 	(void)env;

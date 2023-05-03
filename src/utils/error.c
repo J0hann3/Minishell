@@ -6,11 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 19:43:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:07:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	ft_write_error_2(const char *command,
+			const char *argument, const char *message);
 
 /**
  * @brief write messsages of error in stderror in fromat
@@ -28,30 +31,36 @@ void	ft_write_error(const char *command,
 
 	str = ft_strdup("minishell: ");
 	if (!str)
-		return ;
+		return (ft_write_error_2(command, argument, message));
 	if (command != NULL)
 	{
 		tmp = str;
 		str = ft_strjoin3(tmp, command, ": ");
 		free(tmp);
+		if (!str)
+			return (ft_write_error_2(command, argument, message));
 	}
 	if (argument != NULL)
 	{
 		tmp = str;
 		str = ft_strjoin3(str, argument, ": ");
 		free(tmp);
+		if (!str)
+			return (ft_write_error_2(command, argument, message));
 	}
 	if (message != NULL)
 	{
 		tmp = str;
 		str = ft_strjoin(str, message);
 		free(tmp);
+		if (!str)
+			return (ft_write_error_2(command, argument, message));
 	}
 	tmp = str;
 	str = ft_strjoin(str, "\n");
-	if (!str)
-		return (free(tmp), ft_write_error_2(command, argument, message));
 	free(tmp);
+	if (!str)
+		return (ft_write_error_2(command, argument, message));
 	write(2, str, ft_strlen(str));
 	free(str);
 }
@@ -59,9 +68,6 @@ void	ft_write_error(const char *command,
 void	ft_write_error_2(const char *command,
 			const char *argument, const char *message)
 {
-	char	*str;
-	char	*tmp;
-
 	write(2, "minishell", 9);
 	if (command != NULL)
 	{
