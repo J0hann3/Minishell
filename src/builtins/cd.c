@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 19:06:16 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:23:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	update_env(t_env_info	*env, char *str)
 	{
 		if (i_old_pwd != -1)		//update oldpwd
 		{
-			res = ft_strjoin("OLD", env->env[i_pwd]);		//check malloc
+			res = ft_strjoin("OLD", env->env[i_pwd]);
 			free(env->env[i_pwd]);
 			if (res == NULL)
 				return (ft_write_error("cd", str, strerror(errno)), free(str), g_error = 1, (void)0);

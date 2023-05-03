@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:28:09 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:57:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 			i += skip_quotes(input + i) + 1;
 		else if (input[i] == '<' && input[i + 1] != '<')
 		{
-			if (instruc->infile > -1)
+			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
 			instruc->infile = read_fd(input + i);
 			if (instruc->infile == -1)

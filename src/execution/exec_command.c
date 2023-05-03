@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 18:30:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 11:58:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ static void	trim_name_var(char **str)
 	int		i;
 
 	i = 0;
+	if (str[0] == NULL)
+		return ;
 	while (str[0][i] != '\0')
 	{
 		if (str[0][i] == '=')
 		{
 			i++;
 			tmp = ft_strdup((char *)(str[0] + i));
+			if (tmp == NULL)
+				return (g_error = 2, ft_write_error(NULL, NULL, strerror((errno))));
 			free(str[0]);
 			str[0] = tmp;
 			return ;
@@ -86,6 +90,8 @@ static char	*explore_path(char *name, char *env_path)
 
 	i = 0;
 	var_path = ft_split(env_path, ':');
+	if (var_path == NULL)
+		return (NULL);
 	trim_name_var(var_path);
 	while (var_path[i] != NULL)
 	{
@@ -124,6 +130,8 @@ static char	*find_path_command(char *str, t_env_info *env)
 			path = find_absolute_path(str);
 		else
 			path = ft_strdup(str);
+		if (path == NULL)
+			return (g_error = 2, ft_write_error(NULL, NULL, strerror((errno))), NULL);
 		if (access(path, F_OK) == 0)
 		{
 			if (access(path, X_OK) == 0)
@@ -173,6 +181,8 @@ void	redirection(t_instruction *inst)
 	if (inst->infile >= 0)
 	{
 		inst->s_infile = dup(STDIN_FILENO);
+		if (inst->s_infile == -1)
+			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
 		if (dup2(inst->infile, STDIN_FILENO) == -1)
 		{
 			g_error = 1;
@@ -184,6 +194,8 @@ void	redirection(t_instruction *inst)
 	if (inst->outfile >= 0)
 	{
 		inst->s_outfile = dup(STDOUT_FILENO);
+		if (inst->s_outfile == -1)
+			return (g_error = 1, ft_write_error("file", NULL, strerror((errno))));
 		if (dup2(inst->outfile, STDOUT_FILENO) == -1)
 		{
 			g_error = 1;
@@ -263,6 +275,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 	if (pid == -1)
 	{
 		g_error = 1;
+		ft_write_error("fork", NULL, strerror(errno));
 		return (close_fd(inst), free(path), free_str(inst->command), g_error);
 	}
 	if (pid == 0)
@@ -274,7 +287,8 @@ int	exec(t_instruction *inst, t_env_info *env)
 	}
 	ign_signals(env->act);
 	close_fd(inst);
-	waitpid(pid, &stat, 0);
+	if (waitpid(pid, &stat, 0) == -1)
+		ft_write_error("fork", NULL, strerror(errno));
 	reset_signals(env->act);
 	if (WIFSIGNALED(stat))
 		g_error = 128 + WTERMSIG(stat);
