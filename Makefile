@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/02 19:06:08 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/05 00:08:19 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,7 +101,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --leak-check=full --track-fds=all --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
+	valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)
