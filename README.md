@@ -123,3 +123,11 @@ refaire expand $ ambigous redirection
 change _= ???
 
 unset -TEST		->error 2
+
+echo "exit_code ->$? user ->$USER home -> $HOME"
+
+minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42" 
+write : y bonjour 42
+echo dfgfd > test (redirige le prompt)
+
+exit 9223372036854775808  ->overflow

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:12:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/05 14:00:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 20:11:01 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,30 @@ void	redirection(t_instruction *inst)
 	}
 }
 
+void	reset_redirection(t_instruction *inst)
+{
+	// if (inst->s_infile >= 0)
+	// {
+	// 	if (dup2(inst->s_infile, STDIN_FILENO) == -1)
+	// 	{
+	// 		g_error = 1;
+	// 		ft_write_error(NULL, NULL, strerror(errno));
+	// 	}
+	// 	close(inst->s_infile);
+	// 	inst->s_infile = -2;
+	// }
+	if (inst->s_outfile >= 0)
+	{
+		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
+		{
+			g_error = 1;
+			ft_write_error(NULL, NULL, strerror(errno));
+		}
+		close(inst->s_outfile);
+		inst->s_outfile = -2;
+	}
+}
+
 void	redirection_fork(t_instruction *inst)
 {
 	if (inst->infile >= 0)
@@ -75,29 +99,5 @@ void	redirection_fork(t_instruction *inst)
 		}
 		close(inst->outfile);
 		inst->outfile = -2;
-	}
-}
-
-void	reset_redirection(t_instruction *inst)
-{
-	// if (inst->infile >= 0)
-	// {
-	// 	if (dup2(inst->s_infile, STDIN_FILENO) == -1)
-	// 	{
-	// 		g_error = 1;
-	// 		ft_write_error(NULL, NULL, strerror(errno));
-	// 	}
-	// 	close(inst->s_infile);
-	// 	inst->s_infile = -2;
-	// }
-	if (inst->outfile >= 0)
-	{
-		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)
-		{
-			g_error = 1;
-			ft_write_error(NULL, NULL, strerror(errno));
-		}
-		close(inst->s_outfile);
-		inst->s_outfile = -2;
 	}
 }

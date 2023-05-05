@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/03 16:28:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 19:46:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ t_instruction	*second_parsing(char *input, size_t command_size,
 bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 
 //heredocs.c
+char	*get_file_name(char *input);
 int		do_here_docs(char *input, t_env_info *env_info, int *fd_r);
 
 // prompt_here.c
