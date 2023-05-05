@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:12:24 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:36:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 14:00:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ void	redirection(t_instruction *inst)
 {
 	if (inst->infile >= 0)
 	{
-		inst->s_infile = dup(STDIN_FILENO);
-		if (inst->s_infile == -1)
-			return (g_error = 1, ft_write_error("file", NULL, strerror(errno)));
-		if (dup2(inst->infile, STDIN_FILENO) == -1)
-		{
-			close(inst->s_infile);
-			inst->s_infile = -2;
-			g_error = 1;
-			ft_write_error(NULL, NULL, strerror(errno));
-		}
+		// inst->s_infile = dup(STDIN_FILENO);
+		// if (inst->s_infile == -1)
+		// 	return (g_error = 1, ft_write_error("file", NULL, strerror(errno)));
+		// if (dup2(inst->infile, STDIN_FILENO) == -1)
+		// {
+		// 	close(inst->s_infile);
+		// 	inst->s_infile = -2;
+		// 	g_error = 1;
+		// 	ft_write_error(NULL, NULL, strerror(errno));
+		// }
 		close(inst->infile);
 		inst->infile = -2;
 	}
@@ -80,16 +80,16 @@ void	redirection_fork(t_instruction *inst)
 
 void	reset_redirection(t_instruction *inst)
 {
-	if (inst->infile >= 0)
-	{
-		if (dup2(inst->s_infile, STDIN_FILENO) == -1)
-		{
-			g_error = 1;
-			ft_write_error(NULL, NULL, strerror(errno));
-		}
-		close(inst->s_infile);
-		inst->s_infile = -2;
-	}
+	// if (inst->infile >= 0)
+	// {
+	// 	if (dup2(inst->s_infile, STDIN_FILENO) == -1)
+	// 	{
+	// 		g_error = 1;
+	// 		ft_write_error(NULL, NULL, strerror(errno));
+	// 	}
+	// 	close(inst->s_infile);
+	// 	inst->s_infile = -2;
+	// }
 	if (inst->outfile >= 0)
 	{
 		if (dup2(inst->s_outfile, STDOUT_FILENO) == -1)

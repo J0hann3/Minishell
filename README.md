@@ -108,9 +108,9 @@ erreur parsing
 erreur ambiguous redirect
 ><test		-> needto write an error
 
-cat <<te"st		->seg fault
-don't add in history if ligne empty
-echo <<hey $?
+cat <<te"st		->invalid read
+don't add in history if ligne empty				|done
+echo <<hey $?									|done
 non interactive : readline writes a prompt
 
 cat <<fin&& <<fin -> probleme ?
