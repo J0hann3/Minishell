@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/03 16:24:09 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/05 15:56:24 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,7 +81,7 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
 			$(addprefix $(HEREDOCS), $(SRC_HEREDOCS)) \
-			main.c
+			main_copy.c
 
 SRC_DIR = ./src/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
@@ -91,12 +91,6 @@ OBJ_LIST = $(patsubst %.c, %.o, $(SRC_LIST))
 OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
 all:	$(NAME)
-
-tester: $(NAME)
-	./tester.sh
-
-testerp: $(NAME)
-	./tester.sh -p
 
 run: $(NAME)
 	./$(NAME)

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:06:50 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:47:36 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 15:49:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	is_valid_name(char *str)
 		else
 		{
 			g_error = 1;
+			if (str[i] == '-' && i == 0)
+				g_error = 2;
 			ft_write_error("export", str, "not a valid identifier");		//need '' around str
 			return (0);
 		}

@@ -48,11 +48,11 @@ GIT :
 valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes
 
 builtins:
-◦ echo with option -n							|	Done
+◦ echo with option -n							|	Done		ok
 ◦ pwd with no options							|	Done
 ◦ env with no options or arguments				|	Done
 ◦ cd with only a relative or absolute path		|	Done
-◦ export with no options						|	Done
+◦ export with no options						|	Done		ok
 ◦ unset with no options							|	Done
 ◦ exit with no options							|	Done
 
@@ -118,3 +118,8 @@ cat <<fin&& <<fin -> probleme ?
 g      && (dfghj) ghj		->need to write error
 
 refaire expand $ ambigous redirection
+
+
+change _= ???
+
+unset -TEST		->error 2

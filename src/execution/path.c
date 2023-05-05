@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:39:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 16:01:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ char	*find_path_command(char *str, t_env_info *env)
 			{
 				fd = open(path, O_DIRECTORY);
 				if (fd != -1)
-					return (close(fd), g_error = 127,
+					return (close(fd), g_error = 126,
 						ft_write_error(NULL, str, "Is a directory"), NULL);
 				return (path);
 			}
