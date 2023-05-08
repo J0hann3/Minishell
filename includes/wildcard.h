@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   wildcard.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 22:03:46 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 15:19:34 by qthierry         ###   ########.fr       */
+/*   Created: 2023/05/02 18:26:26 by qthierry          #+#    #+#             */
+/*   Updated: 2023/05/02 18:43:12 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef WILDCARD_C
+# define WILDCARD_C
 
-# include "exec.h"
-# include "builtins.h"
-# include "parsing.h"
-# include "utils.h"
-# include "signals.h"
-# include "wildcard.h"
+# include "structs.h"
+# include <dirent.h>
+
+char	*expand_wild(char *input);
 
 #endif

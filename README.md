@@ -137,3 +137,5 @@ bash exit code = 1
 mini error = ()
 bash error = ( ambiguous redirect)
 
+change expandname file to expand_dollar
+

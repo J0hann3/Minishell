@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/03 11:58:08 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 15:19:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	if (!expanded_command || is_ambigous || !open_all_fds(instruc, expanded_command, fd_heredocs))
 		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
 	// expand *
+	// expand_wild(expanded_command);
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	free(expanded_command);
 	if (!instruc->command)

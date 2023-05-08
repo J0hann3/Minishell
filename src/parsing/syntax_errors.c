@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:30:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 14:23:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ bool	is_redirection_ok(char **input, t_env_info *env)
 
 	is_here_doc = false;
 	if (**input != *(*input + 1) && is_redirection(*(*input + 1)))
-		return (false);
+		return (ft_write_error(NULL, NULL, get_error_token(*input + 1)), false);
 	if (**input == '<' && *(*input + 1) == '<')
 		is_here_doc = true;						//heredocs is created if command = ><test
 	(*input)++;
