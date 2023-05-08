@@ -6,7 +6,11 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2023/05/05 16:17:04 by jvigny           ###   ########.fr        #
+=======
+#    Updated: 2023/05/05 00:08:19 by qthierry         ###   ########.fr        #
+>>>>>>> origin/Quentin
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +21,8 @@ CFLAGS = -g -Wall -Wextra #-fsanitize=address -Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
-HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h signals.h
+HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h \
+				signals.h wildcard.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
@@ -72,8 +77,15 @@ SRC_HEREDOCS = heredocs.c \
 			get_next_line_utils.c \
 
 SIGNALS = signals/
+<<<<<<< HEAD
 SRC_SIGNALS = signals.c \
 			sig_handler.c
+=======
+SRC_SIGNALS = signals.c
+
+WILDCARD = wildcard/
+SRC_WILDCARD = wildcard.c
+>>>>>>> origin/Quentin
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
@@ -81,6 +93,7 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(UTILS), $(SRC_UTILS)) \
 			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
 			$(addprefix $(HEREDOCS), $(SRC_HEREDOCS)) \
+			$(addprefix $(WILDCARD), $(SRC_WILDCARD)) \
 			main.c
 
 SRC_DIR = ./src/
@@ -96,7 +109,7 @@ run: $(NAME)
 	./$(NAME)
 
 vrun: $(NAME)
-	valgrind --leak-check=full --track-fds=all --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
+	valgrind --leak-check=full --track-fds=yes --trace-children=yes --show-leak-kinds=all --track-origins=yes --suppressions=suppr.valgrind ./$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)
@@ -112,6 +125,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(UTILS)
 	mkdir -p $(OBJ_DIR)$(SIGNALS)
 	mkdir -p $(OBJ_DIR)$(HEREDOCS)
+	mkdir -p $(OBJ_DIR)$(WILDCARD)
 
 clean:
 	rm -rf $(OBJ_DIR)
