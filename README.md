@@ -119,7 +119,6 @@ g      && (dfghj) ghj		->need to write error
 
 refaire expand $ ambigous redirection
 
-<<<<<<< HEAD
 
 change _= ???
 
@@ -132,6 +131,4 @@ write : y bonjour 42
 echo dfgfd > test (redirige le prompt)
 
 exit 9223372036854775808  ->overflow
-=======
 change expandname file to expand_dollar
->>>>>>> origin/Quentin

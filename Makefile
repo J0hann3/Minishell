@@ -6,11 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-<<<<<<< HEAD
-#    Updated: 2023/05/05 16:17:04 by jvigny           ###   ########.fr        #
-=======
-#    Updated: 2023/05/05 00:08:19 by qthierry         ###   ########.fr        #
->>>>>>> origin/Quentin
+#    Updated: 2023/05/08 15:28:07 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,15 +73,11 @@ SRC_HEREDOCS = heredocs.c \
 			get_next_line_utils.c \
 
 SIGNALS = signals/
-<<<<<<< HEAD
 SRC_SIGNALS = signals.c \
 			sig_handler.c
-=======
-SRC_SIGNALS = signals.c
 
 WILDCARD = wildcard/
 SRC_WILDCARD = wildcard.c
->>>>>>> origin/Quentin
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
