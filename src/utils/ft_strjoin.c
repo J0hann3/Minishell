@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 16:25:32 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/03 15:58:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,35 @@ char	*ft_strnjoin(char *s1, char const *s2, size_t size)
 		res[j++] = s2[len++];
 	res[j] = 0;
 	free(s1);
+	return (res);
+}
+
+char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
+{
+	char	*res;
+	size_t	len;
+	size_t	j;
+
+	len = ft_strlen(s1) + ft_strlen(s2);
+	if (add_slash == 1)
+		++len;
+	res = malloc(sizeof(char) * len + 1);
+	if (res == NULL)
+		return (NULL);
+	j = -1;
+	while (s1[++j])
+		res[j] = s1[j];
+	if (add_slash == 1)
+	{
+		res[j] = '/';
+		++j;
+	}
+	len = -1;
+	while (s2[++len])
+	{
+		res[j] = s2[len];
+		j++;
+	}
+	res[j] = 0;
 	return (res);
 }

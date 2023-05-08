@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/05 00:08:19 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/08 17:18:06 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,15 +24,20 @@ HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
 SRC_EXECUTION =	exec_command.c \
-				binary_tree.c
+				binary_tree.c \
+				redirection.c \
+				pipe.c \
+				path.c
 
 BUILTINS = builtins/
 SRC_BUILTINS =	echo.c \
 				env.c \
 				export.c \
+				export2.c \
 				exit.c \
 				pwd.c \
 				unset.c \
+				canonic_path.c \
 				cd.c
 
 UTILS = utils/
@@ -90,12 +95,6 @@ OBJ_LIST = $(patsubst %.c, %.o, $(SRC_LIST))
 OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
 all:	$(NAME)
-
-tester: $(NAME)
-	./tester.sh
-
-testerp: $(NAME)
-	./tester.sh -p
 
 run: $(NAME)
 	./$(NAME)

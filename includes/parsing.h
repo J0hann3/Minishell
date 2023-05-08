@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 16:19:09 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/08 17:17:47 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ bool	eq(const char	*s1, const char *s2);
 bool	eqn(const char *s1, const char *s2, size_t n);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
-char	*ft_strdup(const char *s);
 char	*ft_itoa(int n);
 void	ft_bzero(void *s, size_t n);
 
@@ -69,19 +68,22 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 // expand_dollar.c
 size_t	get_size_of_var(const char *str);
 bool	is_expandable(const char *input);
-char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
+char	*expand_dollars(char *input, size_t len, t_env_info *env_info,
+			bool *is_ambigous);
 
 //second_parsing.c
-t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_info, int fd_heredocs);
+t_instruction	*second_parsing(char *input, size_t command_size,
+			t_env_info *env_info, int fd_heredocs);
 
 // open_fd.c
 bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
 
 //heredocs.c
-int	do_here_docs(char *input, t_env_info *env_info, int *fd_r);
+char	*get_file_name(char *input);
+int		do_here_docs(char *input, t_env_info *env_info, int *fd_r);
 
 // prompt_here.c
-char	*get_random_name();
+char	*get_random_name(void);
 bool	expand_heredocs(int *fd_in, t_env_info *env_info);
 int		prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env);
 

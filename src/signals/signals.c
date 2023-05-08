@@ -6,28 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:01:04 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 17:56:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/03 16:23:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	crtl_c_interactive(int sig)		//for main process in interactive mode
-{
-	(void)sig;
-	g_error = 130;
-	write(STDERR_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	error_new_line(int sig)		//for heredoc in child
-{
-	(void)sig;
-	write(STDERR_FILENO, "\n", 1);
-	exit(sig + 128);
-}
+void	crtl_c_interactive(int sig);
+void	error_new_line(int sig);
 
 void	init_signals(struct sigaction act[2])
 {	
@@ -36,13 +22,15 @@ void	init_signals(struct sigaction act[2])
 	sigemptyset(&(act[0]).sa_mask);
 	act[0].sa_flags = 0;
 	act[0].sa_flags = SA_RESTART;
-	sigaction(SIGINT, &act[0], NULL);
+	if (sigaction(SIGINT, &act[0], NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 	// CTRL-/
 	act[1].sa_handler = SIG_IGN;
 	sigemptyset(&act[1].sa_mask);
 	act[1].sa_flags = 0;
 	act[1].sa_flags = SA_RESTART;
-	sigaction(SIGQUIT, &(act[1]), NULL);
+	if (sigaction(SIGQUIT, &(act[1]), NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 }
 
 
@@ -50,40 +38,48 @@ void	ign_signals(struct sigaction act[2])
 {
 	// CTRL-C
 	act[0].sa_handler = SIG_IGN;
-	sigaction(SIGINT, &act[0], NULL);
+	if (sigaction(SIGINT, &act[0], NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 	// CTRL-/
 	act[1].sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &(act[1]), NULL);
+	if (sigaction(SIGQUIT, &(act[1]), NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 }
 
 void	none_interactive(struct sigaction act[2])
 {
 	// CTRL-C
 	act[0].sa_handler = SIG_DFL;
-	sigaction(SIGINT, &act[0], NULL);
+	if (sigaction(SIGINT, &act[0], NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 	// CTRL-/
 	act[1].sa_handler = SIG_DFL;
-	sigaction(SIGQUIT, &(act[1]), NULL);
+	if (sigaction(SIGQUIT, &(act[1]), NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 }
 
 void	reset_signals(struct sigaction act[2])
 {	
 	// CTRL-C
 	act[0].sa_handler = crtl_c_interactive;
-	sigaction(SIGINT, &act[0], NULL);
+	if (sigaction(SIGINT, &act[0], NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 	// CTRL-/
 	act[1].sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &(act[1]), NULL);
+	if (sigaction(SIGQUIT, &(act[1]), NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 }
 
 void	add_error_signals(struct sigaction act[2])
 {
 	// CTRL-C
 	act[0].sa_handler = error_new_line;
-	sigaction(SIGINT, &act[0], NULL);
+	if (sigaction(SIGINT, &act[0], NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 	// CTRL-/
 	act[1].sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &(act[1]), NULL);
+	if (sigaction(SIGQUIT, &(act[1]), NULL) == -1)
+		ft_write_error("signal", NULL, strerror(errno));
 }
 
 /**

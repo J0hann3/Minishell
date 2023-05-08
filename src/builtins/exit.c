@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/24 21:32:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/02 19:10:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,9 @@ void	ft_exit(t_instruction *arg, t_env_info *env)			// need to also free tree
 		g_error = 1;
 		return ;
 	}
-	erreur = g_error;
 	free_env(env);
 	free_str(arg->command);
 	free(arg);
 	write(2, "exit\n", 5);
-	exit(erreur);
+	exit(g_error);
 }

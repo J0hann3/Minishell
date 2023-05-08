@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 15:13:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/08 15:19:08 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,9 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 	int		begin_join;
 	char	*tmp;
 	char	*res;
+	bool	in_double_quotes;
 
+	in_double_quotes = false;
 	res = ft_calloc(1, sizeof(char));
 	if (!res)
 		return (mem_exh("dollar expand"), NULL);
@@ -145,8 +147,13 @@ char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_amb
 	begin_join = 0;
 	while (i < len)
 	{
-		if (input[i] == '\'')
+		if (input[i] == '\'' && !in_double_quotes)
 			i += skip_quotes(input + i) + 1;
+		else if (input[i] == '\"')
+		{
+			in_double_quotes ^= true;
+			i++;
+		}
 		else if (input[i] == '$' && is_expandable(input + i + 1))
 		{
 			if (i > 0)

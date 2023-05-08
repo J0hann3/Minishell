@@ -6,126 +6,133 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:28:09 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/05 19:53:28 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*get_file_name(char *input, size_t *size)
+static void	ft_copy(char *dst, char *src, size_t size)
 {
 	size_t	i;
-	char	*cpy;
+	size_t	j;
 	char	quote;
 	bool	is_in_quote;
 
-	cpy = input;
-	is_in_quote = false;
-	i = 0;
-	(*size) = 0;
-	while (input[i] && !(is_wspace(input[i]) && !is_in_quote)
-		&& input[i] != '<' && input[i] != '>')
-	{
-		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
-		{
-			quote = input[i++];
-			is_in_quote = true;
-		}
-		else if (is_in_quote && input[i] == quote)
-		{
-			is_in_quote = false;
-			i++;
-		}
-		else
-			cpy[(*size)++] = input[i++];
-	}
-	return (ft_strndup(input, (*size)));
-}
-
-void	replace_name(char **input, size_t size, int offset_op)
-{
-	char	*tmp;
-	size_t	i;
-	int		j;
-
-	i = 0;
-	while (i++ < (size_t)offset_op)
-		(*input)--;
-	(*input)--;
-	tmp = *input;
 	i = 0;
 	j = 0;
-	while ((*input)[i])
+	quote = 0;
+	is_in_quote = false;
+	while (j < size)
 	{
-		if (i < size + 1 + offset_op)
+		if (src[i] == '\'' || src[i] == '"')
+		{
+			if (is_in_quote && quote == src[i])
+				is_in_quote = false;
+			else if (is_in_quote)
+				dst[j++] = src[i];
+			else
+			{
+				is_in_quote = true;
+				quote = src[i];
+			}
 			i++;
+		}
 		else
-			tmp[j++] = (*input)[i++];
+			dst[j++] = src[i++];
 	}
-	tmp[j] = 0;
-	*input = tmp;
+	dst[j] = 0;
+}
+
+size_t	get_file_size(const char *input)
+{
+	size_t	i;
+	int		tmp;
+	size_t	size;
+
+	i = 0;
+	size = 0;
+	while (input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i]) && !is_parenthesis(*input))
+	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			tmp = skip_quotes(input + i) + 1;
+			i += tmp;
+			size += tmp - 2;
+		}
+		else
+		{
+			size++;
+			i++;
+		}
+	}
+	return (size);
+}
+
+char	*get_file_name(char *input)
+{
+	size_t	file_size;
+	char	*file_name;
+
+	while (*input == '<' || *input == '>' || is_wspace(*input))
+		input++;
+	file_size = get_file_size(input);
+	file_name = ft_calloc(file_size + 1, sizeof(char));
+	if (!file_name)
+		return (NULL);
+	ft_copy(file_name, input, file_size);
+	return (file_name);
+}
+
+void delete_file_name(char *input)
+{
+	size_t	size;
+	size_t	i;
+
+	size = 0;
+	while (input[size] == '<' || input[size] == '>' || is_wspace(input[size]))
+		size++;
+	while (input[size] && !is_operator(input + size) && !is_wspace(input[size]) && !is_redirection(input[size]))
+	{
+		if (input[size] == '\'' || input[size] == '"')
+			size += skip_quotes(input + size);
+		size++;
+	}
+	i = 0;
+	while (input[size])
+		input[i++] = input[size++];
+	input[i] = 0;
+	fflush(stdout);
 }
 
 int	read_fd(char *input)
 {
-	int		fd;
-	size_t		size;
 	char	*file_name;
-	bool	has_space;
+	int		fd;
 
-	has_space = false;
-	while (is_wspace(*++input))
-		has_space = true;
-	file_name = get_file_name(input, &size);
+	file_name = get_file_name(input);
 	if (!file_name)
-		return (mem_exh("open file descriptor"), -1);
-	file_name[size] = 0;
-	replace_name(&input, ft_strlen(file_name), has_space);
+		return (-1);
+	delete_file_name(input);
 	fd = open(file_name, O_RDONLY);
 	free(file_name);
 	return (fd);
 }
 
-bool	heredoc_fd(char *input)
-{
-	char	*file_name;
-	size_t		size;
-	bool	has_space;
-
-	input++;
-	input++;
-	has_space = false;
-	while (is_wspace(*input) && input++)
-		has_space = true;
-	file_name = get_file_name(input, &size);
-	if (!file_name)
-		return (false);
-	file_name[size] = 0;
-	replace_name(&input, ft_strlen(file_name), 1 + has_space);
-	free(file_name);
-	return (true);
-}
 
 int	open_fd(char *input)
 {
-	int		fd;
-	int		open_mode;
+	int	fd;
+	int	open_mode;
 	char	*file_name;
-	size_t		size;
-	bool	has_space;
 
-	input++;
-	has_space = false;
 	open_mode = O_CREAT | O_WRONLY | O_TRUNC;
-	if (*input == '>' && input++)
+	if (input[0] == '>' && input[1] == '>')
 		open_mode = O_CREAT | O_WRONLY | O_APPEND;
-	while (is_wspace(*input) && input++)
-		has_space = true;
-	file_name = get_file_name(input, &size);
+	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
-	file_name[size] = 0;
-	replace_name(&input, ft_strlen(file_name), ((open_mode & O_APPEND) != 0) + has_space);
+	delete_file_name(input);
 	fd = open(file_name, open_mode, 0666);
 	free(file_name);
 	return (fd);
@@ -145,7 +152,7 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 			i += skip_quotes(input + i) + 1;
 		else if (input[i] == '<' && input[i + 1] != '<')
 		{
-			if (instruc->infile > -1)
+			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
 			instruc->infile = read_fd(input + i);
 			if (instruc->infile == -1)
@@ -160,13 +167,7 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 		{
 			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
-			if (!heredoc_fd(input + i))
-			{
-				if (fd_heredocs != -1 && is_use_heredoc == false)
-					close(fd_heredocs);
-				perror("Error");
-				return (false);
-			}
+			delete_file_name(input + i);
 			if (fd_heredocs != -1)
 				(instruc->infile = fd_heredocs, is_use_heredoc = true);
 		}
@@ -188,3 +189,128 @@ bool	open_all_fds(t_instruction *instruc, char *input, int fd_heredocs)
 	}
 	return (true);
 }
+
+// char	*get_file_name(char *input, size_t *nb_quotes)
+// {
+// 	size_t	i;
+// 	size_t	size;
+// 	char	*cpy;
+// 	char	quote;
+// 	bool	is_in_quote;
+
+// 	cpy = input;
+// 	is_in_quote = false;
+// 	i = 0;
+// 	size = 0;
+// 	*nb_quotes = 0;
+// 	while (input[i] && !(is_wspace(input[i]) && !is_in_quote)
+// 		&& input[i] != '<' && input[i] != '>')
+// 	{
+// 		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
+// 		{
+// 			quote = input[i++];
+// 			is_in_quote = true;
+// 			*nb_quotes += 2;
+// 		}
+// 		else if (is_in_quote && input[i] == quote)
+// 		{
+// 			is_in_quote = false;
+// 			i++;
+// 		}
+// 		else
+// 			cpy[size++] = input[i++];
+// 	}
+// 	return (ft_strndup(input, size));
+// }
+
+// void	replace_name(char **input, size_t size, int offset)
+// {
+// 	char	*tmp;
+// 	size_t	i;
+// 	int		j;
+
+// 	i = 0;
+// 	tmp = *input;
+// 	i = 0;
+// 	j = 0;
+// 	while ((*input)[i])
+// 	{
+// 		if ((*input)[i] != '\0' && i < size + 1 + offset)
+// 			i++;
+// 		else
+// 			tmp[j++] = (*input)[i++];
+// 	}
+// 	tmp[j] = 0;
+// 	*input = tmp;
+// }
+
+// int	read_fd(char *input)
+// {
+// 	int		fd;
+// 	size_t	nb_quotes;
+// 	char	*file_name;
+// 	char	*start;
+// 	bool	has_space;
+
+// 	start = input;
+// 	has_space = false;
+// 	while (is_wspace(*++input))
+// 		has_space = true;
+// 	file_name = get_file_name(input, &nb_quotes);
+// 	if (!file_name)
+// 		return (mem_exh("open file descriptor"), -1);
+// 	printf("input:'%s' len :%ld	len:%ld\n", input, ft_strlen(file_name) - has_space, has_space + nb_quotes);
+// 	replace_name(&start, ft_strlen(file_name - has_space), has_space + nb_quotes);
+// 	fd = open(file_name, O_RDONLY);
+// 	free(file_name);
+// 	return (fd);
+// }
+
+// bool	heredoc_fd(char *input)
+// {
+// 	char	*file_name;
+// 	char	*start;
+// 	size_t	nb_quotes;
+// 	bool	has_space;
+
+// 	start = input;
+// 	input++;
+// 	input++;
+// 	has_space = false;
+// 	while (is_wspace(*input) && input++)
+// 		has_space = true;
+// 	file_name = get_file_name(input, &nb_quotes);
+// 	if (!file_name)
+// 		return (false);
+// 	printf("input:'%s' len :%ld	len:%ld\n", input, ft_strlen(file_name) - has_space, has_space + nb_quotes + 1);
+// 	replace_name(&start, ft_strlen(file_name - has_space), nb_quotes + has_space + 1);
+// 	free(file_name);
+// 	return (true);
+// }
+
+// int	open_fd(char *input)
+// {
+// 	int		fd;
+// 	int		open_mode;
+// 	char	*start;
+// 	char	*file_name;
+// 	size_t	nb_quotes;
+// 	bool	has_space;
+
+// 	start = input;
+// 	input++;
+// 	has_space = false;
+// 	open_mode = O_CREAT | O_WRONLY | O_TRUNC;
+// 	if (*input == '>' && input++)
+// 		open_mode = O_CREAT | O_WRONLY | O_APPEND;
+// 	while (is_wspace(*input) && input++)
+// 		has_space = true;
+// 	file_name = get_file_name(input, &nb_quotes);
+// 	if (!file_name)
+// 		return (-1);
+// 	printf("input:'%s' len :%ld	len:%ld\n", input,  ft_strlen(file_name) - (has_space + (open_mode & O_APPEND) != 0), has_space + nb_quotes);
+// 	replace_name(&start, ft_strlen(file_name - (has_space + (open_mode & O_APPEND) != 0)), has_space + nb_quotes);
+// 	fd = open(file_name, open_mode, 0666);
+// 	free(file_name);
+// 	return (fd);
+// }
