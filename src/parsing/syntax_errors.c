@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/05 14:23:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 15:56:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,17 +183,16 @@ bool	is_operator_ok(char **input, char *start_ptr)
 	return (boolean);
 }
 
-static const char *get_par_error(char *par_start) //TODO
+static const char *get_par_error(char *par_start)
 {
 	size_t	i;
-
+	
+	printf("get_par_error :'%s'\n", par_start);
 	par_start++;
 	i = 0;
 	while (par_start[i] && !is_meta_character(par_start[i])
-			&& !is_wspace(par_start[i]))
-	{
+			&& !is_wspace(par_start[i]) && !is_parenthesis(par_start[i]))
 		i++;
-	}
 	par_start[i] = 0;
 	return (par_start);
 }
@@ -201,7 +200,10 @@ static const char *get_par_error(char *par_start) //TODO
 bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 {
 	char *tmp;
+	char *parenthesis;
 
+	parenthesis = par_start;
+	printf("is_parenthesis_left_ok :'%s'\n", par_start);
 	if (par_start == start_ptr)
 		return (true);
 	par_start--;
@@ -222,7 +224,7 @@ bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 		return (true);
 	if (tmp - par_start == 2 && *(par_start + 1) == '|')
 		return (true);
-	tmp = ft_strjoin3("syntax error near unexpected token `", get_par_error(par_start), "'");
+	tmp = ft_strjoin3("syntax error near unexpected token `", get_par_error(parenthesis), "'");
 	return (ft_write_error(NULL, NULL, tmp), free(tmp), false);
 }
 
@@ -242,6 +244,7 @@ bool	has_closing_parenthesis(char **input, t_env_info *env, char *start_ptr)
 `('\nminishell: syntax error: unexpected end of file";
 
 	par_start = (*input);
+	printf("has_closing_parenthesis :'%s'\n", par_start);
 	(*input)++;
 	while (is_wspace((**input)))
 		(*input)++;
