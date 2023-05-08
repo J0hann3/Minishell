@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 17:38:02 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 21:40:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 14:38:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	ft_unset(char **arg, t_env_info	*env)
 			env->env[len_env - 1] = NULL;
 			len_env--;
 		}
+		else if (i == 1 && arg[i][0] == '-' && arg[i][1] != '\0')
+			return (g_error = 2, ft_write_error("unset", arg[i], "invalid option"));
 		++i;
 	}
 	free_str(arg);

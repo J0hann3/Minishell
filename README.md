@@ -113,16 +113,14 @@ don't add in history if ligne empty				|done
 echo <<hey $?									|done
 non interactive : readline writes a prompt
 
-cat <<fin&& <<fin -> probleme ?
+cat <<fin&& <<fin -> probleme 					| Done
 
 g      && (dfghj) ghj		->need to write error
-
-refaire expand $ ambigous redirection
 
 
 change _= ???
 
-unset -TEST		->error 2
+unset -TEST		->error 2						| Done
 
 echo "exit_code ->$? user ->$USER home -> $HOME"
 
@@ -131,3 +129,10 @@ write : y bonjour 42
 echo dfgfd > test (redirige le prompt)
 
 exit 9223372036854775808  ->overflow
+
+ > * 
+mini exit code = 0
+bash exit code = 1
+mini error = ()
+bash error = ( ambiguous redirect)
+
