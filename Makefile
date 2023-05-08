@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/08 17:18:06 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/08 20:51:56 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRC_UTILS = ft_calloc.c \
 			utils.c \
 			init.c \
 			free_tree.c \
+			ft_strnstr.c \
 			error.c
 
 PARSING = parsing/
@@ -73,10 +74,13 @@ SRC_HEREDOCS = heredocs.c \
 			get_next_line_utils.c \
 
 SIGNALS = signals/
-SRC_SIGNALS = signals.c
+SRC_SIGNALS = signals.c \
+			sig_handler.c
 
 WILDCARD = wildcard/
-SRC_WILDCARD = wildcard.c
+SRC_WILDCARD = wildcard.c \
+			prefix.c \
+			suffix.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 16:27:11 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/08 19:06:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 {
 	void	*new_ptr;
 
-	new_ptr = malloc(new_size);
+	new_ptr = ft_calloc(new_size, 1);
 	if (!new_ptr)
 		return (NULL);
 	if (prev_size > new_size)
