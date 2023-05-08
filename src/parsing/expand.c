@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/05 00:10:22 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/08 15:13:16 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	while (tmp[j] && tmp[j] != '=')
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
-	if (tmp && is_ambig_redir(input - 1, *i - size) && (!*tmp || has_space(tmp)))
-		*is_ambigous = true;
+	// if (tmp && is_ambig_redir(input - 1, *i - size) && (!*tmp || has_space(tmp)))
+	// 	*is_ambigous = true;
 	return (tmp);
 }
 
