@@ -124,9 +124,10 @@ unset -TEST		->error 2						| Done
 
 echo "exit_code ->$? user ->$USER home -> $HOME"
 
-minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42" 
+minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42" 		| Done
 write : y bonjour 42
-echo dfgfd > test (redirige le prompt)
+
+echo dfgfd > test (redirige le prompt)			| Done
 
 exit 9223372036854775808  ->overflow
 
