@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 15:56:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 16:34:19 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,10 +187,11 @@ static const char *get_par_error(char *par_start)
 {
 	size_t	i;
 	
-	printf("get_par_error :'%s'\n", par_start);
 	par_start++;
 	i = 0;
-	while (par_start[i] && !is_meta_character(par_start[i])
+	while (par_start[i] && is_wspace(par_start[i]))
+		i++;
+	while (par_start[i] && !is_operator(par_start + i) && !is_redirection(par_start[i])
 			&& !is_wspace(par_start[i]) && !is_parenthesis(par_start[i]))
 		i++;
 	par_start[i] = 0;
@@ -203,7 +204,6 @@ bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 	char *parenthesis;
 
 	parenthesis = par_start;
-	printf("is_parenthesis_left_ok :'%s'\n", par_start);
 	if (par_start == start_ptr)
 		return (true);
 	par_start--;
@@ -228,6 +228,34 @@ bool	is_parenthesis_left_ok(char *par_start, char *start_ptr)
 	return (ft_write_error(NULL, NULL, tmp), free(tmp), false);
 }
 
+bool	is_parenthesis_right_ok(char *str)
+{
+	size_t	i;
+	int		tmp;
+	char	*error;
+
+	i = 1;
+	while (str[i] && is_wspace(str[i]))
+		i++;
+	if (str[i] == '\0' || str[i] == ')')
+		return (true);
+	tmp = i;
+	if (str[i] == '|')
+		while (str[i] && str[i] == '|')
+			i++;
+	else
+		while (str[i] && str[i] == '&')
+			i++;
+	if (i - tmp == 2 && str[i - 1] == '&')
+		return (true);
+	if (i - tmp == 1 && str[i - 1] == '|')
+		return (true);
+	if (i - tmp == 2 && str[i - 1] == '|')
+		return (true);
+	error = ft_strjoin3("syntax error near unexpected token `", get_par_error(str), "'");
+	return (ft_write_error(NULL, NULL, error), free(error), false);
+}
+
 /**
  * @brief Checks if the given parenthesis is closed, forward input to the
  * closing parenthesis, and write error if closing parenthesis does not exist
@@ -244,7 +272,6 @@ bool	has_closing_parenthesis(char **input, t_env_info *env, char *start_ptr)
 `('\nminishell: syntax error: unexpected end of file";
 
 	par_start = (*input);
-	printf("has_closing_parenthesis :'%s'\n", par_start);
 	(*input)++;
 	while (is_wspace((**input)))
 		(*input)++;
@@ -258,7 +285,7 @@ bool	has_closing_parenthesis(char **input, t_env_info *env, char *start_ptr)
 	while (**input)
 	{
 		if (**input == ')')
-			return (true);
+			return (is_parenthesis_right_ok(*input));
 		else if (**input == '(' && !has_closing_parenthesis(input, env, start_ptr))
 			return (false);
 		else if ((**input == '\'' || **input == '"')

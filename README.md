@@ -105,17 +105,17 @@ dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreu
 ERREUR DE MALLOC : <FUNCTIONNALITE> ": memory exausted"
 
 erreur parsing
-erreur ambiguous redirect
-><test		-> needto write an error
+erreur ambiguous redirect						|done
+><test		-> needto write an error			|done
 
-cat <<te"st		->invalid read
+cat <<te"st		->invalid read					|done
 don't add in history if ligne empty				|done
 echo <<hey $?									|done
 non interactive : readline writes a prompt
 
 cat <<fin&& <<fin -> probleme 					| Done
 
-g      && (dfghj) ghj		->need to write error
+g      && (dfghj) ghj		->need to write error	|Done
 
 
 change _= ???
@@ -129,8 +129,6 @@ write : y bonjour 42
 
 echo dfgfd > test (redirige le prompt)			| Done
 
-exit 9223372036854775808  ->overflow
-
  > * 
 mini exit code = 0
 bash exit code = 1
@@ -138,4 +136,3 @@ mini error = ()
 bash error = ( ambiguous redirect)
 
 change expandname file to expand_dollar
-
