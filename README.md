@@ -125,4 +125,6 @@ PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
 
 hereocs creates a .nfs -> bug ?
 
-d|f|f -> erreur de synta sur le pipe !
+d|f|f -> erreur de syntax sur le pipe !
+
+faire ambigous sur les * + messages d'erreur

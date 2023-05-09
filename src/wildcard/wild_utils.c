@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 20:17:25 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/09 23:47:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,12 @@ char	*jump_to_pattern_start(const char *input, const char *start)
 	char	quote;
 	bool	is_in_quote;
 
-	printf("Jump input : '%s'\n", input);
-	printf("2Jump input : '%d'\n", is_end_of_pattern(input, 0));
-	if (input != start && !is_end_of_pattern(input, 0))
+	if (input != start)
+	{
 		input--;
-
+		if (is_end_of_pattern(input, 0))
+			return ((char *)input + 1);
+	}
 	is_in_quote = false;
 	while (input != start && (!is_end_of_pattern(input, 0) || is_in_quote))
 	{
@@ -77,7 +78,7 @@ char	*jump_to_pattern_start(const char *input, const char *start)
 		}
 		input--;
 	}
-	return ((char *)input);
+	return ((char *)input + (input != start));
 }
 
 /**
