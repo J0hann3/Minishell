@@ -120,3 +120,9 @@ g      && (dfghj) ghj		->need to write error
 refaire expand $ ambigous redirection
 
 change expandname file to expand_dollar
+
+PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
+
+hereocs creates a .nfs -> bug ?
+
+d|f|f -> erreur de synta sur le pipe !

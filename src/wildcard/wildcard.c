@@ -6,76 +6,65 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 22:34:06 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/09 19:06:27 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*get_prefix(const char *input, const char *start);
-char	*get_suffix(const char *input, bool *is_end);
+static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
+{
+	bool	rm_slash;
 
-// int	has_found_patterns(const char *start, size_t wild_pos, char *to_test)
-// {
-// 	char	*prefix;
-// 	char	*suffix;
-// 	int		found;
+	rm_slash = flist[i].is_dir && to_find[ft_strlen(to_find) - 1] == '/';
+	while (*flist[i].cursor
+			&& !eqn(flist[i].cursor, to_find,
+				ft_strlen(to_find) + 1 - rm_slash))
+		flist[i].cursor++;
+	if (!*flist[i].cursor)
+	{
+		flist[i].is_matching = 0;
+		flist[i].cursor = NULL;
+	}
+}
 
-// 	found = 0;
-// 	prefix = get_prefix(start + wild_pos, start);
-// 	if (!prefix)
-// 		return (-1);
-// 	suffix = get_suffix(start + wild_pos);
-// 	if (!suffix)
-// 		return (free(prefix), -1);
-// 	if (eqn(prefix, to_test, ft_strlen(prefix))
-// 		&& eqn(suffix, to_test - ft_strlen(suffix) + ft_strlen(to_test),
-// 			ft_strlen(suffix)))
-// 		found = 1;
-// 	free(prefix);
-// 	free(suffix);
-// 	return (found);
-// }
+/**
+ * @brief finds a pattern for each elemts of the file name list.
+ * Fills flist properly if a pattern is found or not.
+ * 
+ * @param flist 
+ * @param to_find 
+ * @param is_end 
+ */
+void	find_pattern_in_fname(t_file_list *flist, char *to_find, bool is_end)
+{
+	char	*tmp;
+	int		i;
 
-// char	*get_start(const char *input, const char *start)
-// {
-// 	int		i;
-// 	char	quote;
-// 	bool	is_in_quote;
+	i = 0;
+	while (flist[i].file_name)
+	{
+		if (flist[i].is_matching && ft_strlen(to_find) != 0)
+		{
+			if (is_end)
+				find_for_end_only(flist, to_find, i);
+			else
+			{
+				tmp = ft_strnstr(flist[i].cursor, to_find, ft_strlen(flist[i].cursor));
+				if (!tmp || (is_end == true && *(tmp + ft_strlen(to_find)) != '\0'))
+				{
+					flist[i].is_matching = 0;
+					flist[i].cursor = NULL;
+				}
+				else
+					flist[i].cursor = tmp + ft_strlen(to_find);
+			}
+		}
+		i++;
+	}
+}
 
-// 	i = 0;
-// 	if (input > start)
-// 		i--;
-// 	else
-// 		return ((char *)input);
-// 	while (input + i >= start && !is_operator(input + i) && !is_wspace(input[i])
-// 			&& !is_redirection(input[i]) && !is_parenthesis(input[i]) && input[i] != '*')
-// 	{
-// 		if (input[i] == '/')
-// 			return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), NULL);
-// 		if (input[i] == '\'' || input[i] == '"')
-// 		{
-// 			quote = input[i];
-// 			if (input + i <= start)
-// 				break ;
-// 			i--;
-// 			while (input + i >= start && input[i] != quote)
-// 			{
-// 				if (input[i] == '/')
-// 					return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), NULL);
-// 				i--;
-// 			}
-// 			if (input + i <= start)
-// 				break ;
-// 			i--;
-// 		}
-// 		else
-// 			i--;
-// 	}
-// 	return ((char *)input + i + 1);
-// }
-
-char	*first_prefix(char *input, t_file_list *flist, const char *start)
+char	*test_first_prefix(char *input, t_file_list *flist, const char *start)
 {
 	char	*to_test;
 	char	*tmp;
@@ -98,110 +87,87 @@ char	*first_prefix(char *input, t_file_list *flist, const char *start)
 		i++;
 	}
 	free(to_test);
-	i = 0;
-	while (flist[i].file_name)
-	{
-		printf("%d : '%s', cursor : '%s'\n", flist[i].is_matching, flist[i].file_name, flist[i].cursor);
-		i++;
-	}
-	// printf("input : '%s'\n", input);
 	return (input);
 }
 
-char	*suffix(char *input, t_file_list *flist)
+char	*test_suffix(char *input, t_file_list *flist)
 {
 	char	*suffix;
-	char	*tmp;
-	int		i;
 	bool	is_end;
 
-	i = 0;
 	suffix = get_suffix(input, &is_end);
 	if (!suffix)
 		return (NULL);
 	input += ft_strlen(suffix) + 1;
-	printf("suffix : '%s', input '%s'\n", suffix, input);
-	while (flist[i].file_name != NULL)
-	{
-		if (flist[i].is_matching == 1 && ft_strlen(suffix) != 0)
-		{
-			tmp = ft_strnstr(flist[i].cursor, suffix, ft_strlen(flist[i].cursor));
-			if (!tmp || (is_end == true && *(tmp + ft_strlen(suffix)) != '\0'))
-			{
-				if (tmp)
-					printf("hey :%d		%s\n", (is_end == true && *(tmp + ft_strlen(suffix)) != '\0'), suffix);
-				flist[i].is_matching = 0;
-				flist[i].cursor = NULL;
-			}
-			else
-				flist[i].cursor = tmp + ft_strlen(suffix);
-		}
-		i++;
-	}
+	find_pattern_in_fname(flist, suffix, is_end);
 	free(suffix);
 	if (is_end)
 		return (NULL);
-	
 	return (input);
 }
 
-void	wildcard(char *input, t_file_list *flist, const char *start)
+char	*get_file_name_string(t_file_list *flist, bool include_hidden)
+{
+	char	*files_names;
+	char	*tmp;
+	char	*sep;
+
+	sep = NULL;
+	files_names = NULL;
+	while (flist && flist->file_name)
+	{
+		if (flist->is_matching
+			&& (include_hidden || (*flist->file_name != '.' && !include_hidden)))
+		{
+			tmp = ft_strjoin3(files_names, sep, flist->file_name);
+			free(files_names);
+			if (!tmp)
+				return (mem_exh("wildcard"), NULL);
+			files_names = tmp;
+			sep = " ";
+		}
+		flist++;
+	}
+	return (files_names);
+}
+
+bool	has_to_include_hidden(const char *input)
+{
+	if (*input == '\'' || *input == '"')
+		input++;
+	return (*input == '.');
+}
+
+bool	replace_wildcard(char **input, t_file_list *flist, bool include_hidden)
+{
+	char	*files_names;
+	char	*pat_end;
+	
+	files_names = get_file_name_string(flist, include_hidden);
+	if (!files_names)
+		return (false);
+	// printf("input deb : '%s'\n", *input);
+	pat_end = jump_to_pattern_end(*input);
+	// printf("input apr : '%s'\n", pat_end);
+	printf("files names : '%s'\n", files_names);
+	return (true);
+}
+
+bool	wildcard(char *input, t_file_list *flist, const char *start)
 {
 	size_t	i;
 	char	*tmp;
 
 	i = 0;
-	first_prefix(input, flist, start);
-	printf("fgh\n");
-	input = suffix(input, flist);
-	while (input && *input == '*')
-	{
-		// printf("truc : '%s'\n", input);
-		input = suffix(input, flist);
-		// if (*input != '*')
-			// break ;
-		// input++;
-		// if (input[i] == '"' || input[i] == '\'')
-		// 	i += skip_quotes(input + i) ;
-		// else if (input[i] == '*')
-		// i++;
-	}
-	i = 0;
-	while (flist[i].file_name)
-	{
-		printf("%d : '%s', cursor : '%s'\n", flist[i].is_matching, flist[i].file_name, flist[i].cursor);
-		i++;
-	}
-	// printf("input : '%s'\n", input);
-}
-
-
-t_file_list	*init_flist(t_file_list *flist)
-{
-	DIR				*dirp;
-	struct dirent	*dir_context;
-	size_t			size;
-	t_file_list 	*tmp;
-	
-	flist = ft_calloc(1, sizeof(t_file_list));
-	if (!flist)
-		return (false);
-	dirp = opendir(".");
-	if (!dirp)
-		return (free(flist), ft_write_error(NULL, "wildcard", strerror(errno)), NULL);
-	size = 0;
-	while (true)
-	{
-		dir_context = readdir(dirp);
-		if (!dir_context)
-			return (flist);
-		tmp = ft_realloc(flist, (size + 1)* sizeof(t_file_list), (size + 2) * sizeof(t_file_list));
-		if (!tmp)
-			return (free(flist), NULL);
-		flist = tmp;
-		flist[size].file_name = dir_context->d_name;
-		size++;
-	}
+	tmp = input;
+	test_first_prefix(tmp, flist, start);
+	tmp = test_suffix(tmp, flist);
+	while (tmp && *tmp == '*')
+		tmp = test_suffix(tmp, flist);
+	input = jump_to_pattern_start(input, start);
+	if (!replace_wildcard(&input, flist, has_to_include_hidden(input)))
+		return (free(flist), false);
+	return (true);
 }
 
 char	*expand_wild(char *input)
@@ -227,24 +193,7 @@ char	*expand_wild(char *input)
 			}
 			wildcard(input + i, flist, input);
 			break ;
-			// if (has_found_patterns(input, i, "\"machin  \"")) // malloc error crash
-				// printf("trouve :)\n");
-			// else
-			// 	printf("pas trouve :(\n");
-			// if(!expand(input, i, &expanded))
-			// 	return (NULL);
 			i++;
-
-			// file1  0
-			// file2  1
-			// truc   0
-			// coucou 0
-			// machin 0
-			// filia  0
-			
-			// f*il*e*2 *file1
-			// *awd*cou*tru*
-
 		}
 		else
 			i++;

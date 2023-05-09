@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/08 20:51:56 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/09 15:08:49 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,8 @@ SRC_SIGNALS = signals.c \
 WILDCARD = wildcard/
 SRC_WILDCARD = wildcard.c \
 			prefix.c \
-			suffix.c
+			suffix.c \
+			wild_utils.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
