@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 23:55:54 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 00:12:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ int	replace_wildcard(char *input, char **start, t_file_list *flist, bool include
 	char	*pat_start;
 	char	*pat_end;
 	bool	has_merror;
+	int		size;
 	
 	files_names = get_file_name_string(flist, include_hidden, &has_merror);
 	if (has_merror)
@@ -180,8 +181,10 @@ int	replace_wildcard(char *input, char **start, t_file_list *flist, bool include
 	if (!files_names)
 		return (mem_exh("wildcard"), -1);
 	if(!replace_on_input(start, files_names, pat_start))
-		return (-1);
-	return (ft_strlen(files_names));
+		return (free(files_names), -1);
+	size = ft_strlen(files_names);
+	free(files_names);
+	return (size);
 }
 
 bool	wildcard(char *input, t_file_list *flist, char **start, size_t *i)
@@ -220,10 +223,12 @@ bool	expand_wild(char **input)
 				if (!flist)
 					return (false);
 			}
-			wildcard((*input) + i, flist, input, &i);
+			if (!wildcard((*input) + i, flist, input, &i))
+				return (free(flist), false);
 		}
 		else
 			i++;
 	}
+	free(flist);
 	return (true);
 }

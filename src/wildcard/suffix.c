@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:02 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 17:10:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 00:03:23 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	get_cleaned_name(char *dst, char *src, size_t size)
 	dst[j] = 0;
 }
 
-static size_t	get_pattern_size(const char *input, bool *is_end)
+static ssize_t	get_pattern_size(const char *input, bool *is_end)
 {
 	size_t	i;
 	int		tmp;
@@ -54,6 +54,8 @@ static size_t	get_pattern_size(const char *input, bool *is_end)
 	size = 0;
 	while (input[i] && !is_end_of_single_wildcard(input, i))
 	{
+		if (input[i] == '/')
+			return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
 		if (input[i] == '\'' || input[i] == '"')
 		{
 			tmp = skip_quotes(input + i) + 1;
@@ -73,12 +75,14 @@ static size_t	get_pattern_size(const char *input, bool *is_end)
 
 char	*get_suffix(const char *input, bool *is_end)
 {
-	size_t	pattern_size;
+	ssize_t	pattern_size;
 	char	*suffix;
 
 	*is_end = false;
 	input++;
 	pattern_size = get_pattern_size(input, is_end);
+	if (pattern_size < 0)
+		return (NULL);
 	suffix = ft_calloc(pattern_size + 1, sizeof(char));
 	if (!suffix)
 		return (NULL); // error write

@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 23:47:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 00:07:59 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_file_list	*init_flist(t_file_list *flist)
 			return (flist);
 		tmp = ft_realloc(flist, (size + 1) * sizeof(t_file_list), (size + 2) * sizeof(t_file_list));
 		if (!tmp)
-			return (free(flist), mem_exh("wildcard"), NULL);
+			return (closedir(dirp), free(flist), mem_exh("wildcard"), NULL);
 		flist = tmp;
 		flist[size].file_name = dir_context->d_name;
 		stat(dir_context->d_name, &s);
