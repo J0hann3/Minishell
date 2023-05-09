@@ -6,14 +6,14 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/09 15:08:49 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/09 19:57:10 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra #-fsanitize=address -Werror
+CFLAGS = -g -Wall -Wextra #-fsanitize=address# -Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 

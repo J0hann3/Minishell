@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:26:26 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 17:40:33 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/09 20:01:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ char		*jump_to_pattern_end(const char *input);
 bool		is_end_of_pattern(const char *input, size_t i);
 t_file_list	*init_flist(t_file_list *flist);
 
-char	*expand_wild(char *input);
+char		*expand_wild(char **input);
 
 #endif

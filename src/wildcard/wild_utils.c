@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 18:03:04 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/09 20:17:25 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 bool	is_end_of_single_wildcard(const char *input, size_t i)
 {
 	return (
-		is_operator(input + i) && is_wspace(input[i])
-		&& is_redirection(input[i]) && is_parenthesis(input[i])
-		&& input[i] == '*'
+		is_operator(input + i) || is_wspace(input[i])
+		|| is_redirection(input[i]) || is_parenthesis(input[i])
+		|| input[i] == '*'
 	);
 }
 
@@ -40,8 +40,8 @@ bool	is_end_of_single_wildcard(const char *input, size_t i)
 bool	is_end_of_pattern(const char *input, size_t i)
 {
 	return (
-		is_operator(input + i) && is_wspace(input[i])
-		&& is_redirection(input[i]) && is_parenthesis(input[i])
+		is_operator(input + i) || is_wspace(input[i])
+		|| is_redirection(input[i]) || is_parenthesis(input[i])
 	);
 }
 
@@ -57,8 +57,11 @@ char	*jump_to_pattern_start(const char *input, const char *start)
 	char	quote;
 	bool	is_in_quote;
 
-	if (input != start)
+	printf("Jump input : '%s'\n", input);
+	printf("2Jump input : '%d'\n", is_end_of_pattern(input, 0));
+	if (input != start && !is_end_of_pattern(input, 0))
 		input--;
+
 	is_in_quote = false;
 	while (input != start && (!is_end_of_pattern(input, 0) || is_in_quote))
 	{
