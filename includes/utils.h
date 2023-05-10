@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/08 21:24:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:28:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,10 @@ void	free_env(t_env_info *env);
 void	close_fd_heredocs(t_env_info *env);
 void	close_fd(t_instruction *inst);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
+size_t	skip_quotes_tchar(const t_char *input);
+t_char	*ft_tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter);
+t_char	*ft_tchar_join(t_char *s1, const t_char *s2);
+size_t	ft_tchar_len(const t_char *s);
+t_char	*ft_tcharndup(const t_char *s, size_t n);
 
 #endif

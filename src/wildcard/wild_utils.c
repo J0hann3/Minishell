@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 17:19:06 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 20:16:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@
  * @return true 
  * @return false 
  */
-bool	is_end_of_single_wildcard(const char *input, size_t i)
+bool	is_end_of_single_wildcard(const t_char *input, size_t i)
 {
 	return (
-		is_operator(input + i) || is_wspace(input[i])
-		|| is_redirection(input[i]) || is_parenthesis(input[i])
-		|| input[i] == '*'
+		(input[i].c == '|' || (input[i].c == '&' && input[i + 1].c == '&'))
+		|| is_wspace(input[i].c)
+		|| is_redirection(input[i].c) || is_parenthesis(input[i].c)
+		|| input[i].c == '*'
 	);
 }
 
@@ -37,11 +38,12 @@ bool	is_end_of_single_wildcard(const char *input, size_t i)
  * @return true 
  * @return false 
  */
-bool	is_end_of_pattern(const char *input, size_t i)
+bool	is_end_of_pattern(const t_char *input, size_t i)
 {
 	return (
-		is_operator(input + i) || is_wspace(input[i])
-		|| is_redirection(input[i]) || is_parenthesis(input[i])
+		(input[i].c == '|' || (input[i].c == '&' && input[i + 1].c == '&'))
+		|| is_wspace(input[i].c)
+		|| is_redirection(input[i].c) || is_parenthesis(input[i].c)
 	);
 }
 
@@ -52,7 +54,7 @@ bool	is_end_of_pattern(const char *input, size_t i)
  * @param start 
  * @return char* 
  */
-char	*jump_to_pattern_start(const char *input, const char *start)
+t_char	*jump_to_pattern_start(const t_char *input, const t_char *start)
 {
 	char	quote;
 	bool	is_in_quote;
@@ -61,24 +63,24 @@ char	*jump_to_pattern_start(const char *input, const char *start)
 	{
 		input--;
 		if (is_end_of_pattern(input, 0))
-			return ((char *)input + 1);
+			return ((t_char *)input + 1);
 	}
 	is_in_quote = false;
 	while (input != start && (!is_end_of_pattern(input, 0) || is_in_quote))
 	{
-		if (*input == '\'' || *input == '"')
+		if ((input->c == '\'' || input->c == '"') && input->is_inter == true)
 		{
-			if (is_in_quote && quote == *input)
+			if (is_in_quote && quote == input->c)
 				is_in_quote = false;
 			else if (!is_in_quote)
 			{
 				is_in_quote = true;
-				quote = *input;
+				quote = input->c;
 			}
 		}
 		input--;
 	}
-	return ((char *)input + (input != start));
+	return ((t_char *)input + (input != start));
 }
 
 /**
@@ -87,28 +89,28 @@ char	*jump_to_pattern_start(const char *input, const char *start)
  * @param input 
  * @return char* 
  */
-char	*jump_to_pattern_end(const char *input)
+t_char	*jump_to_pattern_end(const t_char *input)
 {
 	char	quote;
 	bool	is_in_quote;
 
 	input++;
 	is_in_quote = false;
-	while (*input && (!is_end_of_pattern(input, 0) || is_in_quote))
+	while (input->c && (!is_end_of_pattern(input, 0) || is_in_quote))
 	{
-		if (*input == '\'' || *input == '"')
+		if ((input->c == '\'' || input->c == '"') && input->is_inter == true)
 		{
-			if (is_in_quote && quote == *input)
+			if (is_in_quote && quote == input->c)
 				is_in_quote = false;
 			else if (!is_in_quote)
 			{
 				is_in_quote = true;
-				quote = *input;
+				quote = input->c;
 			}
 		}
 		input++;
 	}
-	return ((char *)input);
+	return ((t_char *)input);
 }
 
 /**

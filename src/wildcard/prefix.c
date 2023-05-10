@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   prefix.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:00 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 17:11:01 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:05:25 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	get_cleaned_name(char *dst, char *src, size_t size)
+static void	get_cleaned_name(char *dst, t_char *src, size_t size)
 {
 	int		i;
 	int		j;
@@ -25,26 +25,26 @@ static void	get_cleaned_name(char *dst, char *src, size_t size)
 	is_in_quote = false;
 	while (j >= 0)
 	{
-		if (src[i] == '\'' || src[i] == '"')
+		if ((src[i].c == '\'' || src[i].c == '"') && src[i].is_inter == true)
 		{
-			if (is_in_quote && quote == src[i])
+			if (is_in_quote && quote == src[i].c)
 				is_in_quote = false;
 			else if (is_in_quote)
-				dst[j--] = src[i];
+				dst[j--] = src[i].c;
 			else
 			{
 				is_in_quote = true;
-				quote = src[i];
+				quote = src[i].c;
 			}
 			i--;
 		}
 		else
-			dst[j--] = src[i--];
+			dst[j--] = src[i--].c;
 	}
 	dst[size] = 0;
 }
 
-static int	get_prefix_size(const char *input, const char *start)
+static int	get_prefix_size(const t_char *input, const t_char *start)
 {
 	int		i;
 	char	quote;
@@ -54,17 +54,17 @@ static int	get_prefix_size(const char *input, const char *start)
 	size = 0;
 	while (input + i >= start && !is_end_of_single_wildcard(input, i))
 	{
-		if (input[i] == '/')
+		if (input[i].c == '/')
 			return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
-		if (input[i] == '\'' || input[i] == '"')
+		if ((input[i].c == '\'' || input[i].c == '"') && input[i].is_inter == true)
 		{
-			quote = input[i];
+			quote = input[i].c;
 			if (input + i <= start)
 				break ;
 			i--;
-			while (input + i >= start && input[i] != quote)
+			while (input + i >= start && input[i].c != quote)
 			{
-				if (input[i] == '/')
+				if (input[i].c == '/')
 					return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
 				i--;
 				size++;
@@ -82,7 +82,7 @@ static int	get_prefix_size(const char *input, const char *start)
 	return (size);
 }
 
-char	*get_prefix(const char *input, const char *start)
+char	*get_prefix(const t_char *input, const t_char *start)
 {
 	int		prefix_size;
 	char	*prefix;
@@ -96,6 +96,6 @@ char	*get_prefix(const char *input, const char *start)
 	prefix = ft_calloc(prefix_size + 1, sizeof(char));
 	if (!prefix)
 		return (NULL); // error write
-	get_cleaned_name(prefix, (char *)input, prefix_size);
+	get_cleaned_name(prefix, (t_char *)input, prefix_size);
 	return (prefix);
 }

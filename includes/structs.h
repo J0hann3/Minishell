@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:26:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 19:55:27 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@
 # include <signal.h>
 
 extern int	g_error;
+
+typedef struct	s_char
+{
+	char	c;
+	bool	is_inter;
+}	t_char;
 
 enum	e_meta_character
 {

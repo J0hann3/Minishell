@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 15:08:23 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 19:55:19 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 // expand_dollar.c
 size_t	get_size_of_var(const char *str);
 bool	is_expandable(const char *input);
-char	*expand_dollars(char *input, size_t len, t_env_info *env_info,
-			bool *is_ambigous);
+t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
+
 
 //second_parsing.c
 t_instruction	*second_parsing(char *input, size_t command_size,

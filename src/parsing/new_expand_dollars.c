@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_dollars.c                                   :+:      :+:    :+:   */
+/*   new_expand_dollars.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 18:28:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 20:28:44 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,49 +131,49 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	return (tmp);
 }
 
-// char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
-// {
-// 	size_t	i;
-// 	int		begin_join;
-// 	char	*tmp;
-// 	char	*res;
-// 	bool	in_double_quotes;
+t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
+{
+	size_t	i;
+	int		begin_join;
+	char	*tmp;
+	t_char	*res;
+	bool	in_double_quotes;
 
-// 	in_double_quotes = false;
-// 	res = ft_calloc(1, sizeof(char));
-// 	if (!res)
-// 		return (mem_exh("dollar expand"), NULL);
-// 	i = 0;
-// 	begin_join = 0;
-// 	while (i < len)
-// 	{
-// 		if (input[i] == '\'' && !in_double_quotes)
-// 			i += skip_quotes(input + i) + 1;
-// 		else if (input[i] == '\"')
-// 		{
-// 			in_double_quotes ^= true;
-// 			i++;
-// 		}
-// 		else if (input[i] == '$' && is_expandable(input + i + 1))
-// 		{
-// 			if (i > 0)
-// 				res = ft_strnjoin(res, input + begin_join, i - begin_join);
-// 			i++;
-// 			tmp = expand(input + i, &i, env_info, is_ambigous);
-// 			if (!tmp)
-// 				return (free(res), mem_exh("dollar expand"), NULL);
-// 			if (*is_ambigous)
-// 				return (free(tmp), free(res), NULL);
-// 			begin_join = i;
-// 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
-// 			free(tmp);
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	if (begin_join != (int)i)
-// 		res = ft_strnjoin(res, input + begin_join, i - begin_join);
-// 	if (!res)
-// 		mem_exh("dollar expand");
-// 	return (res);
-// }
+	in_double_quotes = false;
+	res = ft_calloc(1, sizeof(t_char));
+	if (!res)
+		return (mem_exh("dollar expand"), NULL);
+	i = 0;
+	begin_join = 0;
+	while (i < len)
+	{
+		if (input[i] == '\'' && !in_double_quotes)
+			i += skip_quotes(input + i) + 1;
+		else if (input[i] == '\"')
+		{
+			in_double_quotes ^= true;
+			i++;
+		}
+		else if (input[i] == '$' && is_expandable(input + i + 1))
+		{
+			if (i > 0)
+				res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+			i++;
+			tmp = expand(input + i, &i, env_info, is_ambigous);
+			if (!tmp)
+				return (free(res), mem_exh("dollar expand"), NULL);
+			if (*is_ambigous)
+				return (free(tmp), free(res), NULL);
+			begin_join = i;
+			res = ft_tchar_njoin(res, tmp, ft_strlen(tmp), 0);
+			free(tmp);
+		}
+		else
+			i++;
+	}
+	if (begin_join != (int)i)
+		res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+	if (!res)
+		mem_exh("dollar expand");
+	return (res);
+}

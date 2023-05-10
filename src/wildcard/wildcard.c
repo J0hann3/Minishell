@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 17:25:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 20:28:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ bool	has_to_include_hidden(const char *input)
 	return (*input == '.');
 }
 
-char	*test_suffix(char *input, t_file_list *flist)
+t_char	*test_suffix(t_char *input, t_file_list *flist)
 {
 	char	*suffix;
 	bool	is_end;
@@ -89,7 +89,7 @@ char	*test_suffix(char *input, t_file_list *flist)
 	return (input);
 }
 
-char	*test_first_prefix(char *input, t_file_list *flist, const char *start, bool *include_hidden)
+bool	test_first_prefix(t_char *input, t_file_list *flist, const t_char *start, bool *include_hidden)
 {
 	char	*to_test;
 	char	*tmp;
@@ -98,7 +98,7 @@ char	*test_first_prefix(char *input, t_file_list *flist, const char *start, bool
 	i = 0;
 	to_test = get_prefix(input, start);
 	if (!to_test)
-		return (NULL);
+		return (false);
 	*include_hidden = has_to_include_hidden(to_test);
 	while (flist[i].file_name != NULL)
 	{
@@ -113,7 +113,7 @@ char	*test_first_prefix(char *input, t_file_list *flist, const char *start, bool
 		i++;
 	}
 	free(to_test);
-	return (input);
+	return (true);
 }
 
 char	*get_file_name_string(t_file_list *flist, bool include_hidden)
@@ -142,21 +142,21 @@ char	*get_file_name_string(t_file_list *flist, bool include_hidden)
 }
 
 
-bool	replace_on_input(char **start, char *to_insert, char *pat_start, char *pat_end)
+bool	replace_on_input(t_char **start, char *to_insert, t_char *pat_start, t_char *pat_end)
 {
 	size_t	size;
-	char	*new_ptr;
-	char	*tmp;
+	t_char	*new_ptr;
+	t_char	*tmp;
 
 	size = pat_start - *start;
-	new_ptr = ft_strndup(*start, size);
+	new_ptr = ft_tcharndup(*start, size);
 	if (!new_ptr)
 		return (free(*start), false); // write error
-	tmp = ft_strjoin(new_ptr, to_insert);
+	tmp = ft_tchar_njoin(new_ptr, to_insert, ft_strlen(to_insert), 0);
 	free(new_ptr);
 	if (!tmp)
 		return (free(*start), false); // write error
-	new_ptr = ft_strjoin(tmp, pat_end);
+	new_ptr = ft_tchar_join(tmp, pat_end);
 	free(tmp);
 	free(*start);
 	if (!new_ptr)
@@ -165,11 +165,11 @@ bool	replace_on_input(char **start, char *to_insert, char *pat_start, char *pat_
 	return (true);
 }
 
-int	replace_wildcard(char *input, char **start, t_file_list *flist, bool include_hidden)
+int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool include_hidden)
 {
 	char	*files_names;
-	char	*pat_start;
-	char	*pat_end;
+	t_char	*pat_start;
+	t_char	*pat_end;
 	int		size;
 	
 	files_names = get_file_name_string(flist, include_hidden);
@@ -186,36 +186,37 @@ int	replace_wildcard(char *input, char **start, t_file_list *flist, bool include
 	return (size);
 }
 
-bool	wildcard(char *input, t_file_list *flist, char **start, size_t *i)
+bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 {
 	int		size;
-	char	*tmp;
+	t_char	*tmp;
 	bool	include_hidden;
 
 	tmp = input;
-	test_first_prefix(tmp, flist, *start, &include_hidden);
+	if (!test_first_prefix(tmp, flist, *start, &include_hidden))
+		return (false);
 	tmp = test_suffix(tmp, flist);
-	while (tmp && *tmp == '*')
+	while (tmp && tmp->c == '*')
 		tmp = test_suffix(tmp, flist);
 	size = replace_wildcard(input, start, flist, include_hidden);
 	if (size < 0)
-		return (free(flist), false);
+		return (false);
 	*i += size;
 	return (true);
 }
 
-bool	expand_wild(char **input)
+bool	expand_wild(t_char **input)
 {
 	size_t	i;
 	t_file_list	*flist;
 
 	i = 0;
 	flist = NULL;
-	while ((*input)[i])
+	while ((*input)[i].c)
 	{
-		if ((*input)[i] == '"' || (*input)[i] == '\'')
-			i += skip_quotes((*input) + i) + 1;
-		else if ((*input)[i] == '*')
+		if (((*input)[i].c == '"' || (*input)[i].c == '\'') && (*input)[i].is_inter == true)
+			i += skip_quotes_tchar((*input) + i) + 1;
+		else if ((*input)[i].c == '*')
 		{
 			if (!flist)
 			{

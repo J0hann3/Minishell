@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/10 15:07:15 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/10 19:40:48 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRC_UTILS = ft_calloc.c \
 			init.c \
 			free_tree.c \
 			ft_strnstr.c \
+			ft_join_tchar.c \
 			error.c
 
 PARSING = parsing/
@@ -60,9 +61,9 @@ SRC_PARSING = syntax_errors.c \
 			ast.c \
 			ast_utils.c \
 			parsing_parenthesis.c \
-			second_parsing.c \
+			new_second_parsing.c \
 			open_fd.c \
-			expand_dollars.c \
+			new_expand_dollars.c \
 			remove_quotes.c \
 			utils2.c
 
