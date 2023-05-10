@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/08 15:25:35 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/08 17:08:49 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ SRC_PARSING = syntax_errors.c \
 			parsing_parenthesis.c \
 			second_parsing.c \
 			open_fd.c \
-			expand.c \
+			expand_dollars.c \
 			remove_quotes.c \
 			utils2.c
 
