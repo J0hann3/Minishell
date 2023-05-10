@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 00:12:52 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 03:09:31 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
 {
 	bool	rm_slash;
+	size_t	pos_to_compare;
 
 	rm_slash = flist[i].is_dir && to_find[ft_strlen(to_find) - 1] == '/';
-	while (*flist[i].cursor
-			&& !eqn(flist[i].cursor, to_find,
-				ft_strlen(to_find) - rm_slash))
-		flist[i].cursor++;
-	if (!*flist[i].cursor)
+	pos_to_compare = ft_strlen(flist[i].cursor) - ft_strlen(to_find) + rm_slash;
+	if (ft_strlen(to_find) - rm_slash > ft_strlen(flist[i].cursor)
+		|| !eqn(to_find, flist[i].cursor
+				+ pos_to_compare, ft_strlen(to_find) - rm_slash))
 	{
 		flist[i].is_matching = 0;
 		flist[i].cursor = NULL;

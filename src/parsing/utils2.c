@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/09 23:21:23 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 03:08:21 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ bool	eq(const char *s1, const char *s2)
 }
 
 /**
- * @brief Test if two string are equal only on their n first bytes
+ * @brief Test if two string are equal on n bytes
  * Returns true if yes or n is 0, false either
  * 
  * @param s1 
