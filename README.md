@@ -134,3 +134,17 @@ mini exit code = 0
 bash exit code = 1
 mini error = ()
 bash error = ( ambiguous redirect)
+
+
+
+PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
+
+hereocs creates a .nfs -> bug ?
+
+d|f|f -> erreur de syntax sur le pipe !
+
+faire ambigous sur les * + messages d'erreur
+
+leak fd du DIR*, solution : malloc les char[256] et créer un free_flist
+
+erreur sur les .*

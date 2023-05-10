@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 15:52:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:08:23 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 // utils.c
 size_t	ft_strlen(const char *s);
-bool	eq(char	*s1, char *s2);
+bool	eq(const char	*s1, const char *s2);
+bool	eqn(const char *s1, const char *s2, size_t n);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
 char	*ft_itoa(int n);

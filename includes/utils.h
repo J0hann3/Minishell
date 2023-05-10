@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 15:58:37 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 21:24:16 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ void	free_tree(t_ast **tree);
 void	free_env(t_env_info *env);
 void	close_fd_heredocs(t_env_info *env);
 void	close_fd(t_instruction *inst);
+char	*ft_strnstr(const char *big, const char *little, size_t len);
 
 #endif

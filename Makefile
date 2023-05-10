@@ -6,14 +6,14 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/10 15:05:33 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/10 15:07:15 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra #-fsanitize=address -Werror
+CFLAGS = -g -Wall -Wextra #-fsanitize=address# -Werror
 LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
@@ -51,6 +51,7 @@ SRC_UTILS = ft_calloc.c \
 			utils.c \
 			init.c \
 			free_tree.c \
+			ft_strnstr.c \
 			error.c
 
 PARSING = parsing/
@@ -77,7 +78,10 @@ SRC_SIGNALS = signals.c \
 			sig_handler.c
 
 WILDCARD = wildcard/
-SRC_WILDCARD = wildcard.c
+SRC_WILDCARD = wildcard.c \
+			prefix.c \
+			suffix.c \
+			wild_utils.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \

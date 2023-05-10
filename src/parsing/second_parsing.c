@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 17:07:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:08:17 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,12 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	if(!expand_heredocs(&fd_heredocs, env_info))
 		return (free_instructions(instruc), g_error = 1, NULL);
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
-	// expand *
-	// expand_wild(expanded_command);
-	if (!expanded_command || is_ambigous || !open_all_fds(instruc, expanded_command, fd_heredocs))
-		return (free(expanded_command), free_instructions(instruc), g_error = 1, NULL);
+	if (!expanded_command || is_ambigous)
+		return (free_instructions(instruc), free(expanded_command), g_error = 1, NULL);
+	if (!expand_wild(&expanded_command))
+		return (NULL); // voir free sur error
+	if (!open_all_fds(instruc, expanded_command, fd_heredocs))
+		return (free_instructions(instruc), g_error = 1, NULL);
 	instruc->command = ft_split_quote(expanded_command, ' ');
 	free(expanded_command);
 	if (!instruc->command)

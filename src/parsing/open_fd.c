@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   open_fd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/05 19:53:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/08 17:44:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	ft_copy(char *dst, char *src, size_t size)
+void	ft_copy(char *dst, char *src, size_t size)
 {
 	size_t	i;
 	size_t	j;
@@ -52,7 +52,7 @@ size_t	get_file_size(const char *input)
 
 	i = 0;
 	size = 0;
-	while (input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i]) && !is_parenthesis(*input))
+	while (input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i]) && !is_parenthesis(input[i]))
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
