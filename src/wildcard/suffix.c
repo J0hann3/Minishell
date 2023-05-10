@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   suffix.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:02 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 00:31:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 16:20:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,9 @@ static ssize_t	get_pattern_size(const char *input, bool *is_end)
 	size_t	i;
 	int		tmp;
 	size_t	size;
-	size_t	slash_pos;
 
 	i = 0;
 	size = 0;
-	slash_pos = 0;
 	while (input[i] && !is_end_of_single_wildcard(input, i))
 	{
 		if (input[i] == '/' && input[i + 1])

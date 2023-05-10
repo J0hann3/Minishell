@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wild_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 00:07:59 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:19:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*jump_to_pattern_start(const char *input, const char *start)
 		{
 			if (is_in_quote && quote == *input)
 				is_in_quote = false;
-			else
+			else if (!is_in_quote)
 			{
 				is_in_quote = true;
 				quote = *input;
@@ -100,7 +100,7 @@ char	*jump_to_pattern_end(const char *input)
 		{
 			if (is_in_quote && quote == *input)
 				is_in_quote = false;
-			else
+			else if (!is_in_quote)
 			{
 				is_in_quote = true;
 				quote = *input;

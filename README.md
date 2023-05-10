@@ -141,10 +141,15 @@ PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
 
 hereocs creates a .nfs -> bug ?
 
-d|f|f -> erreur de syntax sur le pipe !
+d|f|f -> erreur de syntax sur le pipe !				| done
 
 faire ambigous sur les * + messages d'erreur
 
 leak fd du DIR*, solution : malloc les char[256] et créer un free_flist
 
-erreur sur les .*
+echo "t "*		-> printf : t * *					| done
+echo .*			-> don't work						| done
+*		-> need to sort in alphabet order
+
+echo src*/		->src/
+echo src*		->src

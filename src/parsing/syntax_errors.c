@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 16:34:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/10 16:10:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ bool	is_operator_ok(char **input, char *start_ptr)
 
 	boolean = (has_argument_left(start_ptr, *input)
 		&& has_argument_right(*input));
+	printf("ok : %d\n", boolean);
 	if (is_and_or(*input))
 		(*input)++;
 	return (boolean);
@@ -329,7 +330,7 @@ int	check_syntax_at(char **input, char *start_ptr, t_env_info *env)
 	if (**input == '<' || **input == '>')
 		return (is_redirection_ok(input, env));
 	if (is_operator(*input))
-		return (is_operator_ok(input, start_ptr) * 2);
+		return (printf("operator : %s\n", *input), is_operator_ok(input, start_ptr) * 2);
 	if (**input == '(')
 		return (has_closing_parenthesis(input, env, start_ptr));
 	if (**input == ')')
@@ -430,7 +431,7 @@ bool	has_argument_left(const char *start_input, char *op_ptr)
 		tmp--;
 		if (*tmp == '(')
 			return (ft_write_error(NULL, NULL, get_error_token(op_ptr)), false);
-		if (tmp != start_input && is_operator(tmp - 1))
+		if (*tmp == '|' || (tmp != start_input && is_and_or(tmp - 1)))
 			return (ft_write_error(NULL, NULL, get_error_token(op_ptr)), false);
 		else if (!is_wspace(*tmp))
 			return (true);
@@ -458,6 +459,8 @@ bool	has_argument_right(char *op_ptr)
 	while (*op_ptr)
 	{
 		if (*op_ptr == ')')
+			return (ft_write_error(NULL, NULL, get_error_token(op_cpy)), false);
+		if (is_operator(op_ptr))
 			return (ft_write_error(NULL, NULL, get_error_token(op_cpy)), false);
 		else if (!is_wspace(*op_ptr))
 			return (true);

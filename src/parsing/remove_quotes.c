@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:03:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:09:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:31:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,17 @@ void	remove_quotes(char *string)
 	is_in_quote = false;
 	while (string[i])
 	{
-		if ((string[i] == '\"' || string[i] == '\'') && !is_in_quote)
+		if (string[i] == '\'' || string[i] == '"')
 		{
-			is_in_quote = true;
-			quote = string[i];
+			if (is_in_quote && quote == string[i])
+				is_in_quote = false;
+			else if (!is_in_quote)
+			{
+				is_in_quote = true;
+				quote = string[i];
+			}
 		}
-		else if (is_in_quote && string[i] == quote)
-			is_in_quote = false;
-		else
+		else 
 			cpy[j++] = string[i];
 		i++;
 	}
