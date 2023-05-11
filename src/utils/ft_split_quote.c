@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quote.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/21 15:02:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 18:47:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/../includes/minishell.h"
 
-static void	free_all(char **string)
+static void	free_all(t_char **string)
 {
 	int	i;
 
@@ -25,24 +25,24 @@ static void	free_all(char **string)
 	free(string);
 }
 
-static int	count_words(const char *string, char c)
+static int	count_words(const t_char *string)
 {
 	int	res;
 
 	res = 0;
-	if (!*string)
+	if (!string->c)
 		return (1);
-	while (*string)
+	while (string->c)
 	{
-		while (*string == c)
+		while (is_wspace(string->c))
 			string++;
-		if (!*string)
+		if (!string->c)
 			break ;
-		while (*string)
+		while (string->c)
 		{
-			if (*string == '\'' || *string == '\"')
-				string += skip_quotes(string);
-			else if (*string == c)
+			if ((string->c == '\'' || string->c == '\"') && string->is_inter == true)
+				string += skip_quotes_tchar(string);
+			else if (is_wspace(string->c))
 				break ;
 			string++;
 		}
@@ -51,51 +51,52 @@ static int	count_words(const char *string, char c)
 	return (res);
 }
 
-static char	*get_word(const char **string, char c)
+static t_char	*get_word(const t_char **string)
 {
-	char	*res;
+	t_char	*res;
 	int		size;
 	int		i;
 
 	size = 0;
-	while (**string && **string == c)
+	while ((*string)->c && is_wspace((*string)->c))
 		(*string)++;
-	while ((*string)[size] && (*string)[size] != c)
+	while ((*string)[size].c && !is_wspace((*string)[size].c))
 	{
-		if ((*string)[size] == '\'' || (*string)[size] == '\"')
-			size += skip_quotes((*string) + size);
+		if (((*string)[size].c == '\'' || (*string)[size].c == '\"') && (*string)[size].is_inter == true)
+			size += skip_quotes_tchar((*string) + size);
 		size++;
 	}
-	res = malloc(sizeof(char) * (size + 1));
+	res = malloc(sizeof(t_char) * (size + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
 	while (i < size)
 	{
-		res[i] = **string;
+		res[i].c = (*string)->c;
+		res[i].is_inter = (*string)->is_inter;
 		(*string)++;
 		i++;
 	}
-	res[i] = 0;
+	res[i].c = 0;
 	return (res);
 }
 
-char	**ft_split_quote(const char *string, char c)
+t_char	**ft_split_quote(const t_char *string, int *nb_words)
 {
-	int		nb_words;
 	int		i;
-	char	**res;
+	t_char	**res;
 
 	if (!string)
 		return (NULL);
-	nb_words = count_words(string, c);
-	res = malloc(sizeof(char *) * (nb_words + 1));
+	*nb_words = count_words(string);
+	printf("nb word : %d\n", *nb_words);
+	res = malloc(sizeof(t_char *) * (*nb_words + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
-	while (i < nb_words)
+	while (i < *nb_words)
 	{
-		res[i] = get_word(&string, c);
+		res[i] = get_word(&string);
 		if (!res[i])
 			return (free_all(res), NULL);
 		i++;

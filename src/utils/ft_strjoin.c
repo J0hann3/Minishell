@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/09 16:11:30 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:58:06 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strjoin(char *s1, char const *s2)
 
 	len = ft_strlen(s1) + ft_strlen(s2);
 	j = 0;
-	res = malloc(sizeof(char) * len + 1);
+	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (0);
 	while (s1 && s1[j])
@@ -62,7 +62,7 @@ char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 
 	len = ft_strlen(s1) + ft_strlen(s2) + ft_strlen(s3);
 	j = 0;
-	res = malloc(sizeof(char) * len + 1);
+	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (0);
 	while (s1 && s1[j])
@@ -107,7 +107,7 @@ char	*ft_strnjoin(char *s1, char const *s2, size_t size)
 	else
 		len = ft_strlen(s1) + size;
 	j = 0;
-	res = malloc(sizeof(char) * len + 1);
+	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (NULL);
 	while (s1 && s1[j])
@@ -132,7 +132,7 @@ char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 	len = ft_strlen(s1) + ft_strlen(s2);
 	if (add_slash == 1)
 		++len;
-	res = malloc(sizeof(char) * len + 1);
+	res = malloc(sizeof(char) * (len + 1));
 	if (res == NULL)
 		return (NULL);
 	j = -1;

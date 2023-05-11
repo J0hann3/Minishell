@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 20:28:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 17:38:27 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+void	ft_print(char *,t_char *expanded_command);
 
 static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
 {
@@ -116,33 +117,41 @@ bool	test_first_prefix(t_char *input, t_file_list *flist, const t_char *start, b
 	return (true);
 }
 
-char	*get_file_name_string(t_file_list *flist, bool include_hidden)
+t_char	*get_file_name_string(t_file_list *flist, bool include_hidden)
 {
-	char	*files_names;
-	char	*tmp;
-	char	*sep;
+	t_char	*files_names;
+	t_char	*tmp;
+	t_char	*sep;
 
-	sep = "";
-	files_names = ft_calloc(1, sizeof(char));
+	sep = ft_calloc(2, sizeof(t_char));
+	if (!sep)
+		return (mem_exh("wildcard"), NULL);
+	files_names = ft_calloc(1, sizeof(t_char));
+	if (!files_names)
+		return (free(sep), mem_exh("wildcard"), NULL);
 	while (flist->file_name)
 	{
 		if (flist->is_matching
 			&& (include_hidden || (*flist->file_name != '.' && !include_hidden)))
 		{
-			tmp = ft_strjoin3(files_names, sep, flist->file_name);
+			tmp = ft_tchar_join(files_names, sep);
 			free(files_names);
 			if (!tmp)
-				return (mem_exh("wildcard"), NULL);
-			files_names = tmp;
-			sep = " ";
+				return (free(sep), mem_exh("wildcard"), NULL);
+			files_names = ft_tchar_njoin(tmp, flist->file_name, ft_strlen(flist->file_name), 0);
+			free(tmp);
+			if (!files_names)
+				return (free(sep), mem_exh("wildcard"), NULL);
+			sep[0] = (t_char){' ', 1};
 		}
 		flist++;
 	}
+	free(sep);
 	return (files_names);
 }
 
 
-bool	replace_on_input(t_char **start, char *to_insert, t_char *pat_start, t_char *pat_end)
+bool	replace_on_input(t_char **start, t_char *to_insert, t_char *pat_start, t_char *pat_end)
 {
 	size_t	size;
 	t_char	*new_ptr;
@@ -152,7 +161,7 @@ bool	replace_on_input(t_char **start, char *to_insert, t_char *pat_start, t_char
 	new_ptr = ft_tcharndup(*start, size);
 	if (!new_ptr)
 		return (free(*start), false); // write error
-	tmp = ft_tchar_njoin(new_ptr, to_insert, ft_strlen(to_insert), 0);
+	tmp = ft_tchar_join(new_ptr, to_insert);
 	free(new_ptr);
 	if (!tmp)
 		return (free(*start), false); // write error
@@ -167,7 +176,7 @@ bool	replace_on_input(t_char **start, char *to_insert, t_char *pat_start, t_char
 
 int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool include_hidden)
 {
-	char	*files_names;
+	t_char	*files_names;
 	t_char	*pat_start;
 	t_char	*pat_end;
 	int		size;
@@ -177,13 +186,13 @@ int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool inc
 		return (-1);
 	pat_start = jump_to_pattern_start(input, *start);
 	pat_end = jump_to_pattern_end(input);
-	if (!*files_names)
-		return (pat_end - pat_start);
+	if (!files_names[0].c)
+		return (pat_end - input);
 	if(!replace_on_input(start, files_names, pat_start, pat_end))
 		return (free(files_names), -1);
-	size = ft_strlen(files_names);
+	size = ft_tchar_len(files_names);
 	free(files_names);
-	return (size);
+	return (size - (input - pat_start));
 }
 
 bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)

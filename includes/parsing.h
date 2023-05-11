@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 19:55:19 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 18:48:05 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ char	*ft_itoa(int n);
 void	ft_bzero(void *s, size_t n);
 
 // ft_split.c
-char	**ft_split_quote(const char *string, char c);
+t_char	**ft_split_quote(const t_char *string, int *nb_words);
 
 // remove_quotes.c
-void	remove_quotes(char *string);
+char	*remove_quotes(t_char *string);
 
 // parsing_utils.c
 bool	is_operator(const char *c);
@@ -76,10 +76,10 @@ t_instruction	*second_parsing(char *input, size_t command_size,
 			t_env_info *env_info, int fd_heredocs);
 
 // open_fd.c
-bool	open_all_fds(t_instruction *instruction, char *input, int fd_heredocs);
+char	*get_file_name(char *input);
+bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs);
 
 //heredocs.c
-char	*get_file_name(char *input);
 int		do_here_docs(char *input, t_env_info *env_info, int *fd_r);
 
 // prompt_here.c

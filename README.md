@@ -153,3 +153,5 @@ echo .*			-> don't work						| done
 
 echo src*/		->src/
 echo src*		->src
+
+export test="     "; >$test

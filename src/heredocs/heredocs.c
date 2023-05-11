@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/05 19:46:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 15:53:36 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,78 @@
 // 			start[j++] = input[i++];
 // 	}
 // 	return (ft_strndup(input, j));
+// }
+
+// void	ft_copy(char *dst, char *src, size_t size)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	char	quote;
+// 	bool	is_in_quote;
+
+// 	i = 0;
+// 	j = 0;
+// 	quote = 0;
+// 	is_in_quote = false;
+// 	while (j < size)
+// 	{
+// 		if (src[i] == '\'' || src[i] == '"')
+// 		{
+// 			if (is_in_quote && quote == src[i])
+// 				is_in_quote = false;
+// 			else if (is_in_quote)
+// 				dst[j++] = src[i];
+// 			else
+// 			{
+// 				is_in_quote = true;
+// 				quote = src[i];
+// 			}
+// 			i++;
+// 		}
+// 		else
+// 			dst[j++] = src[i++];
+// 	}
+// 	dst[j] = 0;
+// }
+
+// size_t	get_file_size(const char *input)
+// {
+// 	size_t	i;
+// 	int		tmp;
+// 	size_t	size;
+
+// 	i = 0;
+// 	size = 0;
+// 	while (input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i]) && !is_parenthesis(input[i]))
+// 	{
+// 		if (input[i] == '\'' || input[i] == '"')
+// 		{
+// 			tmp = skip_quotes(input + i) + 1;
+// 			i += tmp;
+// 			size += tmp - 2;
+// 		}
+// 		else
+// 		{
+// 			size++;
+// 			i++;
+// 		}
+// 	}
+// 	return (size);
+// }
+
+// char	*get_file_name(char *input)
+// {
+// 	size_t	file_size;
+// 	char	*file_name;
+
+// 	while (*input == '<' || *input == '>' || is_wspace(*input))
+// 		input++;
+// 	file_size = get_file_size(input);
+// 	file_name = ft_calloc(file_size + 1, sizeof(char));
+// 	if (!file_name)
+// 		return (NULL);
+// 	ft_copy(file_name, input, file_size);
+// 	return (file_name);
 // }
 
 static char	*ft_strjoin_nbr(char *str, int nbr)

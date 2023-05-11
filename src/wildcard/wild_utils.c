@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wild_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 20:16:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 16:31:37 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_char	*jump_to_pattern_start(const t_char *input, const t_char *start)
 		}
 		input--;
 	}
-	return ((t_char *)input + (input != start));
+	return ((t_char *)input + is_end_of_pattern(input, 0));
 }
 
 /**

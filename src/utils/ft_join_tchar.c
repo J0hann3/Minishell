@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_join_tchar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:24:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/10 20:31:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 17:18:37 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_char	*ft_tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter)
 	else
 		len = ft_tchar_len(s1) + size;
 	j = 0;
-	res = malloc(sizeof(t_char) * len + 1);
+	res = malloc(sizeof(t_char) * (len + 1));
 	if (res == 0)
 		return (NULL);
 	while (s1[j].c)
@@ -61,7 +61,7 @@ t_char	*ft_tchar_join(t_char *s1, const t_char *s2)
 
 	len = ft_tchar_len(s1) + ft_tchar_len(s2);
 	j = 0;
-	res = malloc(sizeof(t_char) * len + 1);
+	res = malloc(sizeof(t_char) * (len + 1));
 	if (res == 0)
 		return (NULL);
 	while (s1[j].c)
@@ -113,5 +113,42 @@ t_char	*ft_tcharndup(const t_char *s, size_t n)
 		i++;
 	}
 	res[i].c = 0;
+	return (res);
+}
+
+char	*ft_tchar_to_str(const t_char *input)
+{
+	size_t	size;
+	char	*res;
+
+	size = ft_tchar_len(input);
+	res = ft_calloc(size + 1, sizeof(char));
+	if (!res)
+		return (NULL);
+	size = 0;
+	while (input[size].c)
+	{
+		res[size] = input[size].c;
+		size++;
+	}
+	res[size] = 0;
+	return (res);
+}
+
+t_char	*ft_str_to_tchar(const char *str, bool is_inter)
+{
+	t_char	*res;
+	size_t	i;
+
+	res = ft_calloc(ft_strlen(str) + 1, sizeof(t_char));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		res[i].c = str[i];
+		res[i].is_inter = is_inter;
+		i++;
+	}
 	return (res);
 }

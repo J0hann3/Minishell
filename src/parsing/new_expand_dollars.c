@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_expand_dollars.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 20:28:44 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/11 19:00:47 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ bool	is_ambig_redir(char *input, int index)
 	i = 1;
 	while (i < index)
 	{
-		if (*(input - i) == '>')
+		if (*(input - i) == '>') // change
 			return (print_ambigous_redirect(input), true);
 		if (*(input - i) == '<')
 		{
@@ -131,12 +131,26 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	return (tmp);
 }
 
+void	set_wspace_to_inter(t_char *tstr)
+{
+	size_t	i;
+
+	i = 0;
+	while (tstr[i].c)
+	{
+		if (is_wspace(tstr[i].c))
+			tstr[i].is_inter = 1;
+		i++;
+	}
+}
+
 t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
 {
 	size_t	i;
 	int		begin_join;
 	char	*tmp;
 	t_char	*res;
+	t_char	*tmpchar;
 	bool	in_double_quotes;
 
 	in_double_quotes = false;
@@ -160,12 +174,18 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 				res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
 			i++;
 			tmp = expand(input + i, &i, env_info, is_ambigous);
+			printf("expand : '%s'\n", tmp);
 			if (!tmp)
 				return (free(res), mem_exh("dollar expand"), NULL);
+			tmpchar = ft_str_to_tchar(tmp, 0);
+			if (!tmpchar)
+				return (NULL); // write error
+			set_wspace_to_inter(tmpchar);
 			if (*is_ambigous)
-				return (free(tmp), free(res), NULL);
+				return (free(tmpchar), free(tmp), free(res), NULL);
 			begin_join = i;
-			res = ft_tchar_njoin(res, tmp, ft_strlen(tmp), 0);
+			res = ft_tchar_join(res, tmpchar);
+			free(tmpchar);
 			free(tmp);
 		}
 		else
