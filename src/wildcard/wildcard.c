@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 18:29:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 20:00:50 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool inc
 	if (!files_names)
 		return (-1);
 	pat_start = jump_to_pattern_start(input, *start);
+	ft_print("pat_start 1 : ", pat_start);
 	pat_end = jump_to_pattern_end(input);
 	if (!files_names[0].c)
 		return (pat_end - input);
@@ -195,7 +196,8 @@ int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool inc
 		return (free(files_names), -1);
 	size = ft_tchar_len(files_names);
 	free(files_names);
-	return (size - (input - pat_start));
+	ft_print("pat_start 2 : ", pat_start);
+	return (printf("bbbbbb3\n"), size - (input - pat_start));
 }
 
 static bool	is_w_redirection(t_char *pat_start, t_char *start)
@@ -203,17 +205,18 @@ static bool	is_w_redirection(t_char *pat_start, t_char *start)
 	int		i;
 
 	i = 0;
+	printf("coucou\n");
 	if (pat_start > start)
 		i--;
 	while (pat_start + i >= start)
 	{
 		if (is_wspace(pat_start[i].c))
 			i--;
-		else if (pat_start[i].c == '>')
+		else if (pat_start[i].c == '>' && pat_start[i].is_inter) 
 			return (true);
-		else if (pat_start[i].c == '<')
+		else if (pat_start[i].c == '<' && pat_start[i].is_inter)
 		{
-			if (pat_start + i > start && pat_start[i - 1].c == '<')
+			if (pat_start + i > start && pat_start[i - 1].c == '<' && pat_start[i - 1].is_inter)
 				return (false);
 			return (true);
 		}
@@ -229,6 +232,7 @@ static bool	is_w_heredoc(t_char *pat_start, t_char *start)
 	bool	first_wspace;
 
 	i = 0;
+	printf("coucou11\n");
 	first_wspace = false;
 	if (pat_start > start)
 		i--;
@@ -239,11 +243,11 @@ static bool	is_w_heredoc(t_char *pat_start, t_char *start)
 			i--;
 			first_wspace = true;
 		}
-		else if (pat_start[i].c == '>')
+		else if (pat_start[i].c == '>' && pat_start[i].is_inter)
 			return (false);
-		else if (pat_start[i].c == '<')
+		else if (pat_start[i].c == '<' && pat_start[i].is_inter)
 		{
-			if (pat_start + i > start && pat_start[i - 1].c == '<')
+			if (pat_start + i > start && pat_start[i - 1].c == '<' && pat_start[i - 1].is_inter)
 				return (true);
 			return (false);
 		}
@@ -292,17 +296,17 @@ bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 
 	tmp = input;
 	if (is_w_heredoc(jump_to_pattern_start(input, *start), *start))
-		return (*i = (jump_to_pattern_end(input) - *start),true);
+		return (*i = (jump_to_pattern_end(input) - *start), true);
 	if (!test_first_prefix(tmp, flist, *start, &include_hidden))
-		return (false);
+		return (printf("end\n"), false);
 	tmp = test_suffix(tmp, flist);
 	while (tmp && tmp->c == '*')
 		tmp = test_suffix(tmp, flist);
 	if (is_ambigous_redirection(input, *start, flist))
-		return (false);
+		return (printf("end1\n"), false);
 	size = replace_wildcard(input, start, flist, include_hidden);
 	if (size < 0)
-		return (false);
+		return (printf("end2\n"), false);
 	*i += size;
 	return (true);
 }
@@ -327,7 +331,7 @@ bool	expand_wild(t_char **input)
 					return (false);
 			}
 			if (!wildcard((*input) + i, flist, input, &i))
-				return (free(flist), false);
+				return (printf("no\n"),free(flist), false);
 		}
 		else
 			i++;

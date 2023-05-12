@@ -6,11 +6,12 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:24:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 17:54:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 18:50:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdbool.h>
 
 
 size_t	ft_tchar_len(const t_char *s)
@@ -151,4 +152,16 @@ t_char	*ft_str_to_tchar(const char *str, bool is_inter)
 		i++;
 	}
 	return (res);
+}
+
+bool	is_inter_and_eq(t_char c1, char c2)
+{
+	return (c1.is_inter && c1.c == c2);
+}
+
+bool	tchar_is_operator(const t_char *c)
+{
+	return ((c->c == '&' && (c + 1)->c == '&' && (c + 1)->is_inter)
+			|| (c->c == '|' && (c + 1)->c == '|' && (c + 1)->is_inter)
+			|| c->c == '|');
 }

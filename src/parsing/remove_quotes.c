@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:03:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 18:50:00 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:34:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ char	*remove_quotes(t_char *string)
 				is_in_quote = true;
 				quote = string[i].c;
 			}
+			else
+				res[j++] = string[i].c;
 		}
 		else 
 			res[j++] = string[i].c;

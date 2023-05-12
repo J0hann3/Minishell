@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   wild_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 16:31:37 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:53:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdbool.h>
 
 /**
  * @brief Does include the wildcard in the stop condition
@@ -22,12 +23,9 @@
  */
 bool	is_end_of_single_wildcard(const t_char *input, size_t i)
 {
-	return (
-		(input[i].c == '|' || (input[i].c == '&' && input[i + 1].c == '&'))
-		|| is_wspace(input[i].c)
-		|| is_redirection(input[i].c) || is_parenthesis(input[i].c)
-		|| input[i].c == '*'
-	);
+	return (input[i].is_inter 
+		&& (is_wspace(input[i].c) || is_redirection(input[i].c) 
+			|| is_parenthesis(input[i].c) || input[i].c == '*'));
 }
 
 /**
@@ -40,11 +38,9 @@ bool	is_end_of_single_wildcard(const t_char *input, size_t i)
  */
 bool	is_end_of_pattern(const t_char *input, size_t i)
 {
-	return (
-		(input[i].c == '|' || (input[i].c == '&' && input[i + 1].c == '&'))
-		|| is_wspace(input[i].c)
-		|| is_redirection(input[i].c) || is_parenthesis(input[i].c)
-	);
+	return (input[i].is_inter 
+		&& (is_wspace(input[i].c) || is_redirection(input[i].c) 
+			|| is_parenthesis(input[i].c)));
 }
 
 /**
