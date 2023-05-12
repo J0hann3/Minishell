@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 00:30:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 00:38:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,9 +137,8 @@ t_file_list	*init_flist(t_file_list *flist)
 		if (!dir_context)
 			return (closedir(dirp), flist);
 		tmp = ft_realloc(flist, (size + 1) * sizeof(t_file_list), (size + 2) * sizeof(t_file_list));
-		free(flist);
 		if (!tmp)
-			return (closedir(dirp), mem_exh("wildcard"), NULL);
+			return (free_flist(flist), closedir(dirp), mem_exh("wildcard"), NULL);
 		flist = tmp;
 		flist[size].file_name = ft_strndup(dir_context->d_name, ft_strlen(dir_context->d_name));
 		if (flist[size].file_name == NULL)
