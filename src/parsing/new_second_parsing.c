@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 19:41:03 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:12:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	if (!expand_wild(&expanded_command))
 		return (NULL); // voir free sur error
 	
-	printf("hey\n");
 	if (!open_all_fds(instruc, expanded_command, fd_heredocs))
 		return (free_instructions(instruc), g_error = 1, NULL);
 	

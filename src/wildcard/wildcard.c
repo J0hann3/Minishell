@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 20:00:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:11:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ t_char	*get_file_name_string(t_file_list *flist, bool include_hidden)
 }
 
 
-bool	replace_on_input(t_char **start, t_char *to_insert, t_char *pat_start, t_char *pat_end)
+t_char	*replace_on_input(t_char **start, t_char *to_insert, t_char *pat_start, t_char *pat_end)
 {
 	size_t	size;
 	t_char	*new_ptr;
@@ -162,42 +162,42 @@ bool	replace_on_input(t_char **start, t_char *to_insert, t_char *pat_start, t_ch
 	size = pat_start - *start;
 	new_ptr = ft_tcharndup(*start, size);
 	if (!new_ptr)
-		return (free(*start), false); // write error
+		return (free(*start), NULL); // write error
 	tmp = ft_tchar_join(new_ptr, to_insert);
 	free(new_ptr);
 	if (!tmp)
-		return (free(*start), false); // write error
+		return (free(*start), NULL); // write error
+	size = ft_tchar_len(tmp);
 	new_ptr = ft_tchar_join(tmp, pat_end);
 	free(tmp);
 	free(*start);
 	if (!new_ptr)
-		return (false); // write error
+		return (NULL); // write error
 	*start = new_ptr;
-	return (true);
+	return (new_ptr + size);
 }
 
-int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool include_hidden)
+t_char	*replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool include_hidden)
 {
 	t_char	*files_names;
 	t_char	*pat_start;
 	t_char	*pat_end;
-	int		size;
+	// int		size;
 	
 	
 	files_names = get_file_name_string(flist, include_hidden);
 	if (!files_names)
-		return (-1);
+		return (NULL);
 	pat_start = jump_to_pattern_start(input, *start);
-	ft_print("pat_start 1 : ", pat_start);
 	pat_end = jump_to_pattern_end(input);
 	if (!files_names[0].c)
-		return (pat_end - input);
-	if(!replace_on_input(start, files_names, pat_start, pat_end))
-		return (free(files_names), -1);
-	size = ft_tchar_len(files_names);
+		return (pat_end);
+	pat_end = replace_on_input(start, files_names, pat_start, pat_end);
+	if (pat_end == NULL)
+		return (free(files_names), NULL);
+	// size = ft_tchar_len(files_names);
 	free(files_names);
-	ft_print("pat_start 2 : ", pat_start);
-	return (printf("bbbbbb3\n"), size - (input - pat_start));
+	return (pat_end);
 }
 
 static bool	is_w_redirection(t_char *pat_start, t_char *start)
@@ -205,7 +205,6 @@ static bool	is_w_redirection(t_char *pat_start, t_char *start)
 	int		i;
 
 	i = 0;
-	printf("coucou\n");
 	if (pat_start > start)
 		i--;
 	while (pat_start + i >= start)
@@ -232,7 +231,6 @@ static bool	is_w_heredoc(t_char *pat_start, t_char *start)
 	bool	first_wspace;
 
 	i = 0;
-	printf("coucou11\n");
 	first_wspace = false;
 	if (pat_start > start)
 		i--;
@@ -290,7 +288,7 @@ bool	is_ambigous_redirection(t_char *input, t_char *start, t_file_list *flist)
 
 bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 {
-	int		size;
+	// int		size;
 	t_char	*tmp;
 	bool	include_hidden;
 
@@ -298,16 +296,16 @@ bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 	if (is_w_heredoc(jump_to_pattern_start(input, *start), *start))
 		return (*i = (jump_to_pattern_end(input) - *start), true);
 	if (!test_first_prefix(tmp, flist, *start, &include_hidden))
-		return (printf("end\n"), false);
+		return (false);
 	tmp = test_suffix(tmp, flist);
 	while (tmp && tmp->c == '*')
 		tmp = test_suffix(tmp, flist);
 	if (is_ambigous_redirection(input, *start, flist))
-		return (printf("end1\n"), false);
-	size = replace_wildcard(input, start, flist, include_hidden);
-	if (size < 0)
-		return (printf("end2\n"), false);
-	*i += size;
+		return (false);
+	tmp = replace_wildcard(input, start, flist, include_hidden);
+	if (tmp == NULL)
+		return (false);
+	*i = tmp - *start;
 	return (true);
 }
 
@@ -331,7 +329,7 @@ bool	expand_wild(t_char **input)
 					return (false);
 			}
 			if (!wildcard((*input) + i, flist, input, &i))
-				return (printf("no\n"),free(flist), false);
+				return (free(flist), false);
 		}
 		else
 			i++;

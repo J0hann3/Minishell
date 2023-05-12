@@ -6,23 +6,23 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:45:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 19:39:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:12:24 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	print_instruc(t_instruction *instruc) // tmp
-{
-	int	i;
+// static void	print_instruc(t_instruction *instruc) // tmp
+// {
+// 	int	i;
 
-	i = 0;
-	printf("Commands :\n");
-	while (instruc->command[i])
-		printf("`%s`\n", instruc->command[i++]);
-	printf("Infile  : '%d'\n", instruc->infile);
-	printf("Outfile : '%d'\n", instruc->outfile);
-}
+// 	i = 0;
+// 	printf("Commands :\n");
+// 	while (instruc->command[i])
+// 		printf("`%s`\n", instruc->command[i++]);
+// 	printf("Infile  : '%d'\n", instruc->infile);
+// 	printf("Outfile : '%d'\n", instruc->outfile);
+// }
 
 // static void	free_instructions(t_instruction *instruc)
 // {
