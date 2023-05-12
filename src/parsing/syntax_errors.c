@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 16:10:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 16:20:58 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,6 @@ bool	is_operator_ok(char **input, char *start_ptr)
 
 	boolean = (has_argument_left(start_ptr, *input)
 		&& has_argument_right(*input));
-	printf("ok : %d\n", boolean);
 	if (is_and_or(*input))
 		(*input)++;
 	return (boolean);
@@ -330,7 +329,7 @@ int	check_syntax_at(char **input, char *start_ptr, t_env_info *env)
 	if (**input == '<' || **input == '>')
 		return (is_redirection_ok(input, env));
 	if (is_operator(*input))
-		return (printf("operator : %s\n", *input), is_operator_ok(input, start_ptr) * 2);
+		return (is_operator_ok(input, start_ptr) * 2);
 	if (**input == '(')
 		return (has_closing_parenthesis(input, env, start_ptr));
 	if (**input == ')')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_expand_dollars.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 19:00:47 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:26:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool	is_ambig_redir(char *input, int index)
 			return (print_ambigous_redirect(input), true);
 		if (*(input - i) == '<')
 		{
-			if (i + 1 <= index - 1 && *(input - i - 1) == '<')
+			if (i + 1 < index && *(input - i - 1) == '<')
 				return (false);
 			print_ambigous_redirect(input);
 			return (true);
@@ -126,8 +126,10 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	while (tmp[j] && tmp[j] != '=')
 		j++;
 	tmp = ft_strdup(tmp + j + 1);
-	// if (tmp && is_ambig_redir(input - 1, *i - size) && (!*tmp || has_space(tmp)))
-	// 	*is_ambigous = true;
+	if (!tmp)
+		return (NULL);
+	if (tmp[0] == '\0' && is_ambig_redir(input - 1, *i - size))
+		*is_ambigous = true;
 	return (tmp);
 }
 
@@ -142,6 +144,38 @@ void	set_wspace_to_inter(t_char *tstr)
 			tstr[i].is_inter = 1;
 		i++;
 	}
+}
+
+bool	is_heredoc(char *pat_start, char *start)
+{
+	int		i;
+	bool 	first_wspace;
+
+	i = 0;
+	first_wspace = false;
+	if (pat_start > start)
+		i--;
+	while (pat_start + i >= start)
+	{
+		if (is_wspace(pat_start[i]))
+		{
+			first_wspace = true;
+			i--;
+		}
+		else if (pat_start[i] == '>')
+			return (false);
+		else if (pat_start[i] == '<')
+		{
+			if (pat_start + i > start && pat_start[i - 1] == '<')
+				return (true);
+			return (false);
+		}
+		else if (first_wspace)
+			return (false);
+		else
+			i--;
+	}
+	return (false);
 }
 
 t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
@@ -170,23 +204,27 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 		}
 		else if (input[i] == '$' && is_expandable(input + i + 1))
 		{
-			if (i > 0)
-				res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
-			i++;
-			tmp = expand(input + i, &i, env_info, is_ambigous);
-			printf("expand : '%s'\n", tmp);
-			if (!tmp)
-				return (free(res), mem_exh("dollar expand"), NULL);
-			tmpchar = ft_str_to_tchar(tmp, 0);
-			if (!tmpchar)
-				return (NULL); // write error
-			set_wspace_to_inter(tmpchar);
-			if (*is_ambigous)
-				return (free(tmpchar), free(tmp), free(res), NULL);
-			begin_join = i;
-			res = ft_tchar_join(res, tmpchar);
-			free(tmpchar);
-			free(tmp);
+			if (!is_heredoc(input + i, input))
+			{
+				if (i > 0)
+					res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+				i++;
+				tmp = expand(input + i, &i, env_info, is_ambigous);
+				if (!tmp)
+					return (free(res), mem_exh("dollar expand"), NULL);
+				tmpchar = ft_str_to_tchar(tmp, 0);
+				if (!tmpchar)
+					return (NULL); // write error
+				// set_wspace_to_inter(tmpchar);
+				if (*is_ambigous)
+					return (free(tmpchar), free(tmp), free(res), NULL);
+				begin_join = i;
+				res = ft_tchar_join(res, tmpchar);
+				free(tmpchar);
+				free(tmp);
+			}
+			else
+				i++;
 		}
 		else
 			i++;

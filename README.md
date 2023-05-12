@@ -143,7 +143,8 @@ hereocs creates a .nfs -> bug ?
 
 d|f|f -> erreur de syntax sur le pipe !				| done
 
-faire ambigous sur les * + messages d'erreur
+faire ambigous sur les */$							| done
+message erreur *
 
 leak fd du DIR*, solution : malloc les char[256] et créer un free_flist
 
@@ -155,3 +156,6 @@ echo src*/		->src/
 echo src*		->src
 
 export test="     "; >$test
+export test="asd     asd"; >$test == ambigous redirection
+
+export test="asd     asd"; echo <<$test == print asd, meme probleme avec les *

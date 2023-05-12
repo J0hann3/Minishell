@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 17:38:27 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:29:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdbool.h>
+#include <stddef.h>
 void	ft_print(char *,t_char *expanded_command);
 
 static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
@@ -181,6 +183,7 @@ int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool inc
 	t_char	*pat_end;
 	int		size;
 	
+	
 	files_names = get_file_name_string(flist, include_hidden);
 	if (!files_names)
 		return (-1);
@@ -195,6 +198,92 @@ int	replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool inc
 	return (size - (input - pat_start));
 }
 
+static bool	is_w_redirection(t_char *pat_start, t_char *start)
+{
+	int		i;
+
+	i = 0;
+	if (pat_start > start)
+		i--;
+	while (pat_start + i >= start)
+	{
+		if (is_wspace(pat_start[i].c))
+			i--;
+		else if (pat_start[i].c == '>')
+			return (true);
+		else if (pat_start[i].c == '<')
+		{
+			if (pat_start + i > start && pat_start[i - 1].c == '<')
+				return (false);
+			return (true);
+		}
+		else
+			return (false);
+	}
+	return (false);
+}
+
+static bool	is_w_heredoc(t_char *pat_start, t_char *start)
+{
+	int		i;
+	bool	first_wspace;
+
+	i = 0;
+	first_wspace = false;
+	if (pat_start > start)
+		i--;
+	while (pat_start + i >= start)
+	{
+		if (is_wspace(pat_start[i].c))
+		{
+			i--;
+			first_wspace = true;
+		}
+		else if (pat_start[i].c == '>')
+			return (false);
+		else if (pat_start[i].c == '<')
+		{
+			if (pat_start + i > start && pat_start[i - 1].c == '<')
+				return (true);
+			return (false);
+		}
+		else if (first_wspace)
+			return (false);
+		else
+			i--;
+	}
+	return (false);
+}
+
+bool	is_ambigous_redirection(t_char *input, t_char *start, t_file_list *flist)
+{
+	t_char	*pat_start;
+	char	*tmp;
+	int		i;
+	int		nb_matching;
+
+	pat_start = jump_to_pattern_start(input, start);
+	if (!is_w_redirection(pat_start, start))
+		return (false);
+	i = 0;
+	nb_matching = 0;
+	while (flist[i].file_name)
+	{
+		if (flist[i].is_matching)
+			nb_matching++;
+		i++;
+	}
+	if (nb_matching > 1)
+	{
+		jump_to_pattern_end(input)->c = '\0';
+		tmp = ft_tchar_to_str(pat_start);
+		ft_write_error(NULL, tmp, "ambigous redirect");
+		free(tmp);
+		return (true);
+	}
+	return (false);
+}
+
 bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 {
 	int		size;
@@ -202,11 +291,15 @@ bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 	bool	include_hidden;
 
 	tmp = input;
+	if (is_w_heredoc(jump_to_pattern_start(input, *start), *start))
+		return (*i = (jump_to_pattern_end(input) - *start),true);
 	if (!test_first_prefix(tmp, flist, *start, &include_hidden))
 		return (false);
 	tmp = test_suffix(tmp, flist);
 	while (tmp && tmp->c == '*')
 		tmp = test_suffix(tmp, flist);
+	if (is_ambigous_redirection(input, *start, flist))
+		return (false);
 	size = replace_wildcard(input, start, flist, include_hidden);
 	if (size < 0)
 		return (false);

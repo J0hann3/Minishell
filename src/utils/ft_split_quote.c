@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quote.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 18:47:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 16:18:46 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ t_char	**ft_split_quote(const t_char *string, int *nb_words)
 	if (!string)
 		return (NULL);
 	*nb_words = count_words(string);
-	printf("nb word : %d\n", *nb_words);
 	res = malloc(sizeof(t_char *) * (*nb_words + 1));
 	if (!res)
 		return (NULL);

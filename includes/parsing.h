@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/11 18:48:05 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:41:36 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 size_t	get_size_of_var(const char *str);
 bool	is_expandable(const char *input);
 t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
+void	print_ambigous_redirect(char *input_redir);
 
 
 //second_parsing.c
