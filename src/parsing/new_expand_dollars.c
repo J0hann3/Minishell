@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 18:26:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:38:53 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,18 +133,18 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	return (tmp);
 }
 
-void	set_wspace_to_inter(t_char *tstr)
-{
-	size_t	i;
+// void	set_wspace_to_inter(t_char *tstr)
+// {
+// 	size_t	i;
 
-	i = 0;
-	while (tstr[i].c)
-	{
-		if (is_wspace(tstr[i].c))
-			tstr[i].is_inter = 1;
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (tstr[i].c)
+// 	{
+// 		if (is_wspace(tstr[i].c))
+// 			tstr[i].is_inter = 1;
+// 		i++;
+// 	}
+// }
 
 bool	is_heredoc(char *pat_start, char *start)
 {
@@ -185,6 +185,7 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 	char	*tmp;
 	t_char	*res;
 	t_char	*tmpchar;
+	t_char	*tmpchar_1;
 	bool	in_double_quotes;
 
 	in_double_quotes = false;
@@ -207,21 +208,30 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 			if (!is_heredoc(input + i, input))
 			{
 				if (i > 0)
-					res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+				{
+					tmpchar = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+					free(res);
+					if (!tmpchar)
+						return (mem_exh("dollar expand"), NULL);
+					res = tmpchar;
+				}
 				i++;
 				tmp = expand(input + i, &i, env_info, is_ambigous);
 				if (!tmp)
 					return (free(res), mem_exh("dollar expand"), NULL);
-				tmpchar = ft_str_to_tchar(tmp, 0);
-				if (!tmpchar)
-					return (NULL); // write error
-				// set_wspace_to_inter(tmpchar);
 				if (*is_ambigous)
-					return (free(tmpchar), free(tmp), free(res), NULL);
-				begin_join = i;
-				res = ft_tchar_join(res, tmpchar);
-				free(tmpchar);
+					return (free(tmp), free(res), NULL);
+				tmpchar = ft_str_to_tchar(tmp, 0);
 				free(tmp);
+				if (!tmpchar)
+					return (free(res), mem_exh("dollar expand"), NULL); // write error
+				begin_join = i;
+				tmpchar_1 = ft_tchar_join(res, tmpchar);
+				free(tmpchar);
+				free(res);
+				if (!tmpchar_1)
+					return (mem_exh("dollar expand"), NULL);
+				res = tmpchar_1;
 			}
 			else
 				i++;
@@ -230,8 +240,12 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 			i++;
 	}
 	if (begin_join != (int)i)
-		res = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
-	if (!res)
-		mem_exh("dollar expand");
+	{
+		tmpchar = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+		free(res);
+		res = tmpchar;
+		if (!res)
+			mem_exh("dollar expand");
+	}
 	return (res);
 }

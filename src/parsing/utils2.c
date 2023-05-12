@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 15:07:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 00:03:46 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
+//free nothing
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 {
 	void	*new_ptr;
@@ -127,7 +128,7 @@ void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 	if (prev_size > new_size)
 		prev_size = new_size;
 	ft_memcpy(new_ptr, ptr, prev_size);
-	free(ptr);
+	// free(ptr);
 	return (new_ptr);
 }
 

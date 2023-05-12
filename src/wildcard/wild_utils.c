@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 19:53:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 00:30:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,21 +129,41 @@ t_file_list	*init_flist(t_file_list *flist)
 		return (false);
 	dirp = opendir(".");
 	if (!dirp)
-		return (free(flist), ft_write_error(NULL, "wildcard", strerror(errno)), NULL);
+		return (free_flist(flist), ft_write_error(NULL, "wildcard", strerror(errno)), NULL);
 	size = 0;
 	while (true)
 	{
 		dir_context = readdir(dirp);
 		if (!dir_context)
-			return (flist);
+			return (closedir(dirp), flist);
 		tmp = ft_realloc(flist, (size + 1) * sizeof(t_file_list), (size + 2) * sizeof(t_file_list));
+		free(flist);
 		if (!tmp)
-			return (closedir(dirp), free(flist), mem_exh("wildcard"), NULL);
+			return (closedir(dirp), mem_exh("wildcard"), NULL);
 		flist = tmp;
-		flist[size].file_name = dir_context->d_name;
-		stat(dir_context->d_name, &s);
+		flist[size].file_name = ft_strndup(dir_context->d_name, ft_strlen(dir_context->d_name));
+		if (flist[size].file_name == NULL)
+			return (free_flist(flist), closedir(dirp), mem_exh("wildcard"), NULL);
+		if (stat(dir_context->d_name, &s) == -1)
+			return (free_flist(flist), closedir(dirp), ft_write_error(NULL, "wilcard", strerror(errno)), NULL);
 		if (S_ISDIR(s.st_mode))
 			flist[size].is_dir = 1;
 		size++;
 	}
+}
+
+void	free_flist(t_file_list *flist)
+{
+	size_t	i;
+
+	i = 0;
+	if (flist == NULL)
+		return ;
+	while(flist[i].file_name != NULL)
+	{
+		// printf("i : %ld  '%s'\n", i, flist[i].file_name);
+		free(flist[i].file_name);
+		i++;
+	}
+	free(flist);
 }

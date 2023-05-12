@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:24:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 18:50:42 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:30:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ t_char	*ft_tchar_join(t_char *s1, const t_char *s2)
 	len = 0;
 	while (s2[len].c)
 	{
-		res[j].is_inter = s2[len].is_inter;
-		res[j++].c = s2[len++].c;
+		res[j].c = s2[len].c;
+		res[j++].is_inter = s2[len++].is_inter;
 	}
 	res[j].c = 0;
 	res[j].is_inter = 1;

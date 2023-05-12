@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 23:11:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 00:30:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,11 +329,11 @@ bool	expand_wild(t_char **input)
 					return (false);
 			}
 			if (!wildcard((*input) + i, flist, input, &i))
-				return (free(flist), false);
+				return (free_flist(flist), false);
 		}
 		else
 			i++;
 	}
-	free(flist);
+	free_flist(flist);
 	return (true);
 }

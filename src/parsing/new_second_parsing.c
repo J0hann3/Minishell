@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 23:12:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/12 23:46:33 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
 	if (!expanded_command || is_ambigous)
 		return (free_instructions(instruc), free(expanded_command), g_error = 1, NULL);
-	// ft_print("test ici", expanded_command);
+
 	if (!expand_wild(&expanded_command))
-		return (NULL); // voir free sur error
+		return (free_instructions(instruc), free(expanded_command), g_error = 1,NULL); // voir free sur error
 	
 	if (!open_all_fds(instruc, expanded_command, fd_heredocs))
 		return (free_instructions(instruc), g_error = 1, NULL);
