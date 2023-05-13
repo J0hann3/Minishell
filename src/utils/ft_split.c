@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 15:39:52 by jvigny            #+#    #+#             */
-/*   Updated: 2023/04/11 21:58:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/13 17:41:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static char	*cpy_mot(char const *s, int index, int len_mot)
 	return (res);
 }
 
-static char	**free_all(int i, char **res)
+static void	free_split(int i, char **res)
 {
 	while (i >= 0)
 	{
@@ -94,7 +94,6 @@ static char	**free_all(int i, char **res)
 		i--;
 	}
 	free(res);
-	return (0);
 }
 
 char	**ft_split(char const *s, char c)
@@ -118,7 +117,7 @@ char	**ft_split(char const *s, char c)
 		index = index_mot(s, c, i, &len_mot);
 		res[i] = cpy_mot(s, index, len_mot);
 		if (res[i] == 0)
-			return (free_all(i, res));
+			return (free_split(i, res), NULL);
 	}
 	res[i] = 0;
 	return (res);

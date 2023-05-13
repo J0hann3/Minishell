@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 18:50:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 17:34:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ char	*ft_tchar_to_str(const t_char *input);
 t_char	*ft_str_to_tchar(const char *str, bool is_inter);
 bool	is_inter_and_eq(t_char c1, char c2);
 bool	tchar_is_operator(const t_char *c);
+void	free_all(t_char **string);
 
 #endif

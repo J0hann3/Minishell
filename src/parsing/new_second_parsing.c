@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/12 23:46:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 18:16:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,46 +62,31 @@ t_instruction	*second_parsing(char *input, size_t command_size, t_env_info *env_
 	instruc->s_outfile = -2;
 	if(!expand_heredocs(&fd_heredocs, env_info))
 		return (free_instructions(instruc), g_error = 1, NULL);
-		
 	expanded_command = expand_dollars(input, command_size, env_info, &is_ambigous);
 	if (!expanded_command || is_ambigous)
 		return (free_instructions(instruc), free(expanded_command), g_error = 1, NULL);
 
 	if (!expand_wild(&expanded_command))
-		return (free_instructions(instruc), free(expanded_command), g_error = 1,NULL); // voir free sur error
+		return (free_instructions(instruc), free(expanded_command), g_error = 1, NULL);
 	
 	if (!open_all_fds(instruc, expanded_command, fd_heredocs))
-		return (free_instructions(instruc), g_error = 1, NULL);
-	
+		return (free_instructions(instruc), free(expanded_command), g_error = 1, NULL);
 	command = ft_split_quote(expanded_command, (int *)&command_size);
 	free(expanded_command);
 	if (!command)
 		return (free_instructions(instruc), g_error = 1, mem_exh("token creation"), NULL);
 	instruc->command = ft_calloc(command_size + 1, sizeof(char *));
 	if (!instruc->command)
-		return (free_instructions(instruc), mem_exh("token creation"), NULL);
+		return (free_instructions(instruc), free_all(command), mem_exh("token creation"), g_error = 1, NULL);
 	
 	i = 0;
 	while (command[i])
 	{
 		instruc->command[i] = remove_quotes(command[i]);
+		if (instruc->command[i] == NULL)
+			return (free_instructions(instruc), free_all(command), g_error = 1, NULL);
 		i++;
 	}
-	i = 0;
-	while (command[i])
-	{
-		printf("[%s]\n",instruc->command[i]);
-		i++;
-	}
-	// ft_print("fin", t_char *expanded_command)
-	// i first_wspace
+	free_all(command);
 	return (instruc);
 }
-
-// echo " test truc   " "$machin" '$HOME'
-
-// echo
-// " test truc   "
-// "$machin"
-// '$HOME'
-

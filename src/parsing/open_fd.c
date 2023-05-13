@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 02:45:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 19:35:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 18:10:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ size_t	get_file_size(const t_char *input)
 
 	i = 0;
 	size = 0;
-	while (input[i].c && (input[i].is_inter == false || (!is_wspace(input[i].c) && !is_redirection(input[i].c) && !is_parenthesis(input[i].c))))
+	while (input[i].c && (input[i].is_inter == false
+		|| (!is_wspace(input[i].c) && !is_redirection(input[i].c) && !is_parenthesis(input[i].c))))
 	{
 		if ((input[i].c == '\'' || input[i].c == '"') && input[i].is_inter == true)
 		{
@@ -74,12 +75,13 @@ char	*get_file_name(t_char *input)
 	size_t	file_size;
 	char	*file_name;
 
-	while (is_inter_and_eq(*input, '<') || is_inter_and_eq(*input, '>') || is_inter_and_eq(*input, ' ') || is_inter_and_eq(*input, '\t'))
+	while (is_inter_and_eq(*input, '<') || is_inter_and_eq(*input, '>')
+		|| is_inter_and_eq(*input, ' ') || is_inter_and_eq(*input, '\t'))
 		input++;
 	file_size = get_file_size(input);
 	file_name = ft_calloc(file_size + 1, sizeof(char));
 	if (!file_name)
-		return (NULL);
+		return (mem_exh("redirection"), NULL);
 	ft_copy(file_name, input, file_size);
 	return (file_name);
 }
@@ -90,9 +92,11 @@ void delete_file_name(t_char *input)
 	size_t	i;
 
 	size = 0;
-	while (is_inter_and_eq(input[size], '<') || is_inter_and_eq(input[size], '>') || is_inter_and_eq(input[size], ' ') || is_inter_and_eq(input[size], '\t'))
+	while (is_inter_and_eq(input[size], '<') || is_inter_and_eq(input[size], '>')
+			|| is_inter_and_eq(input[size], ' ') || is_inter_and_eq(input[size], '\t'))
 		size++;
-	while (input[size].c && (input[size].is_inter == false || (!is_wspace(input[size].c) && !is_redirection(input[size].c))))
+	while (input[size].c && (input[size].is_inter == false
+			|| (!is_wspace(input[size].c) && !is_redirection(input[size].c) && !is_parenthesis(input[size].c))))
 	{
 		if ((input[size].c == '\'' || input[size].c == '"') && input[size].is_inter == true)
 			size += skip_quotes_tchar(input + size);
@@ -112,14 +116,13 @@ int	read_fd(t_char *input)
 	char	*file_name;
 	int		fd;
 
-	// file_name = ft_tchar_to_str(input);
-	// if (!file_name)
-	// 	return (-1); // write error 
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
 	delete_file_name(input);
 	fd = open(file_name, O_RDONLY);
+	if (fd == -1)
+		ft_write_error(NULL, file_name, strerror(errno));
 	free(file_name);
 	return (fd);
 }
@@ -133,15 +136,14 @@ int	open_fd(t_char *input)
 
 	open_mode = O_CREAT | O_WRONLY | O_TRUNC;
 	if (is_inter_and_eq(input[0], '>') && is_inter_and_eq(input[1], '>'))
-		open_mode = O_CREAT | O_WRONLY | O_APPEND;
-	// file_name = ft_tchar_to_str(input);
-	// if (!file_name)
-	// 	return (-1); // write error 
+		open_mode = O_CREAT | O_WRONLY | O_APPEND; 
 	file_name = get_file_name(input);
 	if (!file_name)
 		return (-1);
 	delete_file_name(input);
 	fd = open(file_name, open_mode, 0666);
+	if (fd == -1)
+		ft_write_error(NULL, file_name, strerror(errno));
 	free(file_name);
 	return (fd);
 }
@@ -158,13 +160,16 @@ bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs)
 	{
 		if ((input[i].c == '\"' || input[i].c == '\'') && input[i].is_inter == true)
 			i += skip_quotes_tchar(input + i) + 1;
-		else if (input[i].c == '<' && input[i + 1].c == '<'  && input[i].is_inter == true  && input[i + 1].is_inter == true)
+		else if (input[i].c == '<' && input[i + 1].c == '<' 
+				&& input[i].is_inter == true && input[i + 1].is_inter == true)
 		{
 			if (instruc->infile > -1 && instruc->infile != fd_heredocs)
 				close(instruc->infile);
 			delete_file_name(input + i);
 			if (fd_heredocs != -1)
 				(instruc->infile = fd_heredocs, is_use_heredoc = true);
+			else
+				return (false);
 		}
 		else if (input[i].c == '<' && input[i].is_inter == true)
 		{
@@ -175,7 +180,6 @@ bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs)
 			{
 				if (fd_heredocs != -1 && is_use_heredoc == false)
 					close(fd_heredocs);
-				perror("Error"); // change
 				return (false);
 			}
 		}
@@ -188,7 +192,6 @@ bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs)
 			{
 				if (fd_heredocs != -1 && is_use_heredoc == false)
 					close(fd_heredocs);
-				perror("Error"); // change
 				return (false);
 			}
 		}

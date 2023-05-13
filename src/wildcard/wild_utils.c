@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 00:38:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 16:03:00 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
  */
 bool	is_end_of_single_wildcard(const t_char *input, size_t i)
 {
-	return (input[i].is_inter 
+	return (input[i].c == '*' || (input[i].is_inter 
 		&& (is_wspace(input[i].c) || is_redirection(input[i].c) 
-			|| is_parenthesis(input[i].c) || input[i].c == '*'));
+			|| is_parenthesis(input[i].c))));
 }
 
 /**
@@ -126,7 +126,7 @@ t_file_list	*init_flist(t_file_list *flist)
 
 	flist = ft_calloc(1, sizeof(t_file_list));
 	if (!flist)
-		return (false);
+		return (mem_exh("wildcard"), NULL);
 	dirp = opendir(".");
 	if (!dirp)
 		return (free_flist(flist), ft_write_error(NULL, "wildcard", strerror(errno)), NULL);

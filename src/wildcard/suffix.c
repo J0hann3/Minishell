@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:02 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 20:10:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 16:33:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*get_suffix(const t_char *input, bool *is_end)
 		return (NULL);
 	suffix = ft_calloc(pattern_size + 1, sizeof(char));
 	if (!suffix)
-		return (NULL); // error write
+		return (mem_exh("wildcard"), NULL);
 	get_cleaned_name(suffix, (t_char *)input, pattern_size);
 	return (suffix);
 }

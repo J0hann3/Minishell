@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 16:18:46 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 17:34:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/../includes/minishell.h"
 
-static void	free_all(t_char **string)
+void	free_all(t_char **string)
 {
 	int	i;
 
@@ -66,7 +66,7 @@ static t_char	*get_word(const t_char **string)
 			size += skip_quotes_tchar((*string) + size);
 		size++;
 	}
-	res = malloc(sizeof(t_char) * (size + 1));
+	res = ft_calloc(sizeof(t_char), (size + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -89,7 +89,7 @@ t_char	**ft_split_quote(const t_char *string, int *nb_words)
 	if (!string)
 		return (NULL);
 	*nb_words = count_words(string);
-	res = malloc(sizeof(t_char *) * (*nb_words + 1));
+	res = ft_calloc(sizeof(t_char *), (*nb_words + 1));
 	if (!res)
 		return (NULL);
 	i = 0;

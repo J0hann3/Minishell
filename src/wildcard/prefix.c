@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:00 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/10 20:05:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 16:23:38 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,10 @@ static int	get_prefix_size(const t_char *input, const t_char *start)
 			if (input + i <= start)
 				break ;
 			i--;
-			while (input + i >= start && input[i].c != quote)
+			while (input + i >= start)
 			{
+				if (input[i].c == quote && input[i].is_inter)
+					break ;
 				if (input[i].c == '/')
 					return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
 				i--;
@@ -95,7 +97,7 @@ char	*get_prefix(const t_char *input, const t_char *start)
 		return (NULL);
 	prefix = ft_calloc(prefix_size + 1, sizeof(char));
 	if (!prefix)
-		return (NULL); // error write
+		return (mem_exh("wildcard"), NULL);
 	get_cleaned_name(prefix, (t_char *)input, prefix_size);
 	return (prefix);
 }

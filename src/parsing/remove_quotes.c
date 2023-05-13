@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:03:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 19:34:35 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 17:38:49 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*remove_quotes(t_char *string)
 	is_in_quote = false;
 	res = ft_calloc(ft_tchar_len(string) + 1, sizeof(char));
 	if (!res)
-		return (free(string), NULL); // write error
+		return (mem_exh("token creation"), NULL);
 	while (string[i].c)
 	{
 		if ((string[i].c == '\'' || string[i].c == '"') && string[i].is_inter == true)
@@ -45,6 +45,5 @@ char	*remove_quotes(t_char *string)
 		i++;
 	}
 	res[j] = 0;
-	free(string);
 	return (res);
 }

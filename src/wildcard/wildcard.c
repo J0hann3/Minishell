@@ -6,13 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 00:30:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 16:56:07 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdbool.h>
-#include <stddef.h>
+#include <stdio.h>
+
 void	ft_print(char *,t_char *expanded_command);
 
 static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
@@ -47,9 +47,11 @@ void	find_pattern_in_fname(t_file_list *flist, char *to_find, bool is_end)
 	int		i;
 
 	i = 0;
+	if (ft_strlen(to_find) == 0)
+		return ;
 	while (flist[i].file_name)
 	{
-		if (flist[i].is_matching && ft_strlen(to_find) != 0)
+		if (flist[i].is_matching)
 		{
 			if (is_end)
 				find_for_end_only(flist, to_find, i);
@@ -67,13 +69,6 @@ void	find_pattern_in_fname(t_file_list *flist, char *to_find, bool is_end)
 		}
 		i++;
 	}
-}
-
-bool	has_to_include_hidden(const char *input)
-{
-	if (*input == '\'' || *input == '"')
-		input++;
-	return (*input == '.');
 }
 
 t_char	*test_suffix(t_char *input, t_file_list *flist)
@@ -102,7 +97,7 @@ bool	test_first_prefix(t_char *input, t_file_list *flist, const t_char *start, b
 	to_test = get_prefix(input, start);
 	if (!to_test)
 		return (false);
-	*include_hidden = has_to_include_hidden(to_test);
+	*include_hidden = (*to_test == '.');
 	while (flist[i].file_name != NULL)
 	{
 		tmp = ft_strnstr(flist[i].file_name, to_test, ft_strlen(flist[i].file_name));
@@ -162,17 +157,17 @@ t_char	*replace_on_input(t_char **start, t_char *to_insert, t_char *pat_start, t
 	size = pat_start - *start;
 	new_ptr = ft_tcharndup(*start, size);
 	if (!new_ptr)
-		return (free(*start), NULL); // write error
+		return (mem_exh("wildcard"), NULL);
 	tmp = ft_tchar_join(new_ptr, to_insert);
 	free(new_ptr);
 	if (!tmp)
-		return (free(*start), NULL); // write error
+		return (mem_exh("wildcard"), NULL);
 	size = ft_tchar_len(tmp);
 	new_ptr = ft_tchar_join(tmp, pat_end);
 	free(tmp);
-	free(*start);
 	if (!new_ptr)
-		return (NULL); // write error
+		return (mem_exh("wildcard"),NULL);
+	free(*start);
 	*start = new_ptr;
 	return (new_ptr + size);
 }
@@ -182,7 +177,6 @@ t_char	*replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool
 	t_char	*files_names;
 	t_char	*pat_start;
 	t_char	*pat_end;
-	// int		size;
 	
 	
 	files_names = get_file_name_string(flist, include_hidden);
@@ -191,11 +185,8 @@ t_char	*replace_wildcard(t_char *input, t_char **start, t_file_list *flist, bool
 	pat_start = jump_to_pattern_start(input, *start);
 	pat_end = jump_to_pattern_end(input);
 	if (!files_names[0].c)
-		return (pat_end);
+		return (free(files_names), pat_end);
 	pat_end = replace_on_input(start, files_names, pat_start, pat_end);
-	if (pat_end == NULL)
-		return (free(files_names), NULL);
-	// size = ft_tchar_len(files_names);
 	free(files_names);
 	return (pat_end);
 }
@@ -215,7 +206,8 @@ static bool	is_w_redirection(t_char *pat_start, t_char *start)
 			return (true);
 		else if (pat_start[i].c == '<' && pat_start[i].is_inter)
 		{
-			if (pat_start + i > start && pat_start[i - 1].c == '<' && pat_start[i - 1].is_inter)
+			if (pat_start + i > start && pat_start[i - 1].c == '<'
+					&& pat_start[i - 1].is_inter)
 				return (false);
 			return (true);
 		}
@@ -245,7 +237,8 @@ static bool	is_w_heredoc(t_char *pat_start, t_char *start)
 			return (false);
 		else if (pat_start[i].c == '<' && pat_start[i].is_inter)
 		{
-			if (pat_start + i > start && pat_start[i - 1].c == '<' && pat_start[i - 1].is_inter)
+			if (pat_start + i > start && pat_start[i - 1].c == '<'
+					&& pat_start[i - 1].is_inter)
 				return (true);
 			return (false);
 		}
@@ -288,7 +281,6 @@ bool	is_ambigous_redirection(t_char *input, t_char *start, t_file_list *flist)
 
 bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 {
-	// int		size;
 	t_char	*tmp;
 	bool	include_hidden;
 

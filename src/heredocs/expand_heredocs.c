@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand_heredocs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 18:52:17 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:15:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/get_next_line.h"
+#include <unistd.h>
 
 static char	*expand(char *input, size_t *i, t_env_info *env_info)
 {
@@ -78,7 +79,7 @@ char	*expand_here(char *input, t_env_info *env_info)
 }
 
 
-static bool	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
+static void	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 {
 	char	*line;
 
@@ -96,7 +97,6 @@ static bool	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 	close(src_fd);
 	close(dst_fd);
 	get_next_line(-1);
-	return (true);
 }
 
 bool	expand_heredocs(int *fd_in, t_env_info *env_info)
@@ -117,14 +117,10 @@ bool	expand_heredocs(int *fd_in, t_env_info *env_info)
 	{
 		close(new_fd_r);
 		close(new_fd_w);
-		return (ft_write_error("heredocs", file_name, strerror(errno)), free(file_name), false);
+		return (close(*fd_in), ft_write_error("heredocs", file_name, strerror(errno)), free(file_name), false);
 	}
 	free(file_name);
-	if(!fill_new_fd(new_fd_w, *fd_in, env_info))
-	{
-		close(new_fd_r);
-		return (false);
-	}
+	fill_new_fd(new_fd_w, *fd_in, env_info);
 	*fd_in = new_fd_r;
 	return (true);
 }

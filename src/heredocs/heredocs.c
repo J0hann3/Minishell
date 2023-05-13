@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 19:11:25 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 18:16:02 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 // 	while (input[i] && (is_in_quote || (!is_operator(input + i) && !is_parenthesis(input[i])
 // 		&& !is_redirection(input[i]) && !is_wspace(input[i]))))
 // 	{
-// 		// printf("test : '%s'\n", input + i);
 // 		// fflush(stdout);
 // 		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
 // 		{

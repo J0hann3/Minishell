@@ -133,7 +133,7 @@ echo dfgfd > test (redirige le prompt)			| Done
 mini exit code = 0
 bash exit code = 1
 mini error = ()
-bash error = ( ambiguous redirect)
+bash error = (ambiguous redirect)
 
 
 
@@ -159,3 +159,6 @@ export test="     "; >$test
 export test="asd     asd"; >$test == ambigous redirection
 
 export test="asd     asd"; echo <<$test == print asd, meme probleme avec les *
+
+
+use_heredoc in open_fd not usefull ??

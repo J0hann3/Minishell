@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 11:51:23 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 17:40:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_str(char **str)
 
 	i = 0;
 	if (str == NULL || *str == NULL)
-		return (free(str), (void)0);
+		return (free(str));
 	while (str[i] != NULL)
 	{
 		free(str[i]);
