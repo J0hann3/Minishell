@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 00:14:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 19:38:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,28 @@ bool	is_parenthesis(char c)
 static char *get_error_token(char *input)
 {
 	if (!*input)
-		return (ft_strdup("syntax error near unexpected token `newline'"));
+		return ("syntax error near unexpected token `newline'");
 	if (*input == '&' && *(input + 1) == '&')
-		return (ft_strdup("syntax error near unexpected token `&&'"));
+		return ("syntax error near unexpected token `&&'");
 	if (*input == '|' && *(input + 1) == '|')
-		return (ft_strdup("syntax error near unexpected token `||'"));
+		return ("syntax error near unexpected token `||'");
 	if (*input == '|')
-		return (ft_strdup("syntax error near unexpected token `|'"));
+		return ("syntax error near unexpected token `|'");
 	if (*input == '<' && *(input + 1) == '<' && *(input + 2) == '<')
-		return (ft_strdup("syntax error near unexpected token `<<<'"));
+		return ("syntax error near unexpected token `<<<'");
 	if (*input == '>' && *(input + 1) == '>')
-		return (ft_strdup("syntax error near unexpected token `>>'"));
+		return ("syntax error near unexpected token `>>'");
 	if (*input == '<' && *(input + 1) == '<')
-		return (ft_strdup("syntax error near unexpected token `<<'"));
+		return ("syntax error near unexpected token `<<'");
 	if (*input == '>' && *(input + 1) != '>')
-		return (ft_strdup("syntax error near unexpected token `>'"));
+		return ("syntax error near unexpected token `>'");
 	if (*input == '<' && *(input + 1) != '<')
-		return (ft_strdup("syntax error near unexpected token `<'"));
+		return ("syntax error near unexpected token `<'");
 	if (*input == '(')
-		return (ft_strdup("syntax error near unexpected token `('"));
+		return ("syntax error near unexpected token `('");
 	if (*input == ')')
-		return (ft_strdup("syntax error near unexpected token `)'"));
-	return (ft_strdup("syntax error near unexpected token `error'"));
+		return ("syntax error near unexpected token `)'");
+	return ("syntax error near unexpected token `error'");
 }
 
 /**
@@ -235,10 +235,12 @@ bool	is_parenthesis_right_ok(char *str)
 	char	*error;
 
 	i = 1;
-	while (str[i] && is_wspace(str[i]))
+	while (is_wspace(str[i]))
 		i++;
 	if (str[i] == '\0' || str[i] == ')')
 		return (true);
+	if (str[i] == '(')
+		return (ft_write_error(NULL, NULL, "syntax error near unexpected token `('"), false);
 	tmp = i;
 	if (str[i] == '|')
 		while (str[i] && str[i] == '|')
@@ -252,7 +254,7 @@ bool	is_parenthesis_right_ok(char *str)
 		return (true);
 	if (i - tmp == 2 && str[i - 1] == '|')
 		return (true);
-	error = ft_strjoin3("syntax error near unexpected token `", get_par_error(str), "'");
+	error = ft_strjoin3("syntax error near unexpected token `", get_par_error(str + 1), "'");
 	return (ft_write_error(NULL, NULL, error), free(error), false);
 }
 

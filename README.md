@@ -141,24 +141,23 @@ PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
 
 hereocs creates a .nfs -> bug ?
 
-d|f|f -> erreur de syntax sur le pipe !				| done
-
-faire ambigous sur les */$							| done
-message erreur *
-
-leak fd du DIR*, solution : malloc les char[256] et créer un free_flist
-
-echo "t "*		-> printf : t * *					| done
-echo .*			-> don't work						| done
 *		-> need to sort in alphabet order
 
 echo src*/		->src/
 echo src*		->src
 
-export test="     "; >$test
-export test="asd     asd"; >$test == ambigous redirection
-
-export test="asd     asd"; echo <<$test == print asd, meme probleme avec les *
-
+(echo a)(echo c)
 
 use_heredoc in open_fd not usefull ??
+
+heredocs
+redirection
+variable$
+builtin
+*
+parsing
+|
+&&
+||
+()
+env -i et compagnie

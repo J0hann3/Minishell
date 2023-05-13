@@ -6,12 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 16:56:07 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 19:23:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
 
 void	ft_print(char *,t_char *expanded_command);
 
@@ -36,7 +35,7 @@ static void	find_for_end_only(t_file_list *flist, char *to_find, int i)
 /**
  * @brief finds a pattern for each elemts of the file name list.
  * Fills flist properly if a pattern is found or not.
- * 
+ * input
  * @param flist 
  * @param to_find 
  * @param is_end 

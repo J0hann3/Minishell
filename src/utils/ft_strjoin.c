@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/11 16:58:06 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:31:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ char	*ft_strjoin(char *s1, char const *s2)
 	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (0);
-	while (s1 && s1[j])
+	while (s1[j])
 	{
 		res[j] = s1[j];
 		j++;
 	}
 	len = 0;
-	while (s2 && s2[len])
+	while (s2[len])
 	{
 		res[j] = s2[len];
 		j++;
@@ -65,20 +65,20 @@ char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (0);
-	while (s1 && s1[j])
+	while (s1[j])
 	{
 		res[j] = s1[j];
 		j++;
 	}
 	len = 0;
-	while (s2 && s2[len])
+	while (s2[len])
 	{
 		res[j] = s2[len];
 		j++;
 		len++;
 	}
 	len = 0;
-	while (s3 && s3[len])
+	while (s3[len])
 	{
 		res[j] = s3[len];
 		j++;
@@ -110,7 +110,7 @@ char	*ft_strnjoin(char *s1, char const *s2, size_t size)
 	res = malloc(sizeof(char) * (len + 1));
 	if (res == 0)
 		return (NULL);
-	while (s1 && s1[j])
+	while (s1[j])
 	{
 		res[j] = s1[j];
 		j++;
@@ -136,7 +136,7 @@ char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 	if (res == NULL)
 		return (NULL);
 	j = -1;
-	while (s1 && s1[++j])
+	while (s1[++j])
 		res[j] = s1[j];
 	if (add_slash == 1)
 	{
@@ -144,7 +144,7 @@ char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 		++j;
 	}
 	len = -1;
-	while (s2 && s2[++len])
+	while (s2[++len])
 	{
 		res[j] = s2[len];
 		j++;
