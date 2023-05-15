@@ -1,8 +1,4 @@
 # Minishell
-
-grep e > outfile < infile
-grep e < infile > outfile
-grep e < infile < infile1
 ls | grep e > outfile > outfile1
 ls | grep e >> outfile >> outfile1
 < infile grep a | grep e > outfile
@@ -20,17 +16,9 @@ while (exit)
 	exec (path, arg, env)
 
 
-- TASK :
-quentin : main "parsing + errors" $ENV heredoc "lister fd" signaux "open les fds" *
-johanne : execution built-in pipes "find path"
-
-? : $?
-
-
-execve -> mutattion de process
-
 
 - GOOD TO KNOW :
+execve -> mutation de process
 ‘|&’ is used, command1’s standard error, in addition to its standard output
 Redirections are processed in the order they appear, from left to right. 
 
@@ -70,74 +58,10 @@ WAITPID :
 	• WTERMSIG(status): gives the number of the terminating signal
 	3. WIFSTOPPED(status): child is stopped 
 	• WSTOPSIG(status): gives the number of the stop signal
-- Syntax :
-	"|" : besoin arguments des deux cotés
-	"&&" et "||" : besoin argument des deux cotés
-	"<" et ">" droite uniquement
-	"<<" et ">>" droite uniquement
 
-
-
-expand $ avant le *
-$ + signe non accepte dns pour variable export -> remplace rien
-$ + variable name -> remplace par la valer de l'env, si n'existe pas, remplace par ''
-$ + accepte + non accepte -> remplace et affiche le non accepte a la suite
-cas speciaux :
-$* -> ne fais rien comme un caractere non accepte basique, puis interprete quand meme l'etoile
-$? remplace par la valeur actuelle d'erreur
-
-
-fds : -2 par defaut, si rien n'a ete ouvert, ou tente
-	  -1 si une erreur pendant l'ouverture = jojo ne fais rien
-arrete a la premiere erreur d'ouverture pour >, >> et <
-
-
-// syntax erreur
-
-dans l'ordre gauche a droite, ne print qu'une seul erreur, remonte pas les erreurs
-
-- dans '>' -> parentheses impossible, sinon tout sauf <, renvoie la premiere erreur rencontree
-- dans '"' -> rien tant que pas trouve ", si EOF alors double erreur
-- dans '(' -> attend << ou " dans l'ordre, suit les regles des deux autres si besoin
-- regle de precedence gauche droite pour les erreurs d'operateur sans operant
-
-
-ERREUR DE MALLOC : <FUNCTIONNALITE> ": memory exausted"
-
-erreur parsing
-erreur ambiguous redirect						|done
-><test		-> needto write an error			|done
-
-cat <<te"st		->invalid read					|done
-don't add in history if ligne empty				|done
-echo <<hey $?									|done
 non interactive : readline writes a prompt
 
-cat <<fin&& <<fin -> probleme 					| Done
-
-g      && (dfghj) ghj		->need to write error	|Done
-
-
-
 change _= ???
-
-unset -TEST		->error 2						| Done
-
-echo "exit_code ->$? user ->$USER home -> $HOME"	|Done
-
-minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42" 		| Done
-
-echo dfgfd > test (redirige le prompt)			| Done
-
- > * 
-mini exit code = 0
-bash exit code = 1
-mini error = ()
-bash error = (ambiguous redirect)
-
-
-
-PROTECTION STRJOIN FAITE, SI NULL ALORS PLUS DE SEGFAULT (probleme ?)
 
 hereocs creates a .nfs -> bug ?
 
@@ -161,3 +85,34 @@ parsing
 ||
 ()
 env -i et compagnie
+
+
+==2273715== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$> g      && (dfghj) ghj
+minishell: syntax error near unexpected token `ghj'
+minishell$> g      (dfghj) ghj
+minishell: syntax error near unexpected token `dfghj'
+minishell$> g      (dfghj) |ghj
+minishell: syntax error near unexpected token `dfghj'
+minishell$> g      (dfghj)() |ghj
+minishell: syntax error near unexpected token `dfghj'
+minishell$> g    ||  (dfghj)() |ghj
+minishell: syntax error near unexpected token `('
+minishell$> g    ||  (dfghj)(dfh) |ghj
+minishell: syntax error near unexpected token `('
+minishell$> g    ||  (dfghj)(dfh |ghj)
+minishell: syntax error near unexpected token `('
+minishell$> unset -Test hk
+minishell: unset: -Test: invalid option
+minishell$> echo $?
+2
+minishell$> unset  hk
+minishell$> echo "exit_code ->$? user ->$USER home -> $HOME"
+exit_code ->0 user ->jvigny home -> /mnt/nfs/homes/jvigny
+minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42"
+bonjour       42
+minishell$> >*
+minishell: *: ambigous redirect
+minishell$> echo $?
+1
+minishell$> 

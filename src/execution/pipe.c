@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:46:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 22:20:25 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 		free_env(env);
 		exit(g_error);
 	}
+	close(tree->fd_heredocs);
 	ign_signals(env->act);
 	if (fd_tmp != 0)
 		close(fd_tmp);

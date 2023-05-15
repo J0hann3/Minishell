@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:14:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:33:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 22:23:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_pwd(char **arg, t_env_info	*env)
 	{
 		g_error = 2;
 		ft_write_error("pwd", NULL, strerror(errno));
+		free_str(arg);
 		return ;
 	}
 	write(1, str, ft_strlen(str));

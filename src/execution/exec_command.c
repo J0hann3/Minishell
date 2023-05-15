@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:39:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 22:34:16 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ int	exec(t_instruction *inst, t_env_info *env)
 
 	if (inst == NULL || inst->command == NULL)
 		return (-1);
-	if (inst->command[0] == NULL || *(inst->command[0]) == '\0')
+	if (inst->command[0] == NULL)
 		return (close_fd(inst), free_str(inst->command), -1);
+	if (*(inst->command[0]) == '\0')
+		return (ft_write_error("", NULL, "command not found"), close_fd(inst), free_str(inst->command), -1);
 	g_error = 0;
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (g_error);

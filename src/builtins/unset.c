@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 17:38:02 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/08 14:38:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 22:23:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_unset(char **arg, t_env_info	*env)
 	while (arg[i] != NULL)
 	{
 		if (len_env == 0)
-			return ;
+			return (free_str(arg));
 		i_unset = ft_getenv(env->env, arg[i]);
 		if (i_unset != -1)
 		{
@@ -40,7 +40,7 @@ void	ft_unset(char **arg, t_env_info	*env)
 			len_env--;
 		}
 		else if (i == 1 && arg[i][0] == '-' && arg[i][1] != '\0')
-			return (g_error = 2, ft_write_error("unset", arg[i], "invalid option"));
+			return (g_error = 2, ft_write_error("unset", arg[i], "invalid option"), free_str(arg));
 		++i;
 	}
 	free_str(arg);

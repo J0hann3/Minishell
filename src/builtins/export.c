@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:34:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/13 22:26:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,14 @@ void	ft_export(char **arg, t_env_info	*env)
 	len_arg = trim_invalid_varible(arg);
 	len_arg = modifie_var(arg, env->env, len_arg);
 	if (len_arg < 0 || len_arg == 0)
-		return (free_arg(arg, len_arg), (void)0);
+		return (free_arg(arg, len_arg));
 	len_env = ft_len(env->env);
 	if (env->len_env > len_env + len_arg)
 	{
 		add_new_variable(arg, env->env, len_arg, len_env);
 		env->len_env = len_arg + len_env;
+		free(arg[0]);
+		free(arg);
 		return ;
 	}
 	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));
@@ -77,7 +79,7 @@ void	ft_export(char **arg, t_env_info	*env)
 	{
 		g_error = 2;
 		ft_write_error("export", NULL, "memory exausted");
-		return (free_arg(arg, len_arg), (void)0);
+		return (free_arg(arg, len_arg));
 	}
 	env->len_env = len_env + len_arg;
 	ft_copy(new, env->env);
