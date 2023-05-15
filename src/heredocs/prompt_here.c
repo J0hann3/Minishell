@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 18:10:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 23:51:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ int	prompt_here(char *ender, int fd_w, t_env_info *env)
 	int		pid;
 	int		stat;
 
-	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO)) // not interactive
+	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
 		return (close(fd_w), 0);
 	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (close_fd_heredocs(env), 2);
+		return (ft_write_error("heredocs", NULL, strerror(errno)), close(fd_w), 2);
 	if (pid == 0)
 	{
 		close_fd_heredocs(env);
@@ -68,7 +68,8 @@ int	prompt_here(char *ender, int fd_w, t_env_info *env)
 	else
 	{
 		ign_signals(env->act);
-		waitpid(pid, &stat, 0);
+		if (waitpid(pid, &stat, 0) == -1)
+			ft_write_error("heredocs", NULL, strerror(errno));
 		reset_signals(env->act);
 		if (WIFSIGNALED(stat))
 			stat = 128 + WTERMSIG(stat);

@@ -6,13 +6,12 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 18:15:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 23:33:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/get_next_line.h"
-#include <unistd.h>
 
 static char	*expand(char *input, size_t *i, t_env_info *env_info)
 {
@@ -60,7 +59,11 @@ char	*expand_here(char *input, t_env_info *env_info)
 		if (input[i] == '$' && input[i + 1] != '$' && is_expandable(input + i + 1))
 		{
 			if (i > 0)
+			{
 				res = ft_strnjoin(res, input + begin_join, i - begin_join);
+				if (!res)
+					return (free(input), NULL);
+			}
 			i++;
 			tmp = expand(input + i, &i, env_info);
 			if (!tmp)
@@ -68,6 +71,8 @@ char	*expand_here(char *input, t_env_info *env_info)
 			begin_join = i;
 			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
 			free(tmp);
+			if (!res)
+				return (free(input), NULL);
 		}
 		else
 			i++;
@@ -79,7 +84,7 @@ char	*expand_here(char *input, t_env_info *env_info)
 }
 
 
-static void	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
+static bool	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 {
 	char	*line;
 
@@ -90,13 +95,15 @@ static void	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 			break ;
 		line = expand_here(line, env_info);
 		if (!line)
-			break ;
+			return (mem_exh("heredocs"),
+					get_next_line(-1), close(src_fd), close(dst_fd), false);
 		write(dst_fd, line, ft_strlen(line));
 		free(line);
 	}
 	close(src_fd);
 	close(dst_fd);
 	get_next_line(-1);
+	return (true);
 }
 
 bool	expand_heredocs(int *fd_in, t_env_info *env_info)
@@ -120,7 +127,8 @@ bool	expand_heredocs(int *fd_in, t_env_info *env_info)
 		return (close(*fd_in), ft_write_error("heredocs", file_name, strerror(errno)), free(file_name), false);
 	}
 	free(file_name);
-	fill_new_fd(new_fd_w, *fd_in, env_info);
+	if (!fill_new_fd(new_fd_w, *fd_in, env_info))
+		return (close(new_fd_r), false);
 	*fd_in = new_fd_r;
 	return (true);
 }

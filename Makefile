@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/15 19:16:17 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/15 23:53:15 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,15 +56,15 @@ SRC_UTILS = ft_calloc.c \
 			error.c
 
 PARSING = parsing/
-SRC_PARSING = syntax_errors.c \
-			parsing_utils.c \
+SRC_PARSING = ast_utils.c \
 			ast.c \
-			ast_utils.c \
-			parsing_parenthesis.c \
-			new_second_parsing.c \
+			expand_dollars.c \
 			open_fd.c \
-			new_expand_dollars.c \
+			parsing_parenthesis.c \
+			parsing_utils.c \
 			remove_quotes.c \
+			second_parsing.c \
+			syntax_errors.c \
 			utils2.c
 
 HEREDOCS = heredocs/

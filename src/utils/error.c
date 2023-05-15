@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 19:26:07 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 11:07:40 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 23:23:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ void	mem_exh(const char *context)
 	if (context)
 	{
 		write(2, context, ft_strlen(context));
-		write(2, ": memory exausted\n", 19);
+		write(2, ": memory exhausted\n", 19);
 	}
 	else
-		write(2, "memory exausted\n", 17);
+		write(2, "memory exhausted\n", 17);
 }

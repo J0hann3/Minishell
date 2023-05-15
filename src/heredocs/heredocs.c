@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 18:17:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 23:52:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*get_file_name_heredoc(char *input)
 	file_size = get_file_size_heredoc(input);
 	file_name = ft_calloc(file_size + 1, sizeof(char));
 	if (!file_name)
-		return (NULL);
+		return (mem_exh("heredocs"), NULL);
 	ft_copy_heredoc(file_name, input, file_size);
 	return (file_name);
 }
@@ -133,7 +133,7 @@ char	*get_random_name()
 	nbr = 1;
 	file_name = ft_strdup("/tmp/.heredoc_0");
 	if (!file_name)
-		return (NULL);
+		return (mem_exh("heredocs"), NULL);
 	exist = access("/tmp", F_OK);
 	if (exist != 0)
 		return (free(file_name), ft_write_error("heredocs", "tmp",
@@ -147,7 +147,7 @@ char	*get_random_name()
 		else
 			return (file_name);
 		if (!file_name)
-				return (NULL);
+			return (mem_exh("heredocs"), NULL);
 		nbr++;
 	}
 }
