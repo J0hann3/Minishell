@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 17:48:42 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 22:51:50 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char *argv[], char *envp[])
 	ret_err = 0;
 	while (true)
 	{
-		tcsetattr(STDIN_FILENO, TCSANOW, &termios);
+		// tcsetattr(STDIN_FILENO, TCSANOW, &termios);
 		input = readline(prompt);
 		if (!input)
 			break ;

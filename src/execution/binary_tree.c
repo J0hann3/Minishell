@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:42:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 18:46:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,13 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 	if (meta_next == e_pipe || meta_before == e_pipe)
 	{
 		multi_pipe(tree, env, meta_before, meta_next);
+		tree->fd_heredocs = -1;
 		return (meta_next);
 	}
 	else if (meta_before == e_empty || meta_before == e_empty_new)
 	{
 		arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
+		tree->fd_heredocs = -1;
 		exec(arg, env);
 		free(arg);
 		return (meta_next);
@@ -65,6 +67,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 		{
 			arg = second_parsing(tree->command, tree->size, env,
 					tree->fd_heredocs);
+			tree->fd_heredocs = -1;
 			exec(arg, env);
 			free(arg);
 			return (meta_next);
@@ -76,6 +79,7 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 		{
 			arg = second_parsing(tree->command, tree->size, env,
 					tree->fd_heredocs);
+			tree->fd_heredocs = -1;
 			exec(arg, env);
 			free(arg);
 			return (meta_next);

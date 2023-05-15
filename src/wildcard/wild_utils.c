@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:05:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 16:03:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 22:53:34 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@ void	free_flist(t_file_list *flist)
 		return ;
 	while(flist[i].file_name != NULL)
 	{
-		// printf("i : %ld  '%s'\n", i, flist[i].file_name);
 		free(flist[i].file_name);
 		i++;
 	}

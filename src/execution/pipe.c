@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/15 17:44:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 18:45:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 			close(fildes[1]);
 		}
 		arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
+		tree->fd_heredocs = -1;
 		exec(arg, env);
 		free(arg);
 		free_env(env);

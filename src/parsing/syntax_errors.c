@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:48:35 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 19:38:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 18:14:42 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ bool	is_redirection_ok(char **input, t_env_info *env)
 {
 	char	*start;
 	bool	is_here_doc;
-	int		fd_heredoc;
 	int		error;
 
 	is_here_doc = false;
@@ -143,20 +142,15 @@ bool	is_redirection_ok(char **input, t_env_info *env)
 	{
 		if (env->fds_heredocs[env->len_heredocs] != -1)
 			close(env->fds_heredocs[env->len_heredocs]);
-		error = do_here_docs(start, env, &fd_heredoc);
+		error = do_here_docs(start, env);
 		if (error == 130)
 		{
 			if (env->fds_heredocs[0] >= 0)
 				close(env->fds_heredocs[0]);
-			return (close(fd_heredoc), env->fds_heredocs[0] = -2, false);
+			return (env->fds_heredocs[0] = -2, false);
 		}
 		else if (error != 0)
-		{
-			if (env->fds_heredocs[0] >= 0)
-				close(env->fds_heredocs[0]);
-			return (close(fd_heredoc), env->fds_heredocs[0] = -1, false);
-		}
-		env->fds_heredocs[env->len_heredocs] = fd_heredoc;
+			return (false);
 	}
 	return (true);
 }

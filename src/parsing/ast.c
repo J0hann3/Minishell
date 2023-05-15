@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/05 19:48:13 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 22:54:28 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,6 @@ void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 		add_heredocs(tree->left, fd_heredocs, fd_size, size_max);
 	if (tree->command != NULL)
 	{
-		if (*fd_size > size_max)
-			return ((void)printf("ERROR fd heredocs\n"));
 		tree->fd_heredocs = fd_heredocs[*fd_size];
 		fd_heredocs[*fd_size] = -1;
 		(*fd_size)++;
@@ -180,6 +178,5 @@ t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 	i = 0;
 	root = create_sub_tree(&input, NULL);
 	add_heredocs(root, fd_heredocs, &i, len_fd);
-	// print_tree(root, 0, get_height(root));
 	return (root);
 }

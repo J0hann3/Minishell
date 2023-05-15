@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 17:34:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 17:53:47 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	count_words(const t_char *string)
 
 	res = 0;
 	if (!string->c)
-		return (1);
+		return (0);
 	while (string->c)
 	{
 		while (is_wspace(string->c))

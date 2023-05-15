@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/02 18:28:56 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 18:10:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 	exit(EXIT_SUCCESS);
 }
 
-int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
+int	prompt_here(char *ender, int fd_w, t_env_info *env)
 {
 	char	*input;
 	int		pid;
@@ -59,10 +59,10 @@ int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (2);
+		return (close_fd_heredocs(env), 2);
 	if (pid == 0)
 	{
-		close(fd_r);
+		close_fd_heredocs(env);
 		child(ender, fd_w, env, input);
 	}
 	else
@@ -78,3 +78,4 @@ int	prompt_here(char *ender, int fd_w, int fd_r, t_env_info *env)
 	}
 	return (stat);
 }
+

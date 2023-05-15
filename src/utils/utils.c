@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/13 17:40:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 18:48:57 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_env(t_env_info *env)
 {
 	if (env != NULL)
 	{
-		// close_fd_heredocs(env);
 		free(env->fds_heredocs);
 		free_str(env->env);
 		free_tree(&(env->tree));
