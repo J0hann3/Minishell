@@ -6,117 +6,12 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 18:16:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/15 17:44:59 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// char	*get_here_ender(char *input)
-// {
-// 	size_t	i;
-// 	size_t	j;
-// 	char	*start;
-// 	char	quote;
-// 	bool	is_in_quote;
-
-// 	start = input;
-// 	is_in_quote = false;
-// 	i = 0;
-// 	j = 0;
-// 	// input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i])
-// // !(is_wspace(input[i]) && !is_in_quote)
-// 	while (input[i] && (is_in_quote || (!is_operator(input + i) && !is_parenthesis(input[i])
-// 		&& !is_redirection(input[i]) && !is_wspace(input[i]))))
-// 	{
-// 		// fflush(stdout);
-// 		if ((input[i] == '"' || input[i] == '\'') && !is_in_quote)
-// 		{
-// 			quote = input[i++];
-// 			is_in_quote = true;
-// 		}
-// 		else if (is_in_quote && input[i] == quote)
-// 		{
-// 			is_in_quote = false;
-// 			i++;
-// 		}
-// 		else
-// 			start[j++] = input[i++];
-// 	}
-// 	return (ft_strndup(input, j));
-// }
-
-// void	ft_copy(char *dst, char *src, size_t size)
-// {
-// 	size_t	i;
-// 	size_t	j;
-// 	char	quote;
-// 	bool	is_in_quote;
-
-// 	i = 0;
-// 	j = 0;
-// 	quote = 0;
-// 	is_in_quote = false;
-// 	while (j < size)
-// 	{
-// 		if (src[i] == '\'' || src[i] == '"')
-// 		{
-// 			if (is_in_quote && quote == src[i])
-// 				is_in_quote = false;
-// 			else if (is_in_quote)
-// 				dst[j++] = src[i];
-// 			else
-// 			{
-// 				is_in_quote = true;
-// 				quote = src[i];
-// 			}
-// 			i++;
-// 		}
-// 		else
-// 			dst[j++] = src[i++];
-// 	}
-// 	dst[j] = 0;
-// }
-
-// size_t	get_file_size(const char *input)
-// {
-// 	size_t	i;
-// 	int		tmp;
-// 	size_t	size;
-
-// 	i = 0;
-// 	size = 0;
-// 	while (input[i] && !is_operator(input + i) && !is_wspace(input[i]) && !is_redirection(input[i]) && !is_parenthesis(input[i]))
-// 	{
-// 		if (input[i] == '\'' || input[i] == '"')
-// 		{
-// 			tmp = skip_quotes(input + i) + 1;
-// 			i += tmp;
-// 			size += tmp - 2;
-// 		}
-// 		else
-// 		{
-// 			size++;
-// 			i++;
-// 		}
-// 	}
-// 	return (size);
-// }
-
-// char	*get_file_name(char *input)
-// {
-// 	size_t	file_size;
-// 	char	*file_name;
-
-// 	while (*input == '<' || *input == '>' || is_wspace(*input))
-// 		input++;
-// 	file_size = get_file_size(input);
-// 	file_name = ft_calloc(file_size + 1, sizeof(char));
-// 	if (!file_name)
-// 		return (NULL);
-// 	ft_copy(file_name, input, file_size);
-// 	return (file_name);
-// }
 void	ft_copy_heredoc(char *dst, char *src, size_t size)
 {
 	size_t	i;
@@ -236,7 +131,7 @@ char	*get_random_name()
 	int		nbr;
 
 	nbr = 1;
-	file_name = ft_strdup("./.heredoc_0");
+	file_name = ft_strdup("/tmp/.heredoc_0");
 	if (!file_name)
 		return (NULL);
 	exist = access("/tmp", F_OK);
