@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/10 19:55:27 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 16:56:09 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 extern int	g_error;
 
-typedef struct	s_char
+typedef struct s_char
 {
 	char	c;
 	bool	is_inter;

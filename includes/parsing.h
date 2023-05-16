@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 18:12:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 17:01:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define PARSING_H
 
 # include "structs.h"
+
+typedef t_instruction	t_instr;
 
 // utils.c
 size_t	ft_strlen(const char *s);
@@ -68,12 +70,12 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 // expand_dollar.c
 size_t	get_size_of_var(const char *str);
 bool	is_expandable(const char *input);
-t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous);
+t_char	*expand_dollars(char *input, size_t len,
+			t_env_info *env_info, bool *is_ambigous);
 void	print_ambigous_redirect(char *input_redir);
 
-
 //second_parsing.c
-t_instruction	*second_parsing(char *input, size_t command_size,
+t_instr	*second_parsing(char *input, size_t command_size,
 			t_env_info *env_info, int fd_heredocs);
 
 // open_fd.c
@@ -87,10 +89,5 @@ int		do_here_docs(char *input, t_env_info *env_info);
 char	*get_random_name(void);
 bool	expand_heredocs(int *fd_in, t_env_info *env_info);
 int		prompt_here(char *ender, int fd_w, t_env_info *env);
-
-
-
-// print
-void	ft_print(char *ctxt, t_char *expanded_command);
 
 #endif

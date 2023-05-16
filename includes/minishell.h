@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 22:03:46 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 23:29:58 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 16:57:18 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-#define EE(x) free(x), x = NULL;
 
 # include "exec.h"
 # include "builtins.h"
