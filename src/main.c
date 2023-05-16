@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 22:51:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 19:43:04 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include "../includes/get_next_line.h"
 #include <dirent.h>
 #include <termios.h>
 #include <curses.h>
@@ -18,69 +19,114 @@
 
 int	g_error;
 
-int	main(int argc, char *argv[], char *envp[])
+bool	handle_syntax_errors(char *input, t_env_info *env)
 {
-	char				*input;
-	int					ret_err;
-	t_env_info			*env;
-	const char			*prompt;
-	struct termios		termios;
+	int	ret_error;
 
-	tcgetattr(STDIN_FILENO, &termios);
-	(void)argc;
-	(void)argv;
-	if (argc != 1)
-		return (1);
-	env = init_env((const char **)envp);
-	if (env == NULL)
-		return (1);
-	init_signals(env->act);
-	prompt = "minishell$> ";
-	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
-		prompt = "";
-	ret_err = 0;
+	ret_error = syntax_errors(input, env);
+	if (ret_error == 2)
+	{
+		free(input);
+		close_fd_heredocs(env);
+		g_error = ret_error;
+		return (false);
+	}
+	if (ret_error == 1 || ret_error == 130)
+	{
+		free(input);
+		close_fd_heredocs(env);
+		g_error = ret_error;
+		return (false);
+	}
+	return (true);
+}
+
+bool	handle_tree(char *input, t_env_info *env)
+{
+	env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
+	close_fd_heredocs(env);
+	if (env->tree == NULL)
+	{
+		free(input);
+		return (false);
+	}
+	explore_tree(env->tree, env, e_empty_new);
+	free_tree(&(env->tree));
+	return (true);
+}
+
+void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
+{
+	char	*input;
+
 	while (true)
 	{
-		// tcsetattr(STDIN_FILENO, TCSANOW, &termios);
-		input = readline(prompt);
+		tcsetattr(STDIN_FILENO, TCSANOW, termios);
+		input = readline("minishell$> ");
 		if (!input)
 			break ;
-		if (input[0] == '\0')
+		if (!*input)
 		{
 			free(input);
 			continue ;
 		}
 		add_history(input);
-		ret_err = syntax_errors(input, env);
-		if (ret_err == 2)
-		{
-			free(input);
-			close_fd_heredocs(env);
-			g_error = ret_err;
+		if (!handle_syntax_errors(input, env))
 			continue ;
-		}
-		else if (ret_err == 1 || ret_err == 130)
-		{
-			free(input);
-			close_fd_heredocs(env);
-			g_error = ret_err;
-			continue ;
-		}
-		env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
-		close_fd_heredocs(env);
-		if (env->tree == NULL)
-		{
-			free(input);	
+		if (!handle_tree(input, env))
 			break ;
-		}
-		explore_tree(env->tree, env, e_empty_new);
-		free_tree(&(env->tree));
 		env->tree = NULL;
 		free(input);
-		input = NULL;
 	}
+	write(1, "exit\n", 5);
+}
+
+void	minishell_not_interactive_loop(t_env_info *env)
+{
+	char	*input;
+	size_t	input_len;
+
+	while (true)
+	{
+		input = get_next_line(STDIN_FILENO);
+		if (!input)
+			break ;
+		input_len = ft_strlen(input);
+		if (input_len > 0 && input[input_len - 1] == '\n')
+			input[input_len - 1] = 0;
+		if (!*input)
+		{
+			free(input);
+			continue ;
+		}
+		if (!handle_syntax_errors(input, env))
+			continue ;
+		if (!handle_tree(input, env))
+			break ;
+		env->tree = NULL;
+		free(input);
+	}
+	get_next_line(-1);
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	t_env_info			*env;
+	struct termios		termios;
+
+	(void)argv;
+	if (argc != 1)
+		return (ft_write_error(NULL, NULL, "Wrong number of arguments."), 0);
+	env = init_env((const char **)envp);
+	if (!env)
+		return (1);
+	init_signals(env->act);
+	tcgetattr(STDIN_FILENO, &termios);
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		minishell_interactive_loop(env, &termios);
+	else
+		minishell_not_interactive_loop(env);
 	free_env(env);
 	rl_clear_history();
-	write(1, "exit\n", 5);
 	return (g_error);
 }
