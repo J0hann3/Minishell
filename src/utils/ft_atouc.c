@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atouc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 13:32:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/08 15:19:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 19:56:00 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
  * @brief convert char * in unsigned char
  * 
  * @param str char *: text to convert in unsigned char
- * @return int: sucess -> return unsigned char, else -> -1 if non_numeric value or not decimal
+ * @return int: sucess -> return unsigned char,
+ * else -> -1 if non_numeric value or not decimal
  */
 int	ft_atouc(const char *str)
 {
@@ -32,9 +33,8 @@ int	ft_atouc(const char *str)
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{
-		if (str[i] == '-')
+		if (str[i++] == '-')
 			sign = -1;
-		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{

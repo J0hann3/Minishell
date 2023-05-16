@@ -15,8 +15,6 @@ while (exit)
 	test PATH
 	exec (path, arg, env)
 
-
-
 - GOOD TO KNOW :
 execve -> mutation de process
 ‘|&’ is used, command1’s standard error, in addition to its standard output
@@ -86,33 +84,9 @@ parsing
 ()
 env -i et compagnie
 
+EXIT MARCHE PAS :
+	code erreur de retour sur 'exit' seul est toujours 0 au lieu de la derniere erreur
 
-==2273715== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-minishell$> g      && (dfghj) ghj
-minishell: syntax error near unexpected token `ghj'
-minishell$> g      (dfghj) ghj
-minishell: syntax error near unexpected token `dfghj'
-minishell$> g      (dfghj) |ghj
-minishell: syntax error near unexpected token `dfghj'
-minishell$> g      (dfghj)() |ghj
-minishell: syntax error near unexpected token `dfghj'
-minishell$> g    ||  (dfghj)() |ghj
-minishell: syntax error near unexpected token `('
-minishell$> g    ||  (dfghj)(dfh) |ghj
-minishell: syntax error near unexpected token `('
-minishell$> g    ||  (dfghj)(dfh |ghj)
-minishell: syntax error near unexpected token `('
-minishell$> unset -Test hk
-minishell: unset: -Test: invalid option
-minishell$> echo $?
-2
-minishell$> unset  hk
-minishell$> echo "exit_code ->$? user ->$USER home -> $HOME"
-exit_code ->0 user ->jvigny home -> /mnt/nfs/homes/jvigny
-minishell$> echo <"minishell_tester/test_files/empty" "bonjour       42"
-bonjour       42
-minishell$> >*
-minishell: *: ambigous redirect
-minishell$> echo $?
-1
-minishell$> 
+changements : 
+- main en interactif
+- exit ne print plus 'exit' en interactif

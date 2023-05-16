@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/02 19:10:06 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/16 20:17:39 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,16 @@
  * @param arg char *: value to exit
  * @param env char **: code error modifie or use to exit
  */
-void	ft_exit(t_instruction *arg, t_env_info *env)			// need to also free tree
+void	ft_exit(t_instruction *arg, t_env_info *env)
 {
-	unsigned char	erreur;
-
 	if (arg->command[1] == NULL)
 	{
-		erreur = g_error;
 		free_str(arg->command);
 		free(arg);
 		free_env(env);
-		write(2, "exit\n", 5);
-		exit(erreur);
+		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+			write(2, "exit\n", 5);
+		exit((unsigned char)g_error);
 	}
 	g_error = ft_atouc(arg->command[1]);
 	if (g_error == -1)
@@ -46,14 +44,11 @@ void	ft_exit(t_instruction *arg, t_env_info *env)			// need to also free tree
 	else if (arg->command[2] != NULL)
 	{
 		ft_write_error("exit", NULL, "too many arguments");
-		free_str(arg->command);
-		free(arg);
-		g_error = 1;
-		return ;
+		return (free_str(arg->command), free(arg), g_error = 1, (void)0);
 	}
-	free_env(env);
-	free_str(arg->command);
+	(free_env(env), free_str(arg->command));
 	free(arg);
-	write(2, "exit\n", 5);
+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
+		write(2, "exit\n", 5);
 	exit(g_error);
 }
