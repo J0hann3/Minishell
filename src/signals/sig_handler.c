@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   sig_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:23:06 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:23:24 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 00:39:46 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	crtl_c_interactive(int sig)		//for main process in interactive mode
+//for main process in interactive mode
+void	crtl_c_interactive(int sig)
 {
 	(void)sig;
 	g_error = 130;
@@ -22,7 +23,8 @@ void	crtl_c_interactive(int sig)		//for main process in interactive mode
 	rl_redisplay();
 }
 
-void	error_new_line(int sig)		//for heredoc in child
+//for heredoc in child
+void	error_new_line(int sig)
 {
 	(void)sig;
 	write(STDERR_FILENO, "\n", 1);
