@@ -84,6 +84,8 @@ parsing
 ()
 env -i et compagnie
 
+leak de fd sur 'echo a | cat'
+
 changements : 
 - main en interactif
 - exit ne print plus 'exit' en interactif
