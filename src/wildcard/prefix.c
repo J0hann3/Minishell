@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   prefix.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:00 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 16:23:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/18 16:20:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+/**
+ * @brief get the name of a prefix without quotes (reverse)
+ * 
+ * @param dst 
+ * @param src 
+ * @param size 
+ */
 static void	get_cleaned_name(char *dst, t_char *src, size_t size)
 {
 	int		i;
@@ -21,33 +28,52 @@ static void	get_cleaned_name(char *dst, t_char *src, size_t size)
 
 	i = 0;
 	j = size - 1;
-	quote = 0;
 	is_in_quote = false;
 	while (j >= 0)
 	{
 		if ((src[i].c == '\'' || src[i].c == '"') && src[i].is_inter == true)
 		{
-			if (is_in_quote && quote == src[i].c)
+			if (is_in_quote && quote == src[i--].c)
 				is_in_quote = false;
 			else if (is_in_quote)
-				dst[j--] = src[i].c;
+				dst[j--] = src[i--].c;
 			else
 			{
 				is_in_quote = true;
-				quote = src[i].c;
+				quote = src[i--].c;
 			}
-			i--;
 		}
 		else
 			dst[j--] = src[i--].c;
 	}
-	dst[size] = 0;
+}
+
+static bool	skip_quote_reverse(const t_char *input,
+		const t_char *start, int *i, size_t *size)
+{
+	char	quote;
+
+	quote = input[*i].c;
+	if (input + *i <= start)
+		return (true);
+	(*i)--;
+	while (input + *i >= start)
+	{
+		if (input[*i].c == quote && input[*i].is_inter)
+			break ;
+		if (input[*i].c == '/')
+			return (ft_write_error(NULL,
+					"wildcard", "forbidden `/' in wildcard pattern"), false);
+		(*i)--;
+		(*size)++;
+	}
+	(*i)--;
+	return (true);
 }
 
 static int	get_prefix_size(const t_char *input, const t_char *start)
 {
 	int		i;
-	char	quote;
 	size_t	size;
 
 	i = 0;
@@ -55,25 +81,13 @@ static int	get_prefix_size(const t_char *input, const t_char *start)
 	while (input + i >= start && !is_end_of_single_wildcard(input, i))
 	{
 		if (input[i].c == '/')
-			return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
-		if ((input[i].c == '\'' || input[i].c == '"') && input[i].is_inter == true)
+			return (ft_write_error(NULL, "wildcard",
+					"forbidden `/' in wildcard pattern"), -1);
+		if ((input[i].c == '\'' || input[i].c == '"')
+			&& input[i].is_inter == true)
 		{
-			quote = input[i].c;
-			if (input + i <= start)
-				break ;
-			i--;
-			while (input + i >= start)
-			{
-				if (input[i].c == quote && input[i].is_inter)
-					break ;
-				if (input[i].c == '/')
-					return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
-				i--;
-				size++;
-			}
-			if (input + i <= start)
-				break ;
-			i--;
+			if (!skip_quote_reverse(input, start, &i, &size))
+				return (-1);
 		}
 		else
 		{
@@ -99,5 +113,6 @@ char	*get_prefix(const t_char *input, const t_char *start)
 	if (!prefix)
 		return (mem_exh("wildcard"), NULL);
 	get_cleaned_name(prefix, (t_char *)input, prefix_size);
+	prefix[prefix_size] = 0;
 	return (prefix);
 }
