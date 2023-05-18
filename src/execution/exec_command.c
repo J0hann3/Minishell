@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/15 19:01:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/18 15:10:15 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ static void	ft_builtins(void(function)(char **, t_env_info *),
 
 static int	is_builtins(t_instruction *arg, t_env_info *env)
 {
+	if (ft_strcmp(arg->command[0], "exit") == 0)
+	{
+		redirection(arg);
+		ft_exit(arg, env);
+		reset_redirection(arg);
+		return (1);
+	}
+	g_error = 0;
 	if (ft_strcmp(arg->command[0], "echo") == 0)
 		return (ft_builtins(&ft_echo, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "cd") == 0)
@@ -36,13 +44,6 @@ static int	is_builtins(t_instruction *arg, t_env_info *env)
 		return (ft_builtins(&ft_unset, arg, env), 1);
 	if (ft_strcmp(arg->command[0], "env") == 0)
 		return (ft_builtins(&ft_env, arg, env), 1);
-	if (ft_strcmp(arg->command[0], "exit") == 0)
-	{
-		redirection(arg);
-		ft_exit(arg, env);			// double free detected
-		reset_redirection(arg);
-		return (1);
-	}
 	return (0);
 }
 
@@ -58,9 +59,9 @@ int	exec(t_instruction *inst, t_env_info *env)
 		return (close_fd(inst), free_str(inst->command), -1);
 	if (*(inst->command[0]) == '\0')
 		return (ft_write_error("", NULL, "command not found"), close_fd(inst), free_str(inst->command), -1);
-	g_error = 0;
 	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
 		return (g_error);
+	g_error = 0;
 	path = find_path_command(inst->command[0], env);
 	if (path == NULL)
 		return (close_fd(inst), free_str(inst->command), g_error);
