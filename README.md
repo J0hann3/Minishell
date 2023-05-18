@@ -84,9 +84,8 @@ parsing
 ()
 env -i et compagnie
 
-EXIT MARCHE PAS :
-	code erreur de retour sur 'exit' seul est toujours 0 au lieu de la derniere erreur
-
 changements : 
 - main en interactif
 - exit ne print plus 'exit' en interactif
+- g_error est set à 0 uniquement après check si on utilise exit
+- sep dans les wildcard est maintenant un t_char non-alloc
