@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:47:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/13 18:31:11 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 01:20:52 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,29 @@ char	*ft_strjoin(char *s1, char const *s2)
 char	*ft_strjoin3(char *s1, char const *s2, char const *s3)
 {
 	char	*res;
-	size_t	len;
-	size_t	j;
+	int		s1_len;
+	int		s2_len;
+	int		s3_len;
+	int		i;
 
-	len = ft_strlen(s1) + ft_strlen(s2) + ft_strlen(s3);
-	j = 0;
-	res = malloc(sizeof(char) * (len + 1));
-	if (res == 0)
-		return (0);
-	while (s1[j])
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	s3_len = ft_strlen(s3);
+	res = ft_calloc(s1_len + s2_len + s3_len + 1, sizeof(char));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (i < s1_len || i < s2_len || i < s3_len)
 	{
-		res[j] = s1[j];
-		j++;
+		if (i < s1_len)
+			res[i] = s1[i];
+		if (i < s2_len)
+			res[s1_len + i] = s2[i];
+		if (i < s3_len)
+			res[s1_len + s2_len + i] = s3[i];
+		i++;
 	}
-	len = 0;
-	while (s2[len])
-	{
-		res[j] = s2[len];
-		j++;
-		len++;
-	}
-	len = 0;
-	while (s3[len])
-	{
-		res[j] = s3[len];
-		j++;
-		len++;
-	}
-	res[j] = 0;
+	res[s1_len + s2_len + s3_len] = 0;
 	return (res);
 }
 
@@ -145,10 +140,7 @@ char	*ft_strjoin_slash(char *s1, char *s2, int add_slash)
 	}
 	len = -1;
 	while (s2[++len])
-	{
-		res[j] = s2[len];
-		j++;
-	}
+		res[j++] = s2[len];
 	res[j] = 0;
 	return (res);
 }

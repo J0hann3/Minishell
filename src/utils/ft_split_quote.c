@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_quote.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 17:53:47 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 01:01:06 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ static int	count_words(const t_char *string)
 			break ;
 		while (string->c)
 		{
-			if ((string->c == '\'' || string->c == '\"') && string->is_inter == true)
+			if ((string->c == '\'' || string->c == '\"')
+				&& string->is_inter == true)
 				string += skip_quotes_tchar(string);
 			else if (is_wspace(string->c))
 				break ;
@@ -62,7 +63,8 @@ static t_char	*get_word(const t_char **string)
 		(*string)++;
 	while ((*string)[size].c && !is_wspace((*string)[size].c))
 	{
-		if (((*string)[size].c == '\'' || (*string)[size].c == '\"') && (*string)[size].is_inter == true)
+		if (((*string)[size].c == '\'' || (*string)[size].c == '\"')
+				&& (*string)[size].is_inter == true)
 			size += skip_quotes_tchar((*string) + size);
 		size++;
 	}
@@ -73,9 +75,7 @@ static t_char	*get_word(const t_char **string)
 	while (i < size)
 	{
 		res[i].c = (*string)->c;
-		res[i].is_inter = (*string)->is_inter;
-		(*string)++;
-		i++;
+		res[i++].is_inter = (*string)++->is_inter;
 	}
 	res[i].c = 0;
 	return (res);
