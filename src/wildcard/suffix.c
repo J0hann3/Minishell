@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   suffix.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:34:02 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 16:33:08 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/18 16:26:26 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,24 @@ static void	get_cleaned_name(char *dst, t_char *src, size_t size)
 
 	i = 0;
 	j = 0;
-	quote = 0;
 	is_in_quote = false;
 	while (j < size)
 	{
 		if ((src[i].c == '\'' || src[i].c == '"') && src[i].is_inter == true)
 		{
-			if (is_in_quote && quote == src[i].c)
+			if (is_in_quote && quote == src[i++].c)
 				is_in_quote = false;
 			else if (is_in_quote)
-				dst[j++] = src[i].c;
+				dst[j++] = src[i++].c;
 			else
 			{
 				is_in_quote = true;
-				quote = src[i].c;
+				quote = src[i++].c;
 			}
-			i++;
 		}
 		else
 			dst[j++] = src[i++].c;
 	}
-	dst[j] = 0;
 }
 
 static ssize_t	get_pattern_size(const t_char *input, bool *is_end)
@@ -55,18 +52,17 @@ static ssize_t	get_pattern_size(const t_char *input, bool *is_end)
 	while (input[i].c && !is_end_of_single_wildcard(input, i))
 	{
 		if (input[i].c == '/' && input[i + 1].c)
-			return (ft_write_error(NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
-		if ((input[i].c == '\'' || input[i].c == '"') && input[i].is_inter == true)
+			return (ft_write_error(
+					NULL, "wildcard", "forbidden `/' in wildcard pattern"), -1);
+		if ((input[i].c == '\'' || input[i].c == '"')
+			&& input[i].is_inter == true)
 		{
 			tmp = skip_quotes_tchar(input + i) + 1;
-			i += tmp;
-			size += tmp - 2;
+			i += tmp - 1;
+			size += tmp - 3;
 		}
-		else
-		{
-			size++;
-			i++;
-		}
+		size++;
+		i++;
 	}
 	if (input[i].c != '*')
 		*is_end = true;
@@ -87,5 +83,6 @@ char	*get_suffix(const t_char *input, bool *is_end)
 	if (!suffix)
 		return (mem_exh("wildcard"), NULL);
 	get_cleaned_name(suffix, (t_char *)input, pattern_size);
+	suffix[pattern_size] = 0;
 	return (suffix);
 }
