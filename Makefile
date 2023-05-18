@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/18 17:32:32 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/19 00:48:17 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,9 @@ SRC_UTILS = \
 			init.c \
 			free_tree.c \
 			ft_strnstr.c \
-			ft_join_tchar.c \
+			tchar_join.c \
+			tchar_ope.c \
+			tchar_utils.c \
 			error.c
 
 PARSING = parsing/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/15 18:46:38 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 00:50:10 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,21 @@ void	free_env(t_env_info *env);
 void	close_fd_heredocs(t_env_info *env);
 void	close_fd(t_instruction *inst);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
-size_t	skip_quotes_tchar(const t_char *input);
-t_char	*ft_tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter);
-t_char	*ft_tchar_join(t_char *s1, const t_char *s2);
+void	free_all(t_char **string);
+
+// tchar_join.c
+t_char	*tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter);
+t_char	*tchar_join(t_char *s1, const t_char *s2);
+
+// tchar_ope.c
 size_t	ft_tchar_len(const t_char *s);
 t_char	*ft_tcharndup(const t_char *s, size_t n);
 char	*ft_tchar_to_str(const t_char *input);
 t_char	*ft_str_to_tchar(const char *str, bool is_inter);
+
+// tchar_utils.c
+size_t	skip_quotes_tchar(const t_char *input);
 bool	is_inter_and_eq(t_char c1, char c2);
 bool	tchar_is_operator(const t_char *c);
-void	free_all(t_char **string);
 
 #endif

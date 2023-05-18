@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 17:18:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/18 17:23:22 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/19 00:51:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ t_char	*append_fname(t_char *files_names, char *file_name, t_char *sep)
 {
 	t_char	*tmp;
 
-	tmp = ft_tchar_join(files_names, sep);
+	tmp = tchar_join(files_names, sep);
 	free(files_names);
 	if (!tmp)
 		return (free(sep), mem_exh("wildcard"), NULL);
-	files_names = ft_tchar_njoin(tmp, file_name, ft_strlen(file_name), 0);
+	files_names = tchar_njoin(tmp, file_name, ft_strlen(file_name), 0);
 	free(tmp);
 	if (!files_names)
 		return (mem_exh("wildcard"), NULL);
@@ -63,12 +63,12 @@ t_char	*replace_on_input(t_char **start, t_char *to_insert,
 	new_ptr = ft_tcharndup(*start, size);
 	if (!new_ptr)
 		return (mem_exh("wildcard"), NULL);
-	tmp = ft_tchar_join(new_ptr, to_insert);
+	tmp = tchar_join(new_ptr, to_insert);
 	free(new_ptr);
 	if (!tmp)
 		return (mem_exh("wildcard"), NULL);
 	size = ft_tchar_len(tmp);
-	new_ptr = ft_tchar_join(tmp, pat_end);
+	new_ptr = tchar_join(tmp, pat_end);
 	free(tmp);
 	if (!new_ptr)
 		return (mem_exh("wildcard"), NULL);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_expand_dollars.c                               :+:      :+:    :+:   */
+/*   expand_dollars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/12 23:38:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 00:51:28 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 			{
 				if (i > 0)
 				{
-					tmpchar = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+					tmpchar = tchar_njoin(res, input + begin_join, i - begin_join, 1);
 					free(res);
 					if (!tmpchar)
 						return (mem_exh("dollar expand"), NULL);
@@ -226,7 +226,7 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 				if (!tmpchar)
 					return (free(res), mem_exh("dollar expand"), NULL); // write error
 				begin_join = i;
-				tmpchar_1 = ft_tchar_join(res, tmpchar);
+				tmpchar_1 = tchar_join(res, tmpchar);
 				free(tmpchar);
 				free(res);
 				if (!tmpchar_1)
@@ -241,7 +241,7 @@ t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_a
 	}
 	if (begin_join != (int)i)
 	{
-		tmpchar = ft_tchar_njoin(res, input + begin_join, i - begin_join, 1);
+		tmpchar = tchar_njoin(res, input + begin_join, i - begin_join, 1);
 		free(res);
 		res = tmpchar;
 		if (!res)
