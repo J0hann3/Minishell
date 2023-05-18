@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
+#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/15 23:53:15 by jvigny           ###   ########.fr        #
+#    Updated: 2023/05/18 17:32:32 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,14 +23,16 @@ HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
-SRC_EXECUTION =	exec_command.c \
+SRC_EXECUTION = \
+				exec_command.c \
 				binary_tree.c \
 				redirection.c \
 				pipe.c \
 				path.c
 
 BUILTINS = builtins/
-SRC_BUILTINS =	echo.c \
+SRC_BUILTINS = \
+				echo.c \
 				env.c \
 				export.c \
 				export2.c \
@@ -41,7 +43,8 @@ SRC_BUILTINS =	echo.c \
 				cd.c
 
 UTILS = utils/
-SRC_UTILS = ft_calloc.c \
+SRC_UTILS = \
+			ft_calloc.c \
 			ft_strdup.c \
 			ft_atouc.c \
 			ft_split_quote.c \
@@ -56,7 +59,8 @@ SRC_UTILS = ft_calloc.c \
 			error.c
 
 PARSING = parsing/
-SRC_PARSING = ast_utils.c \
+SRC_PARSING = \
+			ast_utils.c \
 			ast.c \
 			expand_dollars.c \
 			open_fd.c \
@@ -68,21 +72,27 @@ SRC_PARSING = ast_utils.c \
 			utils2.c
 
 HEREDOCS = heredocs/
-SRC_HEREDOCS = heredocs.c \
+SRC_HEREDOCS = \
+			heredocs.c \
 			prompt_here.c \
 			expand_heredocs.c \
 			get_next_line.c \
 			get_next_line_utils.c \
 
 SIGNALS = signals/
-SRC_SIGNALS = signals.c \
+SRC_SIGNALS = \
+			signals.c \
 			sig_handler.c
 
 WILDCARD = wildcard/
-SRC_WILDCARD = wildcard.c \
+SRC_WILDCARD = \
+			file_list.c \
+			pattern_finder.c \
 			prefix.c \
+			replace_input.c \
 			suffix.c \
-			wild_utils.c
+			wild_utils.c \
+			wildcard.c
 			
 SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(EXECUTION), $(SRC_EXECUTION)) \
