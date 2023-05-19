@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:23:55 by qthierry          #+#    #+#             */
-/*   Updated: 2023/04/11 22:25:05 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/19 20:15:37 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,25 +43,7 @@ enum e_meta_character	get_meta(char *input)
 	return (e_empty);
 }
 
-int	get_height(t_ast *root)
-{
-	int	leftHeight;
-	int	rightHeight;
-
-	if (!root)
-		return (0);
-	else
-	{
-		leftHeight = get_height(root->left);
-		rightHeight = get_height(root->right);
-		if (leftHeight > rightHeight)
-			return (leftHeight + 1);
-		else
-			return (rightHeight + 1);
-	}
-}
-
-const char *meta_to_char(enum e_meta_character meta)
+const char	*meta_to_char(enum e_meta_character meta)
 {
 	if (meta == e_pipe)
 		return ("|");
@@ -72,3 +54,21 @@ const char *meta_to_char(enum e_meta_character meta)
 	else
 		return ("");
 }
+
+// int	get_height(t_ast *root)
+// {
+// 	int	left_height;
+// 	int	right_height;
+
+// 	if (!root)
+// 		return (0);
+// 	else
+// 	{
+// 		left_height = get_height(root->left);
+// 		right_height = get_height(root->right);
+// 		if (left_height > right_height)
+// 			return (left_height + 1);
+// 		else
+// 			return (right_height + 1);
+// 	}
+// }

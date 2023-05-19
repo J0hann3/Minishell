@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 22:54:28 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 20:14:45 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 enum e_meta_character	get_meta(char *input);
-int						get_height(t_ast *root);
 const char				*meta_to_char(enum e_meta_character meta);
 
 size_t	get_command_size(const char *input)
