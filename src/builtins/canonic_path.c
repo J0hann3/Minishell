@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   canonic_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:01:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:02:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 17:09:20 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,22 @@ static int	delete_dot_slash(char *str, int index)
 	return (letter_suppr);
 }
 
+static void	count_dot_slash(char *str, int *nb_dot, int *nb_slash, int *i)
+{
+	*nb_dot = 0;
+	while (str[*i] == '.')
+	{
+		(*nb_dot)++;
+		(*i)++;
+	}
+	*nb_slash = 0;
+	while (str[*i] != '\0' && str[*i] == '/' && str[*i + 1] == '/')
+	{
+		(*nb_slash)++;
+		(*i)++;
+	}
+}
+
 int	canonical_form(char *str)
 {
 	int		i;
@@ -86,33 +102,18 @@ int	canonical_form(char *str)
 	letter_suppr = 0;
 	while (str[i] != '\0')
 	{
-		nb_dot = 0;
-		while (str[i] == '.')
-		{
-			++nb_dot;
-			++i;
-		}
-		nb_slash = 0;
-		while (str[i] != '\0' && str[i] == '/' && str[i + 1] == '/')
-		{
-			++nb_slash;
-			++i;
-		}
+		count_dot_slash(str, &nb_dot, &nb_slash, &i);
 		if (nb_slash >= 1)
 			letter_suppr += trim_slash(str, i - 1);
 		if (str[i] == '/' || str[i] == '\0')
 		{
-			if (str[i] == '\0')
-				i = i - 1;
+			i -= (str[i] == '\0');
 			if (nb_dot == 2)
 				letter_suppr += delete_previous_dir(str, i);
 			else if (nb_dot == 1)
 				letter_suppr += delete_dot_slash(str, i);
-			if (str[i + 1] == '\0')
-			{
-				++i;
+			if (!str[i++ + 1])
 				break ;
-			}
 		}
 		++i;
 	}

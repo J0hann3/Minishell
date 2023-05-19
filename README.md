@@ -85,8 +85,9 @@ parsing
 env -i et compagnie
 
 a changer :
-leak de fd sur 'echo a | cat' ?????? parfois
-ajouter les '' dans le message d'erreur de export invalid identifier
+- leak de fd sur 'echo a | cat' ?????? parfois
+- ajouter les '' dans le message d'erreur de export invalid identifier
+- ajouter un message d'erreur a cd seul, il renvoie 1
 
 changements : 
 - main en interactif
