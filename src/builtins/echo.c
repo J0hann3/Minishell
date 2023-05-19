@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:21:00 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/01 21:30:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 20:09:56 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,11 @@ void	ft_echo(char **arg, t_env_info	*env)
 	check_option = 1;
 	while (arg[i] != NULL)
 	{
-		if (i == 1 || check_option == 1)
+		if ((i == 1 || check_option == 1) && is_option(arg[i]) == 1)
 		{
-			if (is_option(arg[i]) == 1)
-			{
-				option = 0;
-				++i;
-				continue ;
-			}
+			option = 0;
+			++i;
+			continue ;
 		}
 		check_option = 0;
 		write(1, arg[i], ft_strlen(arg[i]));
