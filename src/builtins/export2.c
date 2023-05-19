@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:06:50 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/05 15:49:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 16:50:43 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,41 +21,30 @@
 static int	is_valid_name(char *str)
 {
 	int	i;
-	int	equal;
 
 	i = 0;
-	equal = 0;
 	while (str[i])
 	{
 		if (is_alpha(str[i]) || str[i] == '_' || str[i] == '='
 			|| is_digit(str[i]))
 		{
-			if (i == 0 && (is_digit(str[i]) || str[i] == '=' ))
+			if (i == 0 && (is_digit(str[i]) || str[i] == '='))
 			{
-				g_error = 1;
-				ft_write_error("export", str, "not a valid identifier");		//need '' around str
-				return (0);
+				ft_write_error("export", str, "not a valid identifier");
+				return (g_error = 1, false);
 			}
 			else if (str[i] == '=')
-			{
-				equal = 1;
-				break ;
-			}
+				return (true);
 		}
 		else
 		{
-			g_error = 1;
-			if (str[i] == '-' && i == 0)
-				g_error = 2;
-			ft_write_error("export", str, "not a valid identifier");		//need '' around str
-			return (0);
+			g_error = 1 + (str[i] == '-' && i == 0);
+			ft_write_error("export", str, "not a valid identifier");
+			return (false);
 		}
 		++i;
 	}
-	if (equal == 1)
-		return (1);
-	else
-		return (0);
+	return (false);
 }
 
 int	trim_invalid_varible(char **arg)
@@ -114,11 +103,8 @@ int	modifie_var(char **arg, char **env, int len_arg)
 	modif = 0;
 	while (elem < len_arg || arg[i] != NULL)
 	{
-		if (arg[i] == NULL)
-		{
-			++i;
+		if (arg[i] == NULL && ++i)
 			continue ;
-		}
 		var_exist = is_variable_existing(env, arg[i]);
 		if (var_exist != -1)
 		{
@@ -126,14 +112,9 @@ int	modifie_var(char **arg, char **env, int len_arg)
 			env[var_exist] = arg[i];
 			arg[i] = NULL;
 			modif++;
-			++i;
-			++elem;
 		}
-		else
-		{
-			elem++;
-			i++;
-		}
+		i++;
+		elem++;
 	}
 	return (len_arg - modif);
 }
@@ -148,26 +129,17 @@ void	add_new_variable(char **arg, char **env, int len_arg, int len_env)
 	elem_add = 0;
 	while (elem_add < len_arg || arg[i] != NULL)
 	{
-		if (arg[i] == NULL)
-		{
-			++i;
+		if (arg[i] == NULL && ++i)
 			continue ;
-		}
 		var_exist = is_variable_existing(env, arg[i]);
 		if (var_exist != -1)
 		{
 			free(env[var_exist]);
-			env[var_exist] = arg[i];
-			++i;
-			++elem_add;
+			env[var_exist] = arg[i++];
 		}
 		else
-		{
-			env[len_env] = arg[i];
-			++i;
-			++len_env;
-			++elem_add;
-		}
+			env[len_env++] = arg[i++];
+		++elem_add;
 	}
 	env[len_env] = NULL;
 }
