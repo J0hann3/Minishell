@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_here.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 23:51:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 17:16:48 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,13 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
-void	child(char *ender, int fd, t_env_info *env, char *input)
+void	child(char *ender, int fd, t_env_info *env)
 {
+	char	*input;
+
+	close_fd_heredocs(env);
 	add_error_signals(env->act);
+	input = (char *)1;
 	while (input)
 	{
 		input = readline("> ");
@@ -34,7 +38,7 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 		else if (!input)
 		{
 			input = get_warning_message(ender);
-			ft_write_error("warning", NULL, input); // rajouter num ligne si besoin/envie a l'aide
+			ft_write_error("warning", NULL, input);
 			break ;
 		}
 		write(fd, input, ft_strlen(input));
@@ -50,21 +54,17 @@ void	child(char *ender, int fd, t_env_info *env, char *input)
 
 int	prompt_here(char *ender, int fd_w, t_env_info *env)
 {
-	char	*input;
 	int		pid;
 	int		stat;
 
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
 		return (close(fd_w), 0);
-	input = (char *)1;
 	pid = fork();
 	if (pid == -1)
-		return (ft_write_error("heredocs", NULL, strerror(errno)), close(fd_w), 2);
+		return (ft_write_error("heredocs", NULL,
+				strerror(errno)), close(fd_w), 2);
 	if (pid == 0)
-	{
-		close_fd_heredocs(env);
-		child(ender, fd_w, env, input);
-	}
+		child(ender, fd_w, env);
 	else
 	{
 		ign_signals(env->act);
@@ -79,4 +79,3 @@ int	prompt_here(char *ender, int fd_w, t_env_info *env)
 	}
 	return (stat);
 }
-

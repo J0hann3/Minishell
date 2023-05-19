@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_heredocs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/15 23:33:11 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 18:28:53 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,61 +42,69 @@ static char	*expand(char *input, size_t *i, t_env_info *env_info)
 	return (tmp);
 }
 
-char	*expand_here(char *input, t_env_info *env_info)
+char	*expand_join(char *input, char *res, size_t *i, t_env_info *env_info)
 {
-	size_t	i;
-	int		begin_join;
 	char	*tmp;
-	char	*res;
 
-	res = ft_calloc(1, sizeof(char));
+	tmp = expand(input + *i, i, env_info);
+	if (!tmp)
+		return (free(res), free(input), NULL);
+	res = ft_strnjoin(res, tmp, ft_strlen(tmp));
+	free(tmp);
 	if (!res)
 		return (free(input), NULL);
-	i = 0;
-	begin_join = 0;
-	while (input[i])
-	{
-		if (input[i] == '$' && input[i + 1] != '$' && is_expandable(input + i + 1))
-		{
-			if (i > 0)
-			{
-				res = ft_strnjoin(res, input + begin_join, i - begin_join);
-				if (!res)
-					return (free(input), NULL);
-			}
-			i++;
-			tmp = expand(input + i, &i, env_info);
-			if (!tmp)
-				return (free(res), free(input), NULL);
-			begin_join = i;
-			res = ft_strnjoin(res, tmp, ft_strlen(tmp));
-			free(tmp);
-			if (!res)
-				return (free(input), NULL);
-		}
-		else
-			i++;
-	}
-	if (begin_join != (int)i)
-		res = ft_strnjoin(res, input + begin_join, i - begin_join);
-	free(input);
 	return (res);
 }
 
+char	*expand_here(char *input, t_env_info *env_info, char *res)
+{
+	size_t	i;
+	int		begin_join;
+
+	i = -1;
+	begin_join = 0;
+	while (input[++i])
+	{
+		if (input[i] == '$' && input[i + 1] != '$'
+			&& is_expandable(input + i + 1))
+		{
+			if (++i > 0)
+			{
+				res = ft_strnjoin(res, input + begin_join, i - begin_join - 1);
+				if (!res)
+					return (free(input), NULL);
+			}
+			res = expand_join(input, res, &i, env_info);
+			if (!res)
+				return (NULL);
+			begin_join = i--;
+		}
+	}
+	if (begin_join != (int)i)
+		res = ft_strnjoin(res, input + begin_join, i - begin_join);
+	return (free(input), res);
+}
 
 static bool	fill_new_fd(int dst_fd, int src_fd, t_env_info *env_info)
 {
 	char	*line;
+	char	*res;
 
-	while(true)
+	while (true)
 	{
+		res = ft_calloc(1, sizeof(char));
+		if (!res)
+			return (NULL);
 		line = get_next_line(src_fd);
 		if (!line)
+		{
+			free(res);
 			break ;
-		line = expand_here(line, env_info);
+		}
+		line = expand_here(line, env_info, res);
 		if (!line)
 			return (mem_exh("heredocs"),
-					get_next_line(-1), close(src_fd), close(dst_fd), false);
+				get_next_line(-1), close(src_fd), close(dst_fd), false);
 		write(dst_fd, line, ft_strlen(line));
 		free(line);
 	}
@@ -124,7 +132,8 @@ bool	expand_heredocs(int *fd_in, t_env_info *env_info)
 	{
 		close(new_fd_r);
 		close(new_fd_w);
-		return (close(*fd_in), ft_write_error("heredocs", file_name, strerror(errno)), free(file_name), false);
+		return (close(*fd_in), ft_write_error("heredocs",
+				file_name, strerror(errno)), free(file_name), false);
 	}
 	free(file_name);
 	if (!fill_new_fd(new_fd_w, *fd_in, env_info))
