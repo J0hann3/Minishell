@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 15:33:05 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/13 22:26:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/19 20:12:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,25 +55,10 @@ static void	free_arg(char **arg, int len)
 	free(arg);
 }
 
-void	ft_export(char **arg, t_env_info	*env)
+static void	ft_export2(int len_env, int len_arg, char **arg, t_env_info *env)
 {
-	int		len_env;
-	int		len_arg;
 	char	**new;
 
-	len_arg = trim_invalid_varible(arg);
-	len_arg = modifie_var(arg, env->env, len_arg);
-	if (len_arg < 0 || len_arg == 0)
-		return (free_arg(arg, len_arg));
-	len_env = ft_len(env->env);
-	if (env->len_env > len_env + len_arg)
-	{
-		add_new_variable(arg, env->env, len_arg, len_env);
-		env->len_env = len_arg + len_env;
-		free(arg[0]);
-		free(arg);
-		return ;
-	}
 	new = ft_calloc((len_env + len_arg + 1), sizeof(char *));
 	if (new == NULL)
 	{
@@ -88,6 +73,27 @@ void	ft_export(char **arg, t_env_info	*env)
 	env->env = new;
 	free(arg[0]);
 	free(arg);
+}
+
+void	ft_export(char **arg, t_env_info *env)
+{
+	int		len_env;
+	int		len_arg;
+
+	len_arg = trim_invalid_varible(arg);
+	len_arg = modifie_var(arg, env->env, len_arg);
+	if (len_arg < 0 || len_arg == 0)
+		return (free_arg(arg, len_arg));
+	len_env = ft_len(env->env);
+	if (env->len_env > len_env + len_arg)
+	{
+		add_new_variable(arg, env->env, len_arg, len_env);
+		env->len_env = len_arg + len_env;
+		free(arg[0]);
+		free(arg);
+		return ;
+	}
+	ft_export2(len_env, len_arg, arg, env);
 }
 
 /**
