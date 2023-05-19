@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/19 00:55:54 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/19 18:39:08 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,11 +76,12 @@ SRC_PARSING = \
 
 HEREDOCS = heredocs/
 SRC_HEREDOCS = \
+			expand_heredocs.c \
+			get_next_line_utils.c \
+			get_next_line.c \
 			heredocs.c \
 			prompt_here.c \
-			expand_heredocs.c \
-			get_next_line.c \
-			get_next_line_utils.c \
+			random_name.c \
 
 SIGNALS = signals/
 SRC_SIGNALS = \

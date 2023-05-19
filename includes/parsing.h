@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/16 17:01:34 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/19 18:36:57 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,5 @@ t_instr	*second_parsing(char *input, size_t command_size,
 // open_fd.c
 char	*get_file_name(t_char *input);
 bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs);
-
-//heredocs.c
-int		do_here_docs(char *input, t_env_info *env_info);
-
-// prompt_here.c
-char	*get_random_name(void);
-bool	expand_heredocs(int *fd_in, t_env_info *env_info);
-int		prompt_here(char *ender, int fd_w, t_env_info *env);
 
 #endif
