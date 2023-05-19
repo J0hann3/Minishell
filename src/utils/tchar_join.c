@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 19:24:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/19 00:51:28 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:53:39 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,20 @@ t_char	*tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter)
 {
 	t_char	*res;
 	size_t	len;
-	size_t	j;
+	int		j;
 
 	if (!s1)
 		len = size;
 	else
 		len = ft_tchar_len(s1) + size;
-	j = 0;
 	res = malloc(sizeof(t_char) * (len + 1));
 	if (res == 0)
 		return (NULL);
-	while (s1[j].c)
+	j = -1;
+	while (s1[++j].c)
 	{
 		res[j].c = s1[j].c;
 		res[j].is_inter = s1[j].is_inter;
-		j++;
 	}
 	len = 0;
 	while (len < size)

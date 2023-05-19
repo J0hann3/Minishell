@@ -84,7 +84,9 @@ parsing
 ()
 env -i et compagnie
 
-leak de fd sur 'echo a | cat'
+a changer :
+leak de fd sur 'echo a | cat' ?????? parfois
+ajouter les '' dans le message d'erreur de export invalid identifier
 
 changements : 
 - main en interactif
