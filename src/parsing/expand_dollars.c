@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:56:01 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 00:51:28 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 01:35:12 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ bool	is_ambig_redir(char *input, int index)
 	i = 1;
 	while (i < index)
 	{
-		if (*(input - i) == '>') // change
+		if (*(input - i) == '>')
 			return (print_ambigous_redirect(input), true);
 		if (*(input - i) == '<')
 		{
@@ -85,6 +85,21 @@ bool	is_ambig_redir(char *input, int index)
 	return (false);
 }
 
+char	*expand2(t_env_info *env_info, int env_index)
+{
+	char	*tmp;
+	size_t	j;
+
+	tmp = env_info->env[env_index];
+	j = 0;
+	while (tmp[j] && tmp[j] != '=')
+		j++;
+	tmp = ft_strdup(tmp + j + 1);
+	if (!tmp)
+		return (mem_exh("dollar expand"), NULL);
+	return (tmp);
+}
+
 /**
  * @brief Returns the expanded $ variable, first input character is the very next
  * character after $
@@ -96,18 +111,14 @@ bool	is_ambig_redir(char *input, int index)
  * @param is_ambigous 
  * @return char* 
  */
-char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
+char	*expand(char *input, int *i, t_env_info *env_info, bool *is_ambigous)
 {
 	char	*tmp;
 	int		env_index;
-	size_t	j;
 	size_t	size;
 
 	if (*input == '?')
-	{
-		(*i)++;
-		return (ft_itoa(g_error));
-	}
+		return ((*i)++, ft_itoa(g_error));
 	size = get_size_of_var(input);
 	*i += size;
 	tmp = ft_strndup(input, size);
@@ -121,11 +132,7 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 			*is_ambigous = true;
 		return (ft_calloc(1, sizeof(char)));
 	}
-	tmp = env_info->env[env_index];
-	j = 0;
-	while (tmp[j] && tmp[j] != '=')
-		j++;
-	tmp = ft_strdup(tmp + j + 1);
+	tmp = expand2(env_info, env_index);
 	if (!tmp)
 		return (NULL);
 	if (tmp[0] == '\0' && is_ambig_redir(input - 1, *i - size))
@@ -133,23 +140,10 @@ char	*expand(char *input, size_t *i, t_env_info *env_info, bool *is_ambigous)
 	return (tmp);
 }
 
-// void	set_wspace_to_inter(t_char *tstr)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (tstr[i].c)
-// 	{
-// 		if (is_wspace(tstr[i].c))
-// 			tstr[i].is_inter = 1;
-// 		i++;
-// 	}
-// }
-
 bool	is_heredoc(char *pat_start, char *start)
 {
 	int		i;
-	bool 	first_wspace;
+	bool	first_wspace;
 
 	i = 0;
 	first_wspace = false;
@@ -157,12 +151,9 @@ bool	is_heredoc(char *pat_start, char *start)
 		i--;
 	while (pat_start + i >= start)
 	{
-		if (is_wspace(pat_start[i]))
-		{
+		if (is_wspace(pat_start[i]) && --i > 0)
 			first_wspace = true;
-			i--;
-		}
-		else if (pat_start[i] == '>')
+		else if (pat_start[i] == '>' || first_wspace)
 			return (false);
 		else if (pat_start[i] == '<')
 		{
@@ -170,78 +161,115 @@ bool	is_heredoc(char *pat_start, char *start)
 				return (true);
 			return (false);
 		}
-		else if (first_wspace)
-			return (false);
 		else
 			i--;
 	}
 	return (false);
 }
 
-t_char	*expand_dollars(char *input, size_t len, t_env_info *env_info, bool *is_ambigous)
+/**
+ * @brief Returns -1 on alloc error, 0 on ambigous, 1 on non-ambigous redirect
+ * 
+ * @param input 
+ * @param i 
+ * @param res 
+ * @param env_info 
+ * @return int 
+ */
+int	join_on_expand(char *input, int *i, t_char **res, t_env_info *env_info)
 {
-	size_t	i;
-	int		begin_join;
 	char	*tmp;
-	t_char	*res;
 	t_char	*tmpchar;
 	t_char	*tmpchar_1;
-	bool	in_double_quotes;
+	bool	is_ambigous;
 
-	in_double_quotes = false;
+	is_ambigous = false;
+	tmp = expand(input + *i, i, env_info, &is_ambigous);
+	if (!tmp)
+		return (free(*res), mem_exh("dollar expand"), -1);
+	if (is_ambigous)
+		return (free(tmp), free(*res), 0);
+	tmpchar = ft_str_to_tchar(tmp, 0);
+	free(tmp);
+	if (!tmpchar)
+		return (free(*res), mem_exh("dollar expand"), -1);
+	tmpchar_1 = tchar_join(*res, tmpchar);
+	free(tmpchar);
+	free(*res);
+	if (!tmpchar_1)
+		return (mem_exh("dollar expand"), -1);
+	*res = tmpchar_1;
+	return (1);
+}
+
+enum e_var {
+	i,
+	begin_join,
+	in_double_quotes,
+	ret
+};
+
+/**
+ * @brief WTF? Ask the norminette.
+ * Returns -1 on alloc error, 0 on ambigous, 1 on non-ambigous redirect
+ * 
+ * @param input 
+ * @param v 
+ * @param res 
+ * @param env_info 
+ * @return int 
+ */
+int	test_for_dollar(char *input, int **v, t_char **res, t_env_info *env_info)
+{
+	t_char	*tmpchar;
+
+	if (input[(*v)[i]] == '\'' && !(*v)[in_double_quotes])
+		(*v)[i] += skip_quotes(input + (*v)[i]);
+	else if (input[(*v)[i]] == '\"')
+		(*v)[in_double_quotes] ^= true;
+	else if (input[(*v)[i]] == '$' && is_expandable(input + (*v)[i] + 1)
+		&& !is_heredoc(input + (*v)[i], input))
+	{
+		if ((*v)[i] > 0)
+		{
+			tmpchar = tchar_njoin(*res, input
+					+ (*v)[begin_join], (*v)[i] - (*v)[begin_join], 1);
+			free(*res);
+			if (!tmpchar)
+				return (mem_exh("dollar expand"), -1);
+			*res = tmpchar;
+		}
+		(*v)[i]++;
+		(*v)[ret] = join_on_expand(input, &(*v)[i], res, env_info);
+		if ((*v)[ret] <= 0)
+			return ((*v)[ret]);
+		(*v)[begin_join] = (*v)[i]--;
+	}
+	return ((*v)[i]++, 1);
+}
+
+t_char	*expand_dollars(char *input, size_t len,
+			t_env_info *env_info, bool *is_ambigous)
+{
+	int		*v;
+	t_char	*res;
+	t_char	*tmpchar;
+
+	v = (int [4]){0, 0, 0, 0};
+	*is_ambigous = false;
 	res = ft_calloc(1, sizeof(t_char));
 	if (!res)
 		return (mem_exh("dollar expand"), NULL);
-	i = 0;
-	begin_join = 0;
-	while (i < len)
+	while (v[i] < (int)len)
 	{
-		if (input[i] == '\'' && !in_double_quotes)
-			i += skip_quotes(input + i) + 1;
-		else if (input[i] == '\"')
-		{
-			in_double_quotes ^= true;
-			i++;
-		}
-		else if (input[i] == '$' && is_expandable(input + i + 1))
-		{
-			if (!is_heredoc(input + i, input))
-			{
-				if (i > 0)
-				{
-					tmpchar = tchar_njoin(res, input + begin_join, i - begin_join, 1);
-					free(res);
-					if (!tmpchar)
-						return (mem_exh("dollar expand"), NULL);
-					res = tmpchar;
-				}
-				i++;
-				tmp = expand(input + i, &i, env_info, is_ambigous);
-				if (!tmp)
-					return (free(res), mem_exh("dollar expand"), NULL);
-				if (*is_ambigous)
-					return (free(tmp), free(res), NULL);
-				tmpchar = ft_str_to_tchar(tmp, 0);
-				free(tmp);
-				if (!tmpchar)
-					return (free(res), mem_exh("dollar expand"), NULL); // write error
-				begin_join = i;
-				tmpchar_1 = tchar_join(res, tmpchar);
-				free(tmpchar);
-				free(res);
-				if (!tmpchar_1)
-					return (mem_exh("dollar expand"), NULL);
-				res = tmpchar_1;
-			}
-			else
-				i++;
-		}
-		else
-			i++;
+		v[ret] = test_for_dollar(input, &v, &res, env_info);
+		if (v[ret] <= 0)
+			return (*is_ambigous = (v[ret] == 0), NULL);
 	}
-	if (begin_join != (int)i)
+	if (v[begin_join] != (int)v[i])
 	{
-		tmpchar = tchar_njoin(res, input + begin_join, i - begin_join, 1);
+		tmpchar = tchar_njoin(res, input
+				+ v[begin_join], v[i] - v[begin_join], 1);
 		free(res);
 		res = tmpchar;
 		if (!res)
