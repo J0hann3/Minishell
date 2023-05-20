@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 16:29:47 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/01 21:31:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/20 22:39:42 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,9 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 		if (input[i] == '\"' || input[i] == '\'')
 			i += skip_quotes(input + i);
 		else if (input[i] == '(' && !has_op_left)
-		{
-			return (true); //error on token before, can't be empty
-		}
+			return (true);
 		else if (input[i] == ')' && has_error_op_par_right(input + i))
-		{
-			return (true); //error on token after '(' (not newline)
-		}
+			return (true);
 		else if (is_and_or(input + i))
 			has_op_left = ++i;
 		else if (is_single_meta(input + i))
@@ -135,5 +131,5 @@ bool	has_error_on_operators_and_parenthesis(const char *input)
 			has_op_left = false;
 		i++;
 	}
-	return (false); // no error
+	return (false);
 }
