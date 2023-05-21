@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:23:06 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/19 00:39:46 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 01:58:04 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	crtl_c_interactive(int sig)
 void	error_new_line(int sig)
 {
 	(void)sig;
+	free_on_crash(NULL, 0);
 	write(STDERR_FILENO, "\n", 1);
 	exit(sig + 128);
 }

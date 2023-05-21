@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 17:16:48 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 02:01:34 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,33 @@ char	*get_warning_message(char *ender)
 	return (res);
 }
 
+void	free_on_crash(char *ender, int fd)
+{
+	static char	*stck_ender = NULL;
+	static int	stck_fd = 0;
+
+	if (!ender && stck_ender && stck_fd)
+	{
+		free(stck_ender);
+		close(stck_fd);
+		stck_ender = NULL;
+		stck_fd = 0;
+	}
+	else
+	{
+		stck_ender = ender;
+		stck_fd = fd;
+	}
+}
+
 void	child(char *ender, int fd, t_env_info *env)
 {
 	char	*input;
 
+	free_on_crash(ender, fd);
 	close_fd_heredocs(env);
 	add_error_signals(env->act);
+	free_env(env);
 	input = (char *)1;
 	while (input)
 	{
@@ -45,10 +66,8 @@ void	child(char *ender, int fd, t_env_info *env)
 		free(input);
 		write(fd, "\n", 1);
 	}
-	free(input);
+	(free(ender), free(input));
 	close(fd);
-	free_env(env);
-	free(ender);
 	exit(EXIT_SUCCESS);
 }
 
