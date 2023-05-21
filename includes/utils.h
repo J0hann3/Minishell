@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/19 00:50:10 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 02:29:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_char	*ft_str_to_tchar(const char *str, bool is_inter);
 
 // tchar_utils.c
 size_t	skip_quotes_tchar(const t_char *input);
-bool	is_inter_and_eq(t_char c1, char c2);
+bool	inter_eq(t_char c1, char c2);
 bool	tchar_is_operator(const t_char *c);
 
 #endif

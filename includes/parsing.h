@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 18:36:57 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 02:59:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,16 @@ void	print_ambigous_redirect(char *input_redir);
 t_instr	*second_parsing(char *input, size_t command_size,
 			t_env_info *env_info, int fd_heredocs);
 
-// open_fd.c
+// redirections.c
 char	*get_file_name(t_char *input);
 bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs);
+
+// open_files.c
+int	read_fd(t_char *input);
+int	open_fd(t_char *input);
+
+// get_file_name.c
+char	*get_file_name(t_char *input);
+void	delete_file_name(t_char *input);
 
 #endif

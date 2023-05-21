@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/19 18:39:08 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/21 03:00:19 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,12 +66,14 @@ SRC_PARSING = \
 			ast_utils.c \
 			ast.c \
 			expand_dollars.c \
-			open_fd.c \
 			parsing_parenthesis.c \
 			parsing_utils.c \
 			remove_quotes.c \
 			second_parsing.c \
 			syntax_errors.c \
+			redirections.c \
+			get_file_name.c \
+			open_files.c \
 			utils2.c
 
 HEREDOCS = heredocs/

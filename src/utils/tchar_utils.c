@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 00:46:07 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 00:54:01 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 02:29:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ size_t	skip_quotes_tchar(const t_char *input)
 	return (0);
 }
 
-bool	is_inter_and_eq(t_char c1, char c2)
+bool	inter_eq(t_char c1, char c2)
 {
 	return (c1.is_inter && c1.c == c2);
 }
