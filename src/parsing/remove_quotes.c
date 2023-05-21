@@ -3,32 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:03:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 17:38:49 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/21 03:14:51 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*remove_quotes(t_char *string)
+// calloc so no \0 at end, norminette issue
+static void	copy_string_without_quotes(t_char *string,
+	char *res, bool is_in_quote)
 {
-	bool	is_in_quote;
-	char	quote;
 	size_t	i;
 	size_t	j;
-	char	*res;
+	char	quote;
 
 	i = 0;
 	j = 0;
-	is_in_quote = false;
-	res = ft_calloc(ft_tchar_len(string) + 1, sizeof(char));
-	if (!res)
-		return (mem_exh("token creation"), NULL);
 	while (string[i].c)
 	{
-		if ((string[i].c == '\'' || string[i].c == '"') && string[i].is_inter == true)
+		if ((string[i].c == '\'' || string[i].c == '"')
+			&& string[i].is_inter == true)
 		{
 			if (is_in_quote && quote == string[i].c)
 				is_in_quote = false;
@@ -40,10 +37,21 @@ char	*remove_quotes(t_char *string)
 			else
 				res[j++] = string[i].c;
 		}
-		else 
+		else
 			res[j++] = string[i].c;
 		i++;
 	}
-	res[j] = 0;
+}
+
+char	*remove_quotes(t_char *string)
+{
+	bool	is_in_quote;
+	char	*res;
+
+	is_in_quote = false;
+	res = ft_calloc(ft_tchar_len(string) + 1, sizeof(char));
+	if (!res)
+		return (mem_exh("token creation"), NULL);
+	copy_string_without_quotes(string, res, is_in_quote);
 	return (res);
 }
