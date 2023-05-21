@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 03:58:22 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 04:44:41 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ char	*get_file_name(t_char *input);
 bool	open_all_fds(t_instruction *instruc, t_char *input, int fd_heredocs);
 
 // open_files.c
-int	read_fd(t_char *input);
-int	open_fd(t_char *input);
+int		read_fd(t_char *input);
+int		open_fd(t_char *input);
 
 // get_file_name.c
 char	*get_file_name(t_char *input);
