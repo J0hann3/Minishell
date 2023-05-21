@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 04:44:41 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/22 00:06:56 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,20 @@ bool	has_argument_left(const char *start_input, char *op_ptr);
 bool	is_redirection(char c);
 bool	is_parenthesis(char c);
 
+// syntax_utils.c
+bool	is_syntax_char(char *string);
+bool	is_redirection(char c);
+bool	is_parenthesis(char c);
+char	*get_error_token(char *input);
+bool	is_operator_ok(char **input, char *start_ptr);
+
+bool	is_quote_closed(char **input);
+
+// check_redirections.c
+bool	is_redirection_ok(char **input, t_env_info *env);
+
 // ast_utils.c
-t_ast	*create_node(const char *command);\
+t_ast	*create_node(const char *command);
 enum e_meta_character	get_meta(char *input);
 const char				*meta_to_char(enum e_meta_character meta);
 size_t					get_command_size(const char *input);

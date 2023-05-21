@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 04:08:54 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/22 00:14:14 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	g_error;
 
-bool	handle_syntax_errors(char *input, t_env_info *env)
+static bool	handle_syntax_errors(char *input, t_env_info *env)
 {
 	int	ret_error;
 
@@ -41,7 +41,7 @@ bool	handle_syntax_errors(char *input, t_env_info *env)
 	return (true);
 }
 
-bool	handle_tree(char *input, t_env_info *env)
+static bool	handle_tree(char *input, t_env_info *env)
 {
 	env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
 	close_fd_heredocs(env);
@@ -102,7 +102,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 		if (!handle_syntax_errors(input, env))
 			continue ;
 		if (!handle_tree(input, env))
-			continue ;
+			break ;
 		env->tree = NULL;
 		free(input);
 	}
