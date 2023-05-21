@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:59:40 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/08 15:53:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/21 01:41:24 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool	is_and(const char *input)
 bool	is_and_or(const char *input)
 {
 	return ((*input == '&' && *(input + 1) == '&')
-			|| (*input == '|' && *(input + 1) == '|'));
+		|| (*input == '|' && *(input + 1) == '|'));
 }
 
 // returns the closing quote of the one entered

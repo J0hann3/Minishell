@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/18 15:10:15 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 01:44:16 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	contain_slash(char *str);
 
-static void	ft_builtins(void(function)(char **, t_env_info *),
+static void	ft_builtins(void (function)(char **, t_env_info *),
 	t_instruction *arg, t_env_info *env)
 {
 	redirection(arg);
