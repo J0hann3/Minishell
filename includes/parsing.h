@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 02:59:33 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 03:58:22 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,18 @@ bool	is_redirection(char c);
 bool	is_parenthesis(char c);
 
 // ast_utils.c
-t_ast	*create_node(const char *command);
+t_ast	*create_node(const char *command);\
+enum e_meta_character	get_meta(char *input);
+const char				*meta_to_char(enum e_meta_character meta);
+size_t					get_command_size(const char *input);
+
+// ast_rec.c
+t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd);
+t_ast	*create_sub_tree(char **input, t_ast *child, bool *has_error);
 
 // ast.c
-t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd);
+t_ast	*create_leaf(const char *input);
+t_ast	*create_op_node(char *input);
 
 // parsing_parenthesis.c
 void	remove_useless_parenthesis(char **input);

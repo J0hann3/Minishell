@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:23:55 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 20:15:37 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 03:42:02 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,16 @@ const char	*meta_to_char(enum e_meta_character meta)
 		return ("");
 }
 
-// int	get_height(t_ast *root)
-// {
-// 	int	left_height;
-// 	int	right_height;
+size_t	get_command_size(const char *input)
+{
+	const char	*start;
 
-// 	if (!root)
-// 		return (0);
-// 	else
-// 	{
-// 		left_height = get_height(root->left);
-// 		right_height = get_height(root->right);
-// 		if (left_height > right_height)
-// 			return (left_height + 1);
-// 		else
-// 			return (right_height + 1);
-// 	}
-// }
+	start = input;
+	while (*input)
+	{
+		if (is_double_meta(input) || is_single_meta(input))
+			return (start - input);
+		input++;
+	}
+	return (start - input);
+}

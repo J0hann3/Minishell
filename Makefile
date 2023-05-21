@@ -6,7 +6,7 @@
 #    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/21 03:16:16 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/21 03:40:36 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,8 +63,9 @@ SRC_UTILS = \
 
 PARSING = parsing/
 SRC_PARSING = \
-			ast_utils.c \
 			ast.c \
+			ast_rec.c \
+			ast_utils.c \
 			expand_dollars.c \
 			parsing_parenthesis.c \
 			parsing_utils.c \

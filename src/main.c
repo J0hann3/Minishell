@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 16:53:51 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 04:08:54 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
 		if (!handle_syntax_errors(input, env))
 			continue ;
 		if (!handle_tree(input, env))
-			break ;
+			continue ;
 		env->tree = NULL;
 		free(input);
 	}
@@ -102,7 +102,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 		if (!handle_syntax_errors(input, env))
 			continue ;
 		if (!handle_tree(input, env))
-			break ;
+			continue ;
 		env->tree = NULL;
 		free(input);
 	}

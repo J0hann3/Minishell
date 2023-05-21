@@ -6,28 +6,57 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 20:14:45 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/21 04:09:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-enum e_meta_character	get_meta(char *input);
-const char				*meta_to_char(enum e_meta_character meta);
+// static int	get_height(t_ast *root)
+// {
+// 	int	left_height;
+// 	int	right_height;
 
-size_t	get_command_size(const char *input)
-{
-	const char	*start;
+// 	if (!root)
+// 		return (0);
+// 	else
+// 	{
+// 		left_height = get_height(root->left);
+// 		right_height = get_height(root->right);
+// 		if (left_height > right_height)
+// 			return (left_height + 1);
+// 		else
+// 			return (right_height + 1);
+// 	}
+// }
 
-	start = input;
-	while (*input)
-	{
-		if (is_double_meta(input) || is_single_meta(input))
-			return (start - input);
-		input++;
-	}
-	return (start - input);
-}
+// static void	print_tree(t_ast *tree, int depth, int max_depth)
+// {
+// 	int	i;
+
+// 	if (!tree)
+// 		return ;
+// 	i = 0;
+// 	depth++;
+// 	if (tree->left)
+// 		print_tree(tree->left, depth, max_depth);
+// 	while (i++ < max_depth - (depth))
+// 		write(1, "\t\t", 2);
+// 	if (tree->command)
+// 	{
+// 		write(1, "[", 1);
+// 		write(1, tree->command, tree->size);
+// 		write(1, "]\n", 2);
+// 	}
+// 	else
+// 	{
+// 		write(1, "[", 1);
+// 		write(1, meta_to_char(tree->meta), tree->size);
+// 		write(1, "]\n", 2);
+// 	}
+// 	if (tree->right)
+// 		print_tree(tree->right, depth, max_depth);
+// }
 
 t_ast	*create_leaf(const char *input)
 {
@@ -72,84 +101,6 @@ t_ast	*create_op_node(char *input)
 	return (node);
 }
 
-t_ast	*create_sub_tree(char **input, t_ast *child)
-{
-	t_ast	*left;
-
-	while (**input == ' ')
-		(*input)++;
-	if (child)
-		left = child;
-	else if (**input == '(')
-	{
-		(*input)++;
-		left = create_sub_tree(input, NULL);
-		if (**input == ')')
-			(*input)++;
-	}
-	else
-	{
-		left = create_leaf(*input);
-		(*input) += left->size;
-	}
-	while (**input == ' ')
-		(*input)++;
-	if (!**input || !is_operator(*input))
-		return (left);
-	left->parent = create_op_node(*input);
-	left->parent->left = left;
-	*input += left->parent->size;
-	while (**input == ' ')
-		(*input)++;
-	if (**input == '(')
-	{
-		(*input)++;
-		left->parent->right = create_sub_tree(input, NULL);
-		left->parent->right->parent = left->parent;
-		if (**input == ')')
-			(*input)++;
-	}
-	else
-	{
-		left->parent->right = create_leaf(*input);
-		*input += left->parent->right->size;
-	}
-	left->parent->right->parent = left->parent;
-	while (**input == ' ')
-		(*input)++;
-	if (is_operator(*input))
-		return (create_sub_tree(input, left->parent));
-	return (left->parent);
-}
-
-void	print_tree(t_ast *tree, int depth, int max_depth)
-{
-	int	i;
-
-	if (!tree)
-		return ;
-	i = 0;
-	depth++;
-	if (tree->left)
-		print_tree(tree->left, depth, max_depth);
-	while(i++ < max_depth - (depth))
-		write(1, "\t\t", 2);
-	if (tree->command)
-	{
-		write(1, "[", 1);
-		write(1, tree->command, tree->size);
-		write(1, "]\n", 2);
-	}
-	else
-	{
-		write(1, "[", 1);
-		write(1, meta_to_char(tree->meta), tree->size);
-		write(1, "]\n", 2);
-	}
-	if (tree->right)
-		print_tree(tree->right, depth, max_depth);
-}
-
 void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 {
 	if (!tree)
@@ -168,14 +119,17 @@ void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
 		add_heredocs(tree->right, fd_heredocs, fd_size, size_max);
 }
 
-
 t_ast	*create_tree(char *input, int *fd_heredocs, int len_fd)
 {
-	t_ast	*root;
+	t_ast	*tree;
 	int		i;
+	bool	has_error;
 
 	i = 0;
-	root = create_sub_tree(&input, NULL);
-	add_heredocs(root, fd_heredocs, &i, len_fd);
-	return (root);
+	has_error = false;
+	tree = create_sub_tree(&input, NULL, &has_error);
+	add_heredocs(tree, fd_heredocs, &i, len_fd);
+	if (has_error)
+		return (free_tree(&tree), mem_exh("ast creation"), NULL);
+	return (tree);
 }
