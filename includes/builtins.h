@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:00:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 18:02:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 // ------Init ------
 t_env_info	*init_env(const char **env);
-char		**init_arg(const char **arg);
 
 // ------ Builtins -------
 void		ft_echo(char **arg, t_env_info	*env);

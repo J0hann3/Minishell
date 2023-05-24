@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 16:32:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 17:26:11 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,31 @@ static enum e_meta_character	find_next_meta(t_ast *node)
 		node = node->parent;
 	}
 	return (e_empty);
+}
+
+static enum e_meta_character	skip_or_exec_and_or(t_ast *tree,
+		t_env_info *env, enum e_meta_character meta_before,
+		enum e_meta_character meta_next)
+{
+	t_instruction			*arg;
+
+	if (meta_before == e_and && g_error == 0)
+	{
+		arg = second_parsing(tree->command, tree->size, env,
+				tree->fd_heredocs);
+		tree->fd_heredocs = -1;
+		exec(arg, env);
+		return (meta_next);
+	}
+	else if (meta_before == e_or && g_error != 0)
+	{
+		arg = second_parsing(tree->command, tree->size, env,
+				tree->fd_heredocs);
+		tree->fd_heredocs = -1;
+		exec(arg, env);
+		return (meta_next);
+	}
+	return (meta_before);
 }
 
 /**
@@ -60,29 +85,26 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 		exec(arg, env);
 		return (meta_next);
 	}
+	return (skip_or_exec_and_or(tree, env, meta_before, meta_next));
+}
+
+static void	explore_right_branch(t_ast *tree, t_env_info *env,
+		enum e_meta_character meta_before)
+{
+	if (tree->right != NULL && tree->right->command != NULL)
+		meta_before = skip_or_exec_command(tree->right, env, meta_before);
 	else if (meta_before == e_and)
 	{
 		if (g_error == 0)
-		{
-			arg = second_parsing(tree->command, tree->size, env,
-					tree->fd_heredocs);
-			tree->fd_heredocs = -1;
-			exec(arg, env);
-			return (meta_next);
-		}
+			explore_tree(tree->right, env, meta_before);
 	}
 	else if (meta_before == e_or)
 	{
 		if (g_error != 0)
-		{
-			arg = second_parsing(tree->command, tree->size, env,
-					tree->fd_heredocs);
-			tree->fd_heredocs = -1;
-			exec(arg, env);
-			return (meta_next);
-		}
+			explore_tree(tree->right, env, meta_before);
 	}
-	return (meta_before);
+	else
+		explore_tree(tree->right, env, meta_before);
 }
 
 /**
@@ -98,9 +120,7 @@ void	explore_tree(t_ast *tree, t_env_info *env,
 {
 	enum e_meta_character	tmp;
 
-	if (tree == NULL)
-		return ;
-	if (g_error == 130 && meta_before != e_empty_new)
+	if (tree == NULL || (g_error == 130 && meta_before != e_empty_new))
 		return ;
 	if (tree->meta != e_empty)
 	{
@@ -110,20 +130,7 @@ void	explore_tree(t_ast *tree, t_env_info *env,
 		else
 			explore_tree(tree->left, env, meta_before);
 		meta_before = tmp;
-		if (tree->right != NULL && tree->right->command != NULL)
-			meta_before = skip_or_exec_command(tree->right, env, meta_before);
-		else if (meta_before == e_and)
-		{
-			if (g_error == 0)
-				explore_tree(tree->right, env, meta_before);
-		}
-		else if (meta_before == e_or)
-		{
-			if (g_error != 0)
-				explore_tree(tree->right, env, meta_before);
-		}
-		else
-			explore_tree(tree->right, env, meta_before);
+		explore_right_branch(tree, env, meta_before);
 	}
 	else if (tree->command != NULL)
 		meta_before = skip_or_exec_command(tree, env, meta_before);
