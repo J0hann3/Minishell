@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/16 16:56:09 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:36:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,8 @@ typedef struct s_instruction
 	char	**command;
 	int		infile;
 	int		outfile;
-	int		outerror;
 	int		s_infile;
 	int		s_outfile;
-	int		s_outerror;
 }	t_instruction;
 
 typedef struct s_ast

@@ -6,58 +6,14 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/13 22:24:58 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 12:46:01 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	canonical_form(char *str);
-
-static void	update_env(t_env_info	*env, char *str)
-{
-	int		i_pwd;
-	int		i_old_pwd;
-	int		len_env;
-	char	*res;
-
-	i_old_pwd = ft_getenv(env->env, "OLDPWD");
-	i_pwd = ft_getenv(env->env, "PWD");
-	if (i_pwd != -1)
-	{
-		if (i_old_pwd != -1)		//update oldpwd
-		{
-			res = ft_strjoin("OLD", env->env[i_pwd]);
-			free(env->env[i_pwd]);
-			if (res == NULL)
-				return (ft_write_error("cd", str, strerror(errno)), free(str),
-					g_error = 1, (void)0);
-			free(env->env[i_old_pwd]);
-			env->env[i_old_pwd] = res;
-		}
-		else
-			free(env->env[i_pwd]);
-		env->env[i_pwd] = ft_strjoin("PWD=", str);
-		if (env->env[i_pwd] == NULL)
-			return (ft_write_error("cd", str, strerror(errno)), g_error = 1,
-				env->env[i_pwd] = str, (void)0);
-		free(str);
-		return ;
-	}
-	else
-	{
-		if (i_old_pwd != -1)
-		{
-			len_env = ft_len(env->env);
-			if (len_env <= 0)
-				return ;
-			free(env->env[i_old_pwd]);
-			env->env[i_old_pwd] = env->env[len_env - 1];
-			env->env[len_env - 1] = NULL;
-		}
-	}
-	free(str);
-}
+void	update_env(t_env_info	*env, char *str);
+int		canonical_form(char *str);
 
 static int	check_arg(char **arg)
 {
@@ -76,11 +32,11 @@ static int	add_first_slash(char *str, int len_path, int real_len)
 	int	i;
 	int	j;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	while (j < len_path)
 	{
-		if (str[i] != '\0')
+		if (str[++i] != '\0')
 		{
 			if (i - 1 >= 0 && str[i] != '/')
 			{
@@ -90,7 +46,6 @@ static int	add_first_slash(char *str, int len_path, int real_len)
 			j++;
 			break ;
 		}
-		++i;
 	}
 	if (len_path == 0 && real_len > 1)
 	{
@@ -128,6 +83,21 @@ static char	*clean_path(char *str, int len_path)
 	return (new);
 }
 
+static void	change_env(t_env_info *env, char *path, int len, char **arg)
+{
+	int	len_path;
+
+	len_path = canonical_form(path);
+	len_path = add_first_slash(path, len_path, len);
+	path = clean_path(path, len_path);
+	if (path == NULL)
+	{
+		ft_write_error("cd", arg[1], strerror(errno));
+		return (g_error = 2, (void)0);
+	}
+	update_env(env, path);
+}
+
 /**
  * @brief 
  * 
@@ -141,7 +111,6 @@ static char	*clean_path(char *str, int len_path)
 void	ft_cd(char **arg, t_env_info	*env)
 {
 	char	*path;
-	int		len_path;
 	int		len;
 
 	if (check_arg(arg) == 0)
@@ -152,26 +121,15 @@ void	ft_cd(char **arg, t_env_info	*env)
 		path = ft_strdup(arg[1]);
 	if (path == NULL)
 	{
-		g_error = 2;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return (free_str(arg));
+		return (g_error = 2, free_str(arg));
 	}
 	len = ft_strlen(path);
 	if (chdir(path) == -1)
 	{
-		g_error = 1;
 		ft_write_error("cd", arg[1], strerror(errno));
-		return (free_str(arg), free(path));
+		return (g_error = 1, free_str(arg), free(path));
 	}
-	len_path = canonical_form(path);
-	len_path = add_first_slash(path, len_path, len);
-	path = clean_path(path, len_path);
-	if (path == NULL)
-	{
-		g_error = 2;
-		ft_write_error("cd", arg[1], strerror(errno));
-		return (free_str(arg));
-	}
-	update_env(env, path);
+	change_env(env, path, len, arg);
 	free_str(arg);
 }

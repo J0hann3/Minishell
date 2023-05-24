@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/21 22:01:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:41:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	free_instructions(t_instruction *instruc)
+void	free_instructions(t_instruction *instruc)
 {
 	size_t	i;
 
@@ -22,6 +22,10 @@ static void	free_instructions(t_instruction *instruc)
 		close(instruc->infile);
 	if (instruc->outfile >= 0)
 		close(instruc->outfile);
+	if (instruc->s_infile >= 0)
+		close(instruc->s_infile);
+	if (instruc->s_outfile >= 0)
+		close(instruc->s_outfile);
 	if (instruc->command)
 	{
 		i = 0;

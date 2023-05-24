@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 14:45:34 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/15 18:46:05 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 16:32:53 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 		arg = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
 		tree->fd_heredocs = -1;
 		exec(arg, env);
-		free(arg);
 		return (meta_next);
 	}
 	else if (meta_before == e_and)
@@ -69,7 +68,6 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 					tree->fd_heredocs);
 			tree->fd_heredocs = -1;
 			exec(arg, env);
-			free(arg);
 			return (meta_next);
 		}
 	}
@@ -81,7 +79,6 @@ static enum e_meta_character	skip_or_exec_command(t_ast *tree,
 					tree->fd_heredocs);
 			tree->fd_heredocs = -1;
 			exec(arg, env);
-			free(arg);
 			return (meta_next);
 		}
 	}

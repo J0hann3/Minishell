@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/19 01:22:29 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:23:18 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*find_absolute_path(char *str)
 	return (path);
 }
 
-int	contain_slash(char *str)
+bool	contain_slash(char *str)
 {
 	int	i;
 
@@ -39,10 +39,10 @@ int	contain_slash(char *str)
 	while (str[i] != '\0')
 	{
 		if (str[i] == '/')
-			return (1);
+			return (true);
 		++i;
 	}
-	return (0);
+	return (false);
 }
 
 static void	trim_name_var(char **str)
@@ -60,7 +60,8 @@ static void	trim_name_var(char **str)
 			i++;
 			tmp = ft_strdup((char *)(str[0] + i));
 			if (tmp == NULL)
-				return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)));
+				return (g_error = 2,
+					ft_write_error(NULL, NULL, strerror(errno)));
 			free(str[0]);
 			str[0] = tmp;
 			return ;
@@ -69,40 +70,78 @@ static void	trim_name_var(char **str)
 	}
 }
 
+char	*access_path(char *path, char *arg)
+{
+	int	fd;
+
+	if (access(path, F_OK) == 0)
+	{
+		if (access(path, X_OK) == 0)
+		{
+			fd = open(path, O_DIRECTORY);
+			if (fd != -1)
+				return (close(fd), g_error = 126, free(path),
+					ft_write_error(NULL, arg, "Is a directory"), NULL);
+			return (path);
+		}
+		else
+		{
+			g_error = 126;
+			ft_write_error(NULL, arg, strerror(errno));
+			return (free(path), NULL);
+		}
+	}
+	g_error = 127;
+	ft_write_error(NULL, arg, strerror(errno));
+	return (free(path), NULL);
+}
+
+static char	*try_path(char *test_path, char *name, bool *error_mem)
+{
+	int		fd;
+	char	*path;
+
+	if (test_path[ft_strlen(test_path) - 1] != '/')
+		path = ft_strjoin3(test_path, "/", name);
+	else
+		path = ft_strjoin(test_path, name);
+	if (path == NULL)
+		return (g_error = 2, mem_exh(NULL), *error_mem = true, NULL);
+	if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
+	{
+		fd = open(path, O_DIRECTORY);
+		if (fd != -1)
+			return (close(fd), free(path), NULL);
+		return (path);
+	}
+	free(path);
+	return (NULL);
+}
+
 static char	*explore_path(char *name, char *env_path)
 {
 	char	**var_path;
 	char	*path;
+	bool	error_mem;
 	int		i;
-	int		fd;
 
-	i = 0;
+	i = -1;
+	error_mem = false;
 	var_path = ft_split(env_path, ':');
 	if (var_path == NULL)
-		return (NULL);		//now write command not found
+		return (g_error = 2, mem_exh(NULL), NULL);
 	trim_name_var(var_path);
-	while (var_path[i] != NULL)
+	while (var_path[++i] != NULL)
 	{
-		if (var_path[i][ft_strlen(var_path[i]) - 1] != '/')
-			path = ft_strjoin3(var_path[i], "/", name);
-		else
-			path = ft_strjoin(var_path[i], name);
-		if (path == NULL)
-		{
-			++i;
-			continue ;
-		}
-		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
-		{
-			fd = open(path, O_DIRECTORY);
-			if (fd != -1)
-				return (close(fd), free_str(var_path), close(fd), NULL);
+		path = try_path(var_path[i], name, &error_mem);
+		if (!path && error_mem == true)
+			return (free_str(var_path), NULL);
+		if (path)
 			return (free_str(var_path), path);
-		}
-		free(path);
-		++i;
 	}
 	free_str(var_path);
+	g_error = 127;
+	ft_write_error(NULL, name, strerror(errno));
 	return (NULL);
 }
 
@@ -110,9 +149,8 @@ char	*find_path_command(char *str, t_env_info *env)
 {
 	char	*path;
 	int		i_path;
-	int		fd;
 
-	if (contain_slash(str) != 0)
+	if (contain_slash(str))
 	{
 		if (str[0] != '/')
 			path = find_absolute_path(str);
@@ -121,39 +159,14 @@ char	*find_path_command(char *str, t_env_info *env)
 		if (path == NULL)
 			return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)),
 				NULL);
-		if (access(path, F_OK) == 0)
-		{
-			if (access(path, X_OK) == 0)
-			{
-				fd = open(path, O_DIRECTORY);
-				if (fd != -1)
-					return (close(fd), g_error = 126,
-						ft_write_error(NULL, str, "Is a directory"), NULL);
-				return (path);
-			}
-			else
-			{
-				g_error = 126;
-				ft_write_error(NULL, str, strerror(errno));
-				return (free(path), NULL);
-			}
-		}
-		g_error = 127;
-		ft_write_error(NULL, str, strerror(errno));
-		return (free(path), NULL);
+		return (access_path(path, str));
 	}
 	i_path = ft_getenv(env->env, "PATH");
 	if (i_path == -1)
-	{
-		g_error = 127;
-		ft_write_error(NULL, str, "command not found");
-		return (NULL);
-	}
+		return (g_error = 127, ft_write_error(NULL, str, "command not found"),
+			NULL);
 	path = explore_path(str, env->env[i_path]);
 	if (path == NULL)
-	{
-		g_error = 127;
-		ft_write_error(NULL, str, "command not found");
-	}
+		return (NULL);
 	return (path);
 }

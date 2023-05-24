@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
+#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/21 22:58:57 by qthierry         ###   ########.fr        #
+#    Updated: 2023/05/24 12:47:08 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,8 @@ SRC_BUILTINS = \
 				pwd.c \
 				unset.c \
 				canonic_path.c \
-				cd.c
+				cd.c \
+				update_env.c
 
 UTILS = utils/
 SRC_UTILS = \

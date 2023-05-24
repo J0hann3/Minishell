@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/22 00:06:56 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:34:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	print_ambigous_redirect(char *input_redir);
 //second_parsing.c
 t_instr	*second_parsing(char *input, size_t command_size,
 			t_env_info *env_info, int fd_heredocs);
+void	free_instructions(t_instruction *instruc);
 
 // redirections.c
 char	*get_file_name(t_char *input);

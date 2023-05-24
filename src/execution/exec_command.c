@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/21 01:44:16 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:56:29 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,41 +47,12 @@ static int	is_builtins(t_instruction *arg, t_env_info *env)
 	return (0);
 }
 
-int	exec(t_instruction *inst, t_env_info *env)
+static void	ft_waitpid(t_env_info *env, t_instruction *inst, int pid,
+	char *path)
 {
-	char	*path;
-	int		pid;
 	int		stat;
 
-	if (inst == NULL || inst->command == NULL)
-		return (-1);
-	if (inst->command[0] == NULL)
-		return (close_fd(inst), free_str(inst->command), -1);
-	if (*(inst->command[0]) == '\0')
-		return (ft_write_error("", NULL, "command not found"), close_fd(inst), free_str(inst->command), -1);
-	if (contain_slash(inst->command[0]) == 0 && is_builtins(inst, env) != 0)
-		return (g_error);
-	g_error = 0;
-	path = find_path_command(inst->command[0], env);
-	if (path == NULL)
-		return (close_fd(inst), free_str(inst->command), g_error);
-	pid = fork();
-	if (pid == -1)
-	{
-		g_error = 1;
-		ft_write_error("fork", NULL, strerror(errno));
-		return (close_fd(inst), free(path), free_str(inst->command), g_error);
-	}
-	if (pid == 0)
-	{
-		redirection_fork(inst);
-		none_interactive(env->act);
-		free_tree(&(env->tree));
-		execve(path, inst->command, env->env);
-		return (free(path), free_str(inst->command), g_error);
-	}
 	ign_signals(env->act);
-	close_fd(inst);
 	if (waitpid(pid, &stat, 0) == -1)
 		ft_write_error("fork", NULL, strerror(errno));
 	reset_signals(env->act);
@@ -90,6 +61,46 @@ int	exec(t_instruction *inst, t_env_info *env)
 	else
 		g_error = WEXITSTATUS(stat);
 	free(path);
-	free_str(inst->command);
+	free_instructions(inst);
+}
+
+static bool	is_null( t_instruction *inst)
+{
+	if (inst == NULL || inst->command == NULL)
+		return (free_instructions(inst), true);
+	if (inst->command[0] == NULL)
+		return (free_instructions(inst), true);
+	if (*(inst->command[0]) == '\0')
+		return (ft_write_error("", NULL, "command not found"),
+			free_instructions(inst), true);
+	return (false);
+}
+
+int	exec(t_instruction *inst, t_env_info *env)
+{
+	char	*path;
+	int		pid;
+
+	if (is_null(inst))
+		return (g_error);
+	if (!contain_slash(inst->command[0]) && is_builtins(inst, env) != 0)
+		return (close_fd(inst), free(inst), g_error);
+	g_error = 0;
+	path = find_path_command(inst->command[0], env);
+	if (path == NULL)
+		return (free_instructions(inst), g_error);
+	pid = fork();
+	if (pid == -1)
+		return (g_error = 1, free_instructions(inst), free(path),
+			ft_write_error("fork", NULL, strerror(errno)), g_error);
+	if (pid == 0)
+	{
+		redirection_fork(inst);
+		none_interactive(env->act);
+		free_tree(&(env->tree));
+		execve(path, inst->command, env->env);
+		return (free(path), free_instructions(inst), g_error);
+	}
+	ft_waitpid(env, inst, pid, path);
 	return (g_error);
 }
