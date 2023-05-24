@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/22 00:14:14 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:20:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	if (argc != 1)
 		return (ft_write_error(NULL, NULL, "Wrong number of arguments."), 0);
+	g_error = 0;
 	env = init_env((const char **)envp);
 	if (!env)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 18:07:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 18:45:06 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	redirect_outfile(t_env_info *env, int fd[2],
 	}
 }
 
-static void	pipe_waitpid(t_env_info *env, int pid, int fd)
+static void	pipe_waitpid(t_env_info *env, int pid, int *fd)
 {
 	int				stat;
 
@@ -65,7 +65,7 @@ static void	pipe_waitpid(t_env_info *env, int pid, int fd)
 		stat = waitpid(-1, NULL, 0);
 	}
 	reset_signals(env->act);
-	fd = 0;
+	*fd = 0;
 }
 
 static void	pipe_close_fd(int fd, int fildes[2], int fd_heredoc,
@@ -124,5 +124,5 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 	ign_signals(env->act);
 	pipe_close_fd(fd_tmp, fildes, tree->fd_heredocs, m_n);
 	if (m_b == e_pipe && m_n != e_pipe)
-		pipe_waitpid(env, pid, fd_tmp);
+		pipe_waitpid(env, pid, &fd_tmp);
 }
