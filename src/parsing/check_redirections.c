@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   check_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 22:46:16 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 22:46:28 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:52:54 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static bool set_input_position(char **input, bool *is_heredoc)
+static bool	set_input_position(char **input, bool *is_heredoc)
 {
 	if (**input != *(*input + 1) && is_redirection(*(*input + 1)))
-		return (ft_write_error(NULL,NULL,
-			get_error_token(*input + 1)), false);
+		return (ft_write_error(NULL, NULL,
+				get_error_token(*input + 1)), false);
 	if (**input == '<' && *(*input + 1) == '<')
 		*is_heredoc = true;
 	(*input)++;
@@ -27,7 +27,7 @@ static bool set_input_position(char **input, bool *is_heredoc)
 	return (true);
 }
 
-static bool on_heredoc(char *start, t_env_info *env)
+static bool	on_heredoc(char *start, t_env_info *env)
 {
 	int		error;
 
@@ -67,11 +67,11 @@ bool	is_redirection_ok(char **input, t_env_info *env)
 		return (false);
 	start = *input;
 	while (**input && !is_wspace(**input) && !is_operator((*input))
-			&& !is_parenthesis(**input) && !is_redirection(**input))
+		&& !is_parenthesis(**input) && !is_redirection(**input))
 	{
 		if ((**input == '\'' || **input == '"')
 			&& !is_quote_closed(input))
-				return (false);
+			return (false);
 		(*input)++;
 	}
 	if ((*input) == start)

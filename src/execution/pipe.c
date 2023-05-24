@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 18:45:06 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/24 18:58:04 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	redirect_infile(int fd, t_env_info *env)
 			free_env(env);
 			g_error = 1;
 			close(fd);
-			ft_write_error("pipe", NULL, strerror(errno));		//attention close fd == sigpipe else leaks fd
+			ft_write_error("pipe", NULL, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		close(fd);
@@ -82,6 +82,15 @@ static void	pipe_close_fd(int fd, int fildes[2], int fd_heredoc,
 	}
 }
 
+static void	execution(t_ast *tree, t_env_info *env)
+{
+	exec(second_parsing(tree->command, tree->size, env, tree->fd_heredocs),
+		env);
+	tree->fd_heredocs = -1;
+	free_env(env);
+	exit(g_error);
+}
+
 /**
  * @brief create and fork for execution
  * child (pid==0)-> execute command with the good redirection
@@ -104,7 +113,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 		|| (m_b == e_pipe && fd_tmp == 0))
 		return ;
 	if (m_n == e_pipe && pipe(fildes) != 0)
-		return (g_error = 1, ft_write_error("pipe", NULL, strerror(errno)));		//need to close fd_tmp ?? ou heredoc ??
+		return (g_error = 1, ft_write_error("pipe", NULL, strerror(errno)));
 	g_error = 0;
 	pid = fork();
 	if (pid == -1)
@@ -115,11 +124,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 		none_interactive(env->act);
 		redirect_infile(fd_tmp, env);
 		redirect_outfile(env, fildes, m_n);
-		exec(second_parsing(tree->command, tree->size, env, tree->fd_heredocs),
-			env);
-		tree->fd_heredocs = -1;
-		free_env(env);
-		exit(g_error);
+		execution(tree, env);
 	}
 	ign_signals(env->act);
 	pipe_close_fd(fd_tmp, fildes, tree->fd_heredocs, m_n);
