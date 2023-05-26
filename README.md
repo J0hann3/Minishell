@@ -94,3 +94,39 @@ changements :
 - exit ne print plus 'exit' en interactif
 - g_error est set à 0 uniquement après check si on utilise exit
 - sep dans les wildcard est maintenant un t_char non-alloc
+
+heredoc en none interactif affiche le mot de fin de heredoc
+
+cat << $USER
+why
+not
+$USER
+
+si on copy ca en une fois dans minishell le mot de fin est :
+
+minishell: warning: here-document delimited by end-of-file (wanted `$USER
+why
+not
+$USER')
+
+
+exit ""
+exit 0 0 ->134 and double free
+
+echo 'touch "
+"' | ./minishell 
+minishell: unexpected EOF while looking for matching `"'
+minishell: syntax error: unexpected end of file
+minishell: unexpected EOF while looking for matching `"'
+minishell: syntax error: unexpected end of file
+
+
+problem update pwd with cd ..
+
+unset PATH
+cd /bin
+ls
+
+
+echo 'echo "env | /usr/bin/wc -l" | env -i ./minishell ' |bash	->3
+echo 'echo "env | /usr/bin/wc -l" | env -i ./minishell ' |./minishell	->env

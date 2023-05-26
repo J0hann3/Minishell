@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 16:56:29 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/26 20:16:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static bool	is_null( t_instruction *inst)
 	if (inst->command[0] == NULL)
 		return (free_instructions(inst), true);
 	if (*(inst->command[0]) == '\0')
-		return (ft_write_error("", NULL, "command not found"),
+		return (g_error = 127, ft_write_error("", NULL, "command not found"),
 			free_instructions(inst), true);
 	return (false);
 }
