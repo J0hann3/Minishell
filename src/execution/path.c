@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 16:23:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/26 18:34:26 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ static char	*explore_path(char *name, char *env_path)
 	}
 	free_str(var_path);
 	g_error = 127;
-	ft_write_error(NULL, name, strerror(errno));
+	ft_write_error(NULL, name, "command not found");
 	return (NULL);
 }
 

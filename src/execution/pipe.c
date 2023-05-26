@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 18:58:04 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/26 18:10:08 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,17 @@ static void	pipe_waitpid(t_env_info *env, int pid, int *fd)
 	*fd = 0;
 }
 
-static void	pipe_close_fd(int fd, int fildes[2], int fd_heredoc,
+static void	pipe_close_fd(int *fd, int fildes[2], int fd_heredoc,
 		enum e_meta_character m_n)
 {
 	if (fd_heredoc >= 0)
 		close(fd_heredoc);
-	if (fd != 0)
-		close(fd);
+	if (*fd != 0)
+		close(*fd);
 	if (m_n == e_pipe)
 	{
 		close(fildes[1]);
-		fd = fildes[0];
+		*fd = fildes[0];
 	}
 }
 
@@ -127,7 +127,7 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 		execution(tree, env);
 	}
 	ign_signals(env->act);
-	pipe_close_fd(fd_tmp, fildes, tree->fd_heredocs, m_n);
+	pipe_close_fd(&fd_tmp, fildes, tree->fd_heredocs, m_n);
 	if (m_b == e_pipe && m_n != e_pipe)
 		pipe_waitpid(env, pid, &fd_tmp);
 }
