@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/26 18:34:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:16:40 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,23 +150,25 @@ char	*find_path_command(char *str, t_env_info *env)
 	char	*path;
 	int		i_path;
 
-	if (contain_slash(str))
+	if (!contain_slash(str))
 	{
-		if (str[0] != '/')
+		i_path = ft_getenv(env->env, "PATH");
+		if (i_path == -1)
+		{
 			path = find_absolute_path(str);
-		else
-			path = ft_strdup(str);
-		if (path == NULL)
-			return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)),
-				NULL);
-		return (access_path(path, str));
+			if (path == NULL)
+				return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)),
+					NULL);
+			return (access_path(path, str));
+		}
+		return (explore_path(str, env->env[i_path]));
 	}
-	i_path = ft_getenv(env->env, "PATH");
-	if (i_path == -1)
-		return (g_error = 127, ft_write_error(NULL, str, "command not found"),
-			NULL);
-	path = explore_path(str, env->env[i_path]);
+	if (str[0] != '/')
+		path = find_absolute_path(str);
+	else
+		path = ft_strdup(str);
 	if (path == NULL)
-		return (NULL);
-	return (path);
+		return (g_error = 2, ft_write_error(NULL, NULL, strerror(errno)),
+			NULL);
+	return (access_path(path, str));
 }
