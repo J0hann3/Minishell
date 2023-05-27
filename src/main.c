@@ -6,12 +6,11 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/24 18:20:14 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 13:26:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../includes/get_next_line.h"
 #include <dirent.h>
 #include <termios.h>
 #include <curses.h>
@@ -52,6 +51,7 @@ static bool	handle_tree(char *input, t_env_info *env)
 	}
 	explore_tree(env->tree, env, e_empty_new);
 	free_tree(&(env->tree));
+	env->tree = NULL;
 	return (true);
 }
 
@@ -63,6 +63,7 @@ void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
 	{
 		tcsetattr(STDIN_FILENO, TCSANOW, termios);
 		input = readline("minishell$> ");
+		// printf("input : %s", input);
 		if (!input)
 			break ;
 		if (!*input)
@@ -75,7 +76,6 @@ void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
 			continue ;
 		if (!handle_tree(input, env))
 			continue ;
-		env->tree = NULL;
 		free(input);
 	}
 	write(1, "exit\n", 5);
@@ -89,6 +89,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 	while (true)
 	{
 		input = get_next_line(STDIN_FILENO);
+		// printf("input : %s\n", input);
 		if (!input)
 			break ;
 		input_len = ft_strlen(input);
@@ -103,7 +104,6 @@ void	minishell_not_interactive_loop(t_env_info *env)
 			continue ;
 		if (!handle_tree(input, env))
 			break ;
-		env->tree = NULL;
 		free(input);
 	}
 	get_next_line(-1);

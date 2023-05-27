@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 16:36:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 13:27:07 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <signal.h>
+#include "../includes/get_next_line.h"
 
 extern int	g_error;
 

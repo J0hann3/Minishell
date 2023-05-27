@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_heredocs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 18:28:53 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/27 13:27:22 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include "../../includes/get_next_line.h"
 
 static char	*expand(char *input, size_t *i, t_env_info *env_info)
 {

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/26 20:16:26 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 13:25:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	exec(t_instruction *inst, t_env_info *env)
 			ft_write_error("fork", NULL, strerror(errno)), g_error);
 	if (pid == 0)
 	{
+		get_next_line(-1);
 		redirection_fork(inst);
 		none_interactive(env->act);
 		free_tree(&(env->tree));

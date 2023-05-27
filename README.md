@@ -114,6 +114,7 @@ $USER')
 
 exit ""								|Done
 exit -10	->write error + exit 246
+exit -1
 exit 0 0 ->134 and double free		| Done
 
 echo 'touch "
@@ -123,13 +124,17 @@ minishell: syntax error: unexpected end of file
 minishell: unexpected EOF while looking for matching `"'
 minishell: syntax error: unexpected end of file
 
-
 problem update pwd with cd ..		|Done
 
 unset PATH
 cd /bin
 ls
 
-
 echo 'echo "env | /usr/bin/wc -l" | env -i ./minishell ' |bash	->3
 echo 'echo "env | /usr/bin/wc -l" | env -i ./minishell ' |./minishell	->env
+
+ls | cat << stop | grep "asd"
+is this good
+stop
+
+131 error on mandatory

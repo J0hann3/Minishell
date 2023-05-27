@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/21 02:29:38 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/27 13:37:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	close_fd_heredocs(t_env_info *env);
 void	close_fd(t_instruction *inst);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 void	free_all(t_char **string);
+char	*find_most_left_command(t_ast *tree);
+
 
 // tchar_join.c
 t_char	*tchar_njoin(t_char *s1, char const *s2, size_t size, bool is_inter);
