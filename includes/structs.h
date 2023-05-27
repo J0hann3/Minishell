@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:41:48 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:27:07 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 14:57:12 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_env_info
 	int					len_heredocs;
 	struct sigaction	act[2];
 	struct s_ast		*tree;
+	char				*input;
 }	t_env_info;
 
 typedef struct s_instruction

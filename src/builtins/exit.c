@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:37:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 14:59:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_exit(t_instruction *arg, t_env_info *env)
 	if (arg->command[1] == NULL)
 	{
 		free_instructions(arg);
-		free(find_most_left_command(env->tree));
+		free(env->input);
 		free_env(env);
 		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 			write(2, "exit\n", 5);
@@ -48,7 +48,7 @@ void	ft_exit(t_instruction *arg, t_env_info *env)
 		return (g_error = 1, free_str(arg->command));
 	}
 	free_instructions(arg);
-	free(find_most_left_command(env->tree));
+	free(env->input);
 	free_env(env);
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 		write(2, "exit\n", 5);

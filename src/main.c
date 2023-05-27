@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 13:26:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 15:18:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static bool	handle_syntax_errors(char *input, t_env_info *env)
 
 static bool	handle_tree(char *input, t_env_info *env)
 {
+	env->input = input;
 	env->tree = create_tree(input, env->fds_heredocs, env->len_heredocs);
 	close_fd_heredocs(env);
 	if (env->tree == NULL)
@@ -101,7 +102,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 			continue ;
 		}
 		if (!handle_syntax_errors(input, env))
-			continue ;
+			break ;
 		if (!handle_tree(input, env))
 			break ;
 		free(input);

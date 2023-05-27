@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:37:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 15:03:13 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ static void	execution(t_ast *tree, t_env_info *env)
 	t_instruction *inst;
 
 	inst = second_parsing(tree->command, tree->size, env, tree->fd_heredocs);
-	free(find_most_left_command(env->tree));
+	free(env->input);
+	env->input = NULL;
 	exec(inst, env);
 	tree->fd_heredocs = -1;
 	free_env(env);

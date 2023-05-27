@@ -137,4 +137,9 @@ ls | cat << stop | grep "asd"
 is this good
 stop
 
+touch "   "
+ls * | grep "   "
+rm "   "
+
 131 error on mandatory
+3 error on bonus

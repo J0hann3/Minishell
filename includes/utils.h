@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:37:14 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 14:58:49 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	close_fd_heredocs(t_env_info *env);
 void	close_fd(t_instruction *inst);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 void	free_all(t_char **string);
-char	*find_most_left_command(t_ast *tree);
 
 
 // tchar_join.c
