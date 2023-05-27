@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 13:26:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:37:55 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ void	child(char *ender, int fd, t_env_info *env)
 {
 	char	*input;
 
-	// printf("test\n");
-	get_next_line(-1);
-	free_on_crash(ender, fd);
+	(get_next_line(-1), free_on_crash(ender, fd));
 	close_fd_heredocs(env);
 	add_error_signals(env->act);
 	free_env(env);
@@ -56,7 +54,6 @@ void	child(char *ender, int fd, t_env_info *env)
 	while (input)
 	{
 		input = readline("> ");
-		// printf("heredoc : %s\n",input);
 		if (eq(ender, input))
 			break ;
 		else if (!input)

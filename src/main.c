@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 15:18:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:26:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
 	{
 		tcsetattr(STDIN_FILENO, TCSANOW, termios);
 		input = readline("minishell$> ");
-		// printf("input : %s", input);
 		if (!input)
 			break ;
 		if (!*input)
@@ -78,6 +77,7 @@ void	minishell_interactive_loop(t_env_info *env, struct termios *termios)
 		if (!handle_tree(input, env))
 			continue ;
 		free(input);
+		env->input = NULL;
 	}
 	write(1, "exit\n", 5);
 }
@@ -90,7 +90,6 @@ void	minishell_not_interactive_loop(t_env_info *env)
 	while (true)
 	{
 		input = get_next_line(STDIN_FILENO);
-		// printf("input : %s\n", input);
 		if (!input)
 			break ;
 		input_len = ft_strlen(input);
@@ -106,6 +105,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 		if (!handle_tree(input, env))
 			break ;
 		free(input);
+		env->input = NULL;
 	}
 	get_next_line(-1);
 }

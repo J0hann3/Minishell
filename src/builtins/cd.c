@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 12:23:57 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:36:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	update_env(t_env_info	*env, char *str)
 
 static void	change_env(t_env_info *env, char **arg)
 {
-	char *path;
+	char	*path;
 
 	path = getcwd(NULL, 0);
 	if (path == NULL)

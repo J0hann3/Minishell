@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 00:54:48 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 00:55:07 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/27 16:25:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	free_env(t_env_info *env)
 {
 	if (env != NULL)
 	{
+		free(env->input);
 		free(env->fds_heredocs);
 		free_str(env->env);
 		free_tree(&(env->tree));

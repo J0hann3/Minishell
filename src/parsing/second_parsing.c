@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:28:30 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:23:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ t_instruction	*second_parsing(char *input,
 	t_char			*expanded_command;
 	t_instruction	*instruc;
 
-	// printf("input : '%s'	heredoc: %d\n", input, fd_heredocs);
 	instruc = ft_calloc(1, sizeof(t_instruction));
 	if (!instruc)
 		return (mem_exh("token creation"), NULL);
@@ -111,13 +110,6 @@ t_instruction	*second_parsing(char *input,
 	instruc->outfile = -2;
 	instruc->s_infile = -2;
 	instruc->s_outfile = -2;
-	// char *str = get_next_line(fd_heredocs);
-	// while(str != NULL)
-	// {
-	// 	printf("heredocs before : [%s]\n", str);
-	// 	free(str);
-	// 	str = get_next_line(fd_heredocs);
-	// }
 	expanded_command = expand_all(input, command_size, &fd_heredocs, env_info);
 	if (!expanded_command)
 		return (free_instructions(instruc), NULL);
@@ -126,18 +118,5 @@ t_instruction	*second_parsing(char *input,
 			free(expanded_command), g_error = 1, NULL);
 	if (!fill_instruc_command(expanded_command, instruc, command_size))
 		return (NULL);
-	// int i = 0;
-	// while(instruc->command[i] != NULL)
-	// {
-	// 	printf("command : [%s]\n", instruc->command[i]);
-	// 	i++;
-	// }
-	// str = get_next_line(fd_heredocs);
-	// while(str != NULL)
-	// {
-	// 	printf("heredocs : [%s]\n", str);
-	// 	free(str);
-	// 	str = get_next_line(fd_heredocs);
-	// }
 	return (instruc);
 }

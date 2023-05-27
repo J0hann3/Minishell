@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 13:25:39 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:34:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int	exec(t_instruction *inst, t_env_info *env)
 		none_interactive(env->act);
 		free_tree(&(env->tree));
 		execve(path, inst->command, env->env);
-		return (free(path), free_instructions(inst), g_error);
 	}
 	ft_waitpid(env, inst, pid, path);
 	return (g_error);

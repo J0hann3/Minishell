@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 18:46:17 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:28:45 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void	add_shlvl__(t_env_info *new, const char **env, int *i)
 static void	init_var(t_env_info *new, int len)
 {
 	init_signals(new->act);
+	new->input = NULL;
 	new->fds_heredocs = NULL;
 	new->len_heredocs = 0;
 	new->len_env = len;

@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 13:32:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 10:42:21 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:30:32 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ int	ft_atouc(const char *str)
 	if (str[i] != '\0' || error)
 		return (-1);
 	if (sign != 1)
-		return (res * sign);
+		return ((unsigned char)res * sign);
 	return (res);
 }
