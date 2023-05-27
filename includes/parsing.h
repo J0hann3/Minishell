@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:46:19 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 16:48:16 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/05/27 16:51:03 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void					remove_useless_parenthesis(char **input);
 bool					has_error_on_operators_and_parenthesis(
 							const char *input);
 void					remove_multiple_wspaces(char *input);
-bool					has_error_for_meta(char *input, size_t i);
 void					*ft_realloc(void *ptr, size_t prev_size,
 							size_t new_size);
 void					*ft_memcpy(void *dest, const void *src, size_t n);
