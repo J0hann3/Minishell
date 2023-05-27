@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/16 20:17:39 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:51:39 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	ft_exit(t_instruction *arg, t_env_info *env)
 {
 	if (arg->command[1] == NULL)
 	{
-		free_str(arg->command);
-		free(arg);
+		free_instructions(arg);
 		free_env(env);
 		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 			write(2, "exit\n", 5);
@@ -44,10 +43,10 @@ void	ft_exit(t_instruction *arg, t_env_info *env)
 	else if (arg->command[2] != NULL)
 	{
 		ft_write_error("exit", NULL, "too many arguments");
-		return (free_str(arg->command), free(arg), g_error = 1, (void)0);
+		return (g_error = 1, free_str(arg->command));
 	}
-	(free_env(env), free_str(arg->command));
-	free(arg);
+	free_instructions(arg);
+	free_env(env);
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 		write(2, "exit\n", 5);
 	exit(g_error);

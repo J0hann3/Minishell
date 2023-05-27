@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atouc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 13:32:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/16 19:56:00 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:42:21 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,24 @@ int	ft_atouc(const char *str)
 	unsigned char	res;
 	int				i;
 	int				sign;
+	bool			error;
 
 	res = 0;
 	i = 0;
 	sign = 1;
+	error = true;
 	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\r' || str[i] == '\n'
 		||str[i] == '\t' || str[i] == '\v')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
-	{
 		if (str[i++] == '-')
 			sign = -1;
-	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		res = res * 10 + str[i] - '0';
-		i++;
+		res = res * 10 + str[i++] - '0';
+		error = false;
 	}
-	if (str[i] != '\0')
+	if (str[i] != '\0' || error)
 		return (-1);
 	if (sign != 1)
 		return (res * sign);

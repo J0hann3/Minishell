@@ -95,6 +95,8 @@ changements :
 - g_error est set à 0 uniquement après check si on utilise exit
 - sep dans les wildcard est maintenant un t_char non-alloc
 
+
+
 heredoc en none interactif affiche le mot de fin de heredoc
 
 cat << $USER
@@ -110,8 +112,9 @@ not
 $USER')
 
 
-exit ""
-exit 0 0 ->134 and double free
+exit ""								|Done
+exit -10	->write error + exit 246
+exit 0 0 ->134 and double free		| Done
 
 echo 'touch "
 "' | ./minishell 
@@ -121,7 +124,7 @@ minishell: unexpected EOF while looking for matching `"'
 minishell: syntax error: unexpected end of file
 
 
-problem update pwd with cd ..
+problem update pwd with cd ..		|Done
 
 unset PATH
 cd /bin
