@@ -85,9 +85,7 @@ parsing
 env -i et compagnie
 
 a changer :
-- leak de fd sur 'echo a | cat' ?????? parfois
 - ajouter les '' dans le message d'erreur de export invalid identifier
-- ajouter un message d'erreur a cd seul, il renvoie 1
 
 changements : 
 - main en interactif
@@ -95,32 +93,7 @@ changements :
 - g_error est set à 0 uniquement après check si on utilise exit
 - sep dans les wildcard est maintenant un t_char non-alloc
 
-
-
 heredoc en none interactif affiche le mot de fin de heredoc
 
-cat << $USER
-why
-not
-$USER
-
-si on copy ca en une fois dans minishell le mot de fin est :
-
-minishell: warning: here-document delimited by end-of-file (wanted `$USER
-why
-not
-$USER')
-
-
-exit -10	->write error + exit 246
-exit -1
-
-ls | cat << stop | grep "asd"
-is this good
-stop
-
-touch "   "
-ls * | grep "   "
-rm "   "
 
 119 error on mandatory

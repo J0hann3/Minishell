@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 16:59:33 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/19 00:55:04 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/02 18:38:31 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,37 @@ int	ft_getenv(char **env, char *str)
 		++i;
 	}
 	return (-1);
+}
+
+bool	contain_slash(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '/')
+			return (true);
+		++i;
+	}
+	return (false);
+}
+
+char	*find_absolute_path(char *str)
+{
+	char	*pwd;
+	char	*path;
+	int		len;
+	int		add_slash;
+
+	add_slash = 0;
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (NULL);
+	len = ft_strlen(pwd);
+	if (len != 0 && pwd[len - 1] != '/')
+		add_slash = 1;
+	path = ft_strjoin_slash(pwd, str, add_slash);
+	free(pwd);
+	return (path);
 }

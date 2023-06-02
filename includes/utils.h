@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:46 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:48:33 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 18:18:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		is_alpha(char c);
 int		is_digit(char c);
 int		ft_len(char **str);
 int		ft_getenv(char **env, char *str);
-int		ft_atouc(const char *str);
+int		ft_atouc(const char *str, bool *error);
 void	ft_write_error(const char *command,
 			const char *argument, const char *message);
 void	mem_exh(const char *context);

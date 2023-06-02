@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 14:26:28 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:36:15 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 17:55:43 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 static int	check_arg(char **arg)
 {
 	if (arg[1] == NULL)
+	{
+		ft_write_error("cd", NULL, "too few argument");
 		return (free_str(arg), 0);
+	}
 	if (arg[2] != NULL)
 	{
 		ft_write_error("cd", NULL, "too many arguments");

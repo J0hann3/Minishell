@@ -6,47 +6,15 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:35:50 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 18:42:48 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	redirect_infile(int fd, t_env_info *env)
-{
-	get_next_line(-1);
-	if (fd != 0)
-	{
-		if (dup2(fd, STDIN_FILENO) == -1)
-		{
-			free_env(env);
-			g_error = 1;
-			close(fd);
-			ft_write_error("pipe", NULL, strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-		close(fd);
-	}
-}
-
-static void	redirect_outfile(t_env_info *env, int fd[2],
-		enum e_meta_character meta_next)
-{
-	if (meta_next == e_pipe)
-	{
-		if (dup2(fd[1], STDOUT_FILENO) == -1)
-		{
-			free_env(env);
-			g_error = 1;
-			close(fd[0]);
-			close(fd[1]);
-			ft_write_error("pipe", NULL, strerror(errno));
-			exit(EXIT_FAILURE);
-		}
-		close(fd[0]);
-		close(fd[1]);
-	}
-}
+void	redirect_infile_pipe(int fd, t_env_info *env);
+void	redirect_outfile_pipe(t_env_info *env, int fd[2],
+			enum e_meta_character meta_next);
 
 static void	pipe_waitpid(t_env_info *env, int pid, int *fd)
 {
@@ -127,8 +95,8 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 	if (pid == 0)
 	{
 		none_interactive(env->act);
-		redirect_infile(fd_tmp, env);
-		redirect_outfile(env, fildes, m_n);
+		redirect_infile_pipe(fd_tmp, env);
+		redirect_outfile_pipe(env, fildes, m_n);
 		execution(tree, env);
 	}
 	ign_signals(env->act);

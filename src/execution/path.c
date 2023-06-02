@@ -6,44 +6,13 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 15:59:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:33:02 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 18:39:34 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*find_absolute_path(char *str)
-{
-	char	*pwd;
-	char	*path;
-	int		len;
-	int		add_slash;
-
-	add_slash = 0;
-	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
-		return (NULL);
-	len = ft_strlen(pwd);
-	if (len != 0 && pwd[len - 1] != '/')
-		add_slash = 1;
-	path = ft_strjoin_slash(pwd, str, add_slash);
-	free(pwd);
-	return (path);
-}
-
-bool	contain_slash(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '/')
-			return (true);
-		++i;
-	}
-	return (false);
-}
+bool	contain_slash(char *str);
 
 static void	trim_name_var(char **str)
 {

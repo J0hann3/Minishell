@@ -6,7 +6,7 @@
 #    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/27 10:25:13 by jvigny           ###   ########.fr        #
+#    Updated: 2023/06/02 18:30:18 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,41 +24,41 @@ HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
 EXECUTION = execution/
 SRC_EXECUTION = \
-				exec_command.c \
 				binary_tree.c \
-				redirection.c \
+				exec_command.c \
+				path.c \
 				pipe.c \
-				path.c
+				redirection.c
 
 BUILTINS = builtins/
 SRC_BUILTINS = \
+				cd.c \
 				echo.c \
 				env.c \
+				exit.c \
 				export.c \
 				export2.c \
-				exit.c \
 				pwd.c \
-				unset.c \
-				cd.c
+				unset.c
 
 UTILS = utils/
 SRC_UTILS = \
-			ft_calloc.c \
-			ft_strdup.c \
+			error.c \
+			free_tree.c \
+			free_utils.c \
 			ft_atouc.c \
+			ft_calloc.c \
 			ft_split_quote.c \
 			ft_split.c \
-			ft_strjoin.c \
 			ft_strcmp.c \
-			utils.c \
-			init.c \
-			free_tree.c \
+			ft_strdup.c \
+			ft_strjoin.c \
 			ft_strnstr.c \
+			init.c \
 			tchar_join.c \
 			tchar_ope.c \
 			tchar_utils.c \
-			free_utils.c \
-			error.c
+			utils.c
 
 PARSING = parsing/
 SRC_PARSING = \
@@ -89,8 +89,8 @@ SRC_HEREDOCS = \
 
 SIGNALS = signals/
 SRC_SIGNALS = \
-			signals.c \
-			sig_handler.c
+			sig_handler.c \
+			signals.c
 
 WILDCARD = wildcard/
 SRC_WILDCARD = \

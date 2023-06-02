@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:08:16 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:31:53 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 18:22:34 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,18 @@
  */
 void	ft_exit(t_instruction *arg, t_env_info *env)
 {
+	bool	error;
+
 	if (arg->command[1] == NULL)
 	{
-		free_instructions(arg);
-		free_env(env);
+		(free_instructions(arg), free_env(env));
 		if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 			write(2, "exit\n", 5);
 		get_next_line(-1);
 		exit((unsigned char)g_error);
 	}
-	g_error = ft_atouc(arg->command[1]);
-	if (g_error == -1)
+	g_error = ft_atouc(arg->command[1], &error);
+	if (error)
 	{
 		ft_write_error("exit", arg->command[1], "numeric argument required");
 		g_error = 2;
