@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   second_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:01:14 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:23:43 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 20:18:38 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,6 @@ void	free_instructions(t_instruction *instruc)
 		free(instruc->command);
 	}
 	free(instruc);
-}
-
-void	ft_print(char *ctxt, t_char *expanded_command)
-{
-	int	i;
-
-	i = 0;
-	printf("%s : \n", ctxt);
-	while (expanded_command[i].c)
-	{
-		printf("%c		%d\n",
-			expanded_command[i].c, expanded_command[i].is_inter);
-		i++;
-	}
-	printf("fin\n");
 }
 
 static t_char	*expand_all(char *input,

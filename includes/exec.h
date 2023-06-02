@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:19:21 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/03 16:29:00 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 20:07:23 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	multi_pipe(t_ast *tree, t_env_info *env, enum e_meta_character m_b,
 void	redirection(t_instruction *inst);
 void	redirection_fork(t_instruction *inst);
 void	reset_redirection(t_instruction *inst);
-
 char	*find_absolute_path(char *str);
 char	*find_path_command(char *str, t_env_info *env);
 

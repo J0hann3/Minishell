@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:23:55 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 03:42:02 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:12:55 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@ enum e_meta_character	get_meta(char *input)
 		return (e_pipe);
 	}
 	return (e_empty);
-}
-
-const char	*meta_to_char(enum e_meta_character meta)
-{
-	if (meta == e_pipe)
-		return ("|");
-	if (meta == e_or)
-		return ("||");
-	if (meta == e_and)
-		return ("&&");
-	else
-		return ("");
 }
 
 size_t	get_command_size(const char *input)

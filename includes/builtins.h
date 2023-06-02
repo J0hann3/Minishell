@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 19:41:23 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/24 18:02:12 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 19:47:40 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 
 # include "structs.h"
 
-// ------Init ------
+// ------ Init ------
 t_env_info	*init_env(const char **env);
+
+// ------ Utils ------
+int			ft_len(char **str);
 
 // ------ Builtins -------
 void		ft_echo(char **arg, t_env_info	*env);

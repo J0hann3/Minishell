@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
+#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/05/27 10:25:13 by jvigny           ###   ########.fr        #
+#    Updated: 2023/06/02 20:21:57 by qthierry         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBS = -lreadline -lncurses
 INCLUDES = -I$(HEADERS_DIR)
 
 HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h \
-				signals.h wildcard.h
+				signals.h wildcard.h syntax_errors.h get_next_line.h heredocs.h
 HEADERS_DIR = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIR), $(HEADERS_LIST))
 
@@ -43,15 +43,19 @@ SRC_BUILTINS = \
 
 UTILS = utils/
 SRC_UTILS = \
+			char_utils.c \
 			ft_calloc.c \
 			ft_strdup.c \
 			ft_atouc.c \
+			ft_itoa.c \
 			ft_split_quote.c \
 			ft_split.c \
 			ft_strjoin.c \
 			ft_strcmp.c \
 			utils.c \
 			init.c \
+			others_utils.c \
+			skip_quote_par.c \
 			free_tree.c \
 			ft_strnstr.c \
 			tchar_join.c \
@@ -66,17 +70,22 @@ SRC_PARSING = \
 			ast_rec.c \
 			ast_utils.c \
 			expand_dollars.c \
-			parsing_parenthesis.c \
-			parsing_utils.c \
+			expand_dollars2.c \
 			remove_quotes.c \
 			second_parsing.c \
-			syntax_errors.c \
 			redirections.c \
 			get_file_name.c \
 			open_files.c \
-			syntax_utils.c \
+			expand_utils.c
+
+SYNTAX_ERRORS = syntax_errors/
+SRC_SYNTAX_ERRORS = \
 			check_redirections.c \
-			utils2.c
+			check_arguments_l_r.c \
+			parsing_parenthesis.c \
+			parsing_utils.c \
+			syntax_utils.c \
+			syntax_errors.c
 
 HEREDOCS = heredocs/
 SRC_HEREDOCS = \
@@ -109,6 +118,7 @@ SRC_LIST =	$(addprefix $(BUILTINS), $(SRC_BUILTINS)) \
 			$(addprefix $(SIGNALS), $(SRC_SIGNALS)) \
 			$(addprefix $(HEREDOCS), $(SRC_HEREDOCS)) \
 			$(addprefix $(WILDCARD), $(SRC_WILDCARD)) \
+			$(addprefix $(SYNTAX_ERRORS), $(SRC_SYNTAX_ERRORS)) \
 			main.c
 
 SRC_DIR = ./src/
@@ -143,6 +153,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)$(SIGNALS)
 	mkdir -p $(OBJ_DIR)$(HEREDOCS)
 	mkdir -p $(OBJ_DIR)$(WILDCARD)
+	mkdir -p $(OBJ_DIR)$(SYNTAX_ERRORS)
 
 clean:
 	rm -rf $(OBJ_DIR)

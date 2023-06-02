@@ -1,28 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   others_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 01:46:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/13 00:38:18 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/02 18:43:55 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-size_t	ft_strlen(const char *s)
-{
-	const char	*cpy;
-
-	if (!s)
-		return (0);
-	cpy = s;
-	while (*s)
-		s++;
-	return ((size_t)(s - cpy));
-}
 
 /**
  * @brief Test if two string are equal
@@ -104,19 +92,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (c == 0)
-		return ((char *)s);
-	return (NULL);
-}
-
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 {
 	void	*new_ptr;
@@ -158,72 +133,4 @@ void	remove_multiple_wspaces(char *input)
 	*dest = 0;
 	while ((*dest == ' ' || *dest == 0) && dest != start)
 		*(dest--) = 0;
-}
-
-char	*ft_strndup(const char *s, size_t n)
-{
-	char	*res;
-	size_t	i;
-
-	res = malloc(sizeof(char) * (n + 1));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (s[i] && i < n)
-	{
-		res[i] = ((char *)s)[i];
-		i++;
-	}
-	res[i] = 0;
-	return (res);
-}
-
-static size_t	get_size(unsigned int n)
-{
-	size_t	size;
-
-	if (!n)
-		return (1);
-	size = 0;
-	while (n > 0)
-	{
-		size++;
-		n /= 10;
-	}
-	return (size);
-}
-
-char	*ft_itoa(int n)
-{
-	unsigned int	ncpy;
-	char			*res;
-	size_t			size;
-
-	size = (n < 0);
-	ncpy = n * (1 | -size);
-	size += get_size(ncpy);
-	res = malloc(sizeof(char) * (size + 1));
-	if (!res)
-		return (NULL);
-	res[size--] = '\0';
-	if (!ncpy)
-		res[0] = '0';
-	while (ncpy > 0)
-	{
-		res[size] = (ncpy % 10) + '0';
-		ncpy /= 10;
-		size--;
-	}
-	if (n < 0)
-		res[0] = '-';
-	return (res);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-		((char *)s)[i++] = 0;
 }
