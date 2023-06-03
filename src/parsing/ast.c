@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 01:08:36 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/21 04:09:50 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:14:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,18 @@
 // 		else
 // 			return (right_height + 1);
 // 	}
+// }
+
+// static const char	*meta_to_char(enum e_meta_character meta)
+// {
+// 	if (meta == e_pipe)
+// 		return ("|");
+// 	if (meta == e_or)
+// 		return ("||");
+// 	if (meta == e_and)
+// 		return ("&&");
+// 	else
+// 		return ("");
 // }
 
 // static void	print_tree(t_ast *tree, int depth, int max_depth)
@@ -101,7 +113,8 @@ t_ast	*create_op_node(char *input)
 	return (node);
 }
 
-void	add_heredocs(t_ast *tree, int *fd_heredocs, int *fd_size, int size_max)
+static void	add_heredocs(t_ast *tree, int *fd_heredocs,
+				int *fd_size, int size_max)
 {
 	if (!tree)
 		return ;

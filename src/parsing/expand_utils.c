@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredocs.h                                         :+:      :+:    :+:   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/19 18:35:52 by qthierry          #+#    #+#             */
-/*   Updated: 2023/06/02 20:11:07 by qthierry         ###   ########.fr       */
+/*   Created: 2023/06/02 18:22:45 by qthierry          #+#    #+#             */
+/*   Updated: 2023/06/02 20:17:39 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HEREDOCS_H
-# define HEREDOCS_H
-# include "structs.h"
+#include "../../includes/minishell.h"
 
-//heredocs.c
-int		do_here_docs(char *input, t_env_info *env_info);
+bool	is_expandable(const char *input)
+{
+	return (is_alpha(*input) || *input == '_' || *input == '?');
+}
 
-// prompt_here.c
-bool	expand_heredocs(int *fd_in, t_env_info *env_info);
-int		prompt_here(char *ender, int fd_w, t_env_info *env);
-void	free_on_crash(char *ender, int fd);
+size_t	get_size_of_var(const char *str)
+{
+	size_t	i;
 
-// random_name.c
-char	*get_random_name(void);
-
-#endif
+	i = 0;
+	while (str[i])
+	{
+		if (is_alpha(str[i]) || str[i] == '_' || is_digit(str[i]))
+			++i;
+		else
+			return (i);
+	}
+	return (i);
+}

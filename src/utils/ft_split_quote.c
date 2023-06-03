@@ -6,11 +6,11 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 10:35:57 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/19 01:01:06 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/02 19:54:58 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	free_all(t_char **string)
 {
