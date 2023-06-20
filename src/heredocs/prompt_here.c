@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_here.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/06/02 18:50:11 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/20 20:13:35 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	prompt_here(char *ender, int fd_w, t_env_info *env)
 	int		pid;
 	int		stat;
 
+	stat = 0;
 	if (!isatty(STDIN_FILENO) || !isatty(STDERR_FILENO))
 		return (close(fd_w), 0);
 	pid = fork();
