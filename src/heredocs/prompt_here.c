@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 15:42:15 by qthierry          #+#    #+#             */
-/*   Updated: 2023/06/20 20:13:35 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/21 14:50:01 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ int	prompt_here(char *ender, int fd_w, t_env_info *env)
 	else
 	{
 		ign_signals(env->act);
-		if (waitpid(pid, &stat, 0) == -1)
-			ft_write_error("heredocs", NULL, strerror(errno));
+		waitpid(pid, &stat, 0);
 		reset_signals(env->act);
 		if (WIFSIGNALED(stat))
 			stat = 128 + WTERMSIG(stat);

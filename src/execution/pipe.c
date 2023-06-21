@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/06/02 18:42:48 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/21 14:49:41 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,7 @@ static void	pipe_waitpid(t_env_info *env, int pid, int *fd)
 {
 	int				stat;
 
-	if (waitpid(pid, &stat, 0) == -1)
-	{
-		g_error = 1;
-		ft_write_error("pipe", NULL, strerror(errno));
-	}
+	waitpid(pid, &stat, 0);
 	if (WIFSIGNALED(stat))
 		g_error = 128 + WTERMSIG(stat);
 	else

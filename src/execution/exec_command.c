@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:18:41 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:34:05 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/21 14:49:05 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ static void	ft_waitpid(t_env_info *env, t_instruction *inst, int pid,
 	int		stat;
 
 	ign_signals(env->act);
-	if (waitpid(pid, &stat, 0) == -1)
-		ft_write_error("fork", NULL, strerror(errno));
+	waitpid(pid, &stat, 0);
 	reset_signals(env->act);
 	if (WIFSIGNALED(stat))
 		g_error = 128 + WTERMSIG(stat);
