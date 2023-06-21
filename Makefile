@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+         #
+#    By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/31 18:39:31 by jvigny            #+#    #+#              #
-#    Updated: 2023/06/03 15:17:44 by qthierry         ###   ########.fr        #
+#    Updated: 2023/06/21 20:11:09 by jvigny           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 CFLAGS = -g -Wall -Wextra -Werror#-fsanitize=address
-LIBS = -lreadline -lncurses
+LIBS = -lreadline
 INCLUDES = -I$(HEADERS_DIR)
 
 HEADERS_LIST = minishell.h builtins.h utils.h exec.h parsing.h structs.h \
@@ -143,7 +143,7 @@ $(NAME):	$(OBJ_DIR) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(INCLUDES) -o $(NAME)
 
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c $(HEADERS) Makefile
-	$(CC) $(CFLAGS) -c $(INCLUDES) $(LIBS) $< -o $@
+	$(CC) $(CFLAGS) -c $(INCLUDES) $< -o $@
 	
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -164,4 +164,4 @@ fclean:	clean
 
 re: fclean all
 
-.PHONY : all clean fclean re
+.PHONY : all clean fclean re vrun run bonus
