@@ -6,7 +6,7 @@
 /*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 16:16:55 by jvigny            #+#    #+#             */
-/*   Updated: 2023/06/21 14:49:41 by jvigny           ###   ########.fr       */
+/*   Updated: 2023/06/21 15:27:14 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	pipe_waitpid(t_env_info *env, int pid, int *fd)
 		g_error = 128 + WTERMSIG(stat);
 	else
 		g_error = WEXITSTATUS(stat);
+	stat = pid;
 	while (stat > 0)
 	{
 		stat = waitpid(-1, NULL, 0);

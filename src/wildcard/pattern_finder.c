@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pattern_finder.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 17:21:00 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/18 17:23:24 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/21 15:48:15 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,15 @@ void	find_pattern_in_fname(t_file_list *flist, char *to_find, bool is_end)
 	}
 }
 
-t_char	*test_suffix(t_char *input, t_file_list *flist)
+t_char	*test_suffix(t_char *input, t_file_list *flist, bool *error)
 {
 	char	*suffix;
 	bool	is_end;
 
+	*error = false;
 	suffix = get_suffix(input, &is_end);
 	if (!suffix)
-		return (NULL);
+		return (*error = true, NULL);
 	input += ft_strlen(suffix) + 1;
 	find_pattern_in_fname(flist, suffix, is_end);
 	free(suffix);

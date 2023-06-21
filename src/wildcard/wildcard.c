@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:27:21 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/18 17:20:48 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/21 15:49:30 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,15 +101,22 @@ bool	wildcard(t_char *input, t_file_list *flist, t_char **start, size_t *i)
 {
 	t_char	*tmp;
 	bool	include_hidden;
+	bool	error;
 
 	tmp = input;
 	if (is_w_heredoc(jump_to_pattern_start(input, *start), *start))
 		return (*i = (jump_to_pattern_end(input) - *start), true);
 	if (!test_first_prefix(tmp, flist, *start, &include_hidden))
 		return (false);
-	tmp = test_suffix(tmp, flist);
+	tmp = test_suffix(tmp, flist, &error);
+	if (tmp == NULL && error == true)
+		return (false);
 	while (tmp && tmp->c == '*')
-		tmp = test_suffix(tmp, flist);
+	{
+		tmp = test_suffix(tmp, flist, &error);
+		if (tmp == NULL && error == true)
+			return (false);
+	}
 	if (is_ambigous_redirection(input, *start, flist))
 		return (false);
 	tmp = replace_wildcard(input, start, flist, include_hidden);

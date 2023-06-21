@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:26:26 by qthierry          #+#    #+#             */
-/*   Updated: 2023/06/02 20:31:31 by qthierry         ###   ########.fr       */
+/*   Updated: 2023/06/21 15:49:52 by jvigny           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		free_flist(t_file_list *flist);
 // pattern_finder.c
 void		find_pattern_in_fname(t_file_list *flist,
 				char *to_find, bool is_end);
-t_char		*test_suffix(t_char *input, t_file_list *flist);
+t_char		*test_suffix(t_char *input, t_file_list *flist, bool *error);
 bool		test_first_prefix(t_char *input,
 				t_file_list *flist, const t_char *start, bool *include_hidden);
 
