@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 15:02:20 by jvigny            #+#    #+#             */
-/*   Updated: 2023/05/27 16:28:45 by jvigny           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:18:29 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ t_env_info	*init_env(const char **env)
 	}
 	add_pwd(new, env, &i);
 	add_shlvl__(new, env, &i);
+	new->does_expand_here = true;
 	return (new);
 }

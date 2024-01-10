@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_heredocs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 19:43:22 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 13:27:22 by jvigny           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:12:37 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ bool	expand_heredocs(int *fd_in, t_env_info *env_info)
 	int		new_fd_w;
 	char	*file_name;
 
-	if (*fd_in < 0)
+	if (*fd_in < 0 || !env_info->does_expand_here)
 		return (true);
 	file_name = get_random_name();
 	if (!file_name)

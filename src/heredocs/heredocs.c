@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 16:23:20 by jvigny           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:19:33 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int	do_here_docs(char *input, t_env_info *env_info)
 	char	*buffer;
 	int		fd_w;
 	int		error;
+	int		i;
 
 	buffer = get_file_name_heredoc(input);
 	if (!buffer)
@@ -116,6 +117,13 @@ int	do_here_docs(char *input, t_env_info *env_info)
 	if (!open_tmp_file(env_info->fds_heredocs + env_info->len_heredocs, &fd_w))
 		return (free(buffer), -1);
 	error = prompt_here(buffer, fd_w, env_info);
+	i = 0;
+	while (buffer && buffer[i])
+	{
+		if (buffer[i] == '\'' || buffer[i] == '\"')
+			env_info->does_expand_here = false;
+		i++;
+	}
 	free(buffer);
 	return (error);
 }

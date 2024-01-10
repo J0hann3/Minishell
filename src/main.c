@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvigny <jvigny@student.42.fr>              +#+  +:+       +#+        */
+/*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 18:31:30 by qthierry          #+#    #+#             */
-/*   Updated: 2023/05/27 16:26:52 by jvigny           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:12:12 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	minishell_not_interactive_loop(t_env_info *env)
 			break ;
 		free(input);
 		env->input = NULL;
+		env->does_expand_here = true;
 	}
 	get_next_line(-1);
 }
