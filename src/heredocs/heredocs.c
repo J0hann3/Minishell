@@ -6,7 +6,7 @@
 /*   By: qthierry <qthierry@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 18:08:27 by qthierry          #+#    #+#             */
-/*   Updated: 2024/01/10 16:19:33 by qthierry         ###   ########.fr       */
+/*   Updated: 2024/01/10 19:40:50 by qthierry         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_copy_heredoc(char *dst, char *src, size_t size)
 	}
 }
 
-size_t	get_file_size_heredoc(const char *input)
+size_t	get_file_size_heredoc(const char *input, bool *is_quoted_delimiter)
 {
 	size_t	i;
 	int		tmp;
@@ -54,6 +54,7 @@ size_t	get_file_size_heredoc(const char *input)
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
+			*is_quoted_delimiter = true;
 			tmp = skip_quotes(input + i) + 1;
 			i += tmp;
 			size += tmp - 2;
@@ -67,14 +68,17 @@ size_t	get_file_size_heredoc(const char *input)
 	return (size);
 }
 
-char	*get_file_name_heredoc(char *input)
+char	*get_file_name_heredoc(char *input, t_env_info *env_info)
 {
 	size_t	file_size;
 	char	*file_name;
+	bool	is_quoted_delimiter;
 
+	is_quoted_delimiter = false;
 	while (*input == '<' || *input == '>' || is_wspace(*input))
 		input++;
-	file_size = get_file_size_heredoc(input);
+	file_size = get_file_size_heredoc(input, &is_quoted_delimiter);
+	env_info->does_expand_here = !is_quoted_delimiter;
 	file_name = ft_calloc(file_size + 1, sizeof(char));
 	if (!file_name)
 		return (mem_exh("heredocs"), NULL);
@@ -109,21 +113,13 @@ int	do_here_docs(char *input, t_env_info *env_info)
 	char	*buffer;
 	int		fd_w;
 	int		error;
-	int		i;
 
-	buffer = get_file_name_heredoc(input);
+	buffer = get_file_name_heredoc(input, env_info);
 	if (!buffer)
 		return (-1);
 	if (!open_tmp_file(env_info->fds_heredocs + env_info->len_heredocs, &fd_w))
 		return (free(buffer), -1);
 	error = prompt_here(buffer, fd_w, env_info);
-	i = 0;
-	while (buffer && buffer[i])
-	{
-		if (buffer[i] == '\'' || buffer[i] == '\"')
-			env_info->does_expand_here = false;
-		i++;
-	}
 	free(buffer);
 	return (error);
 }
