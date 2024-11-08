@@ -1,4 +1,7 @@
 # Minishell
+
+[Subject Minishell Project 42](minishell.pdf)
+
 ls | grep e > outfile > outfile1
 ls | grep e >> outfile >> outfile1
 < infile grep a | grep e > outfile
