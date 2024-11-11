@@ -1,11 +1,20 @@
-# Minishell
+<h1 align=center>💻 Minishell</h1>
+<p align="center">
+  <img src="img/minishell.png?raw=true"/>
+</p>
+
+## About
+>This project is about creating a simple shell.
+>Yes, your own little bash.
+>You will learn a lot about processes and file descriptors.
 
 [Subject Minishell Project 42](minishell.pdf)
+
+## Setup
 
 ls | grep e > outfile > outfile1
 ls | grep e >> outfile >> outfile1
 < infile grep a | grep e > outfile
-
 
 - CODE : 
 ./minishell
