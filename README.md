@@ -69,7 +69,7 @@ img  includes  Makefile  minishell  obj  README.md  src
 
 ### Built-in commands
 - Recreated the following built-in commands:
-	- `echo` with option ``-n`
+	- `echo` with option `-n`
 	- `pwd` with no options
 	- `env` with no options or arguments
 	- `cd` with only a relative or absolute path
@@ -78,7 +78,7 @@ img  includes  Makefile  minishell  obj  README.md  src
 	- `exit` with no options
 
 ### Pipes
-- Pipes (|) redirect the output of one command to the input of another.
+- Pipes (`|`) redirect the output of one command to the input of another.
 - Handles the use of pipes (`|`) to chain commands together.
 - Minishell supports multiple pipes in the same command line and uses fork processes to execute commands in parallel.
 
@@ -86,17 +86,17 @@ img  includes  Makefile  minishell  obj  README.md  src
 - Waits a process.
 - Executed binaries must be waited in the execution flow by the main process.
 - At the end of each pipeline, `waitpid` waits for all processes created within that pipeline.
-1. WIFEXITED(status): True if child exited normally.
-	- WEXITSTATUS(status): Returns code when child exits.
-2. WIFSIGNALED(status): True if child exited because a signal was not caught.
-	- WTERMSIG(status): Returns code of the terminating signal.
-3. WIFSTOPPED(status): True if child is stopped.
-	- WSTOPSIG(status): Returns code of the stop signal.
+1. `WIFEXITED(status)`: True if child exited normally.
+	- `WEXITSTATUS(status)`: Returns code when child exits.
+2. `WIFSIGNALED(status)`: True if child exited because a signal was not caught.
+	- `WTERMSIG(status)`: Returns code of the terminating signal.
+3. `WIFSTOPPED(status)`: True if child is stopped.
+	- `WSTOPSIG(status)`: Returns code of the stop signal.
 
 ### Exit Status
 - Returns a command's exit status that is provided by the `waitpid`, or 128 + n if terminated by signal n.
 - The exit status of a pipeline is the exit status of the last command.
-- For commands using && and ||, the exit status is that of the last command executed.
+- For commands using `&&` and `||`, the exit status is that of the last command executed.
 
 ### Readline
 - Function that reads from the standard input.
